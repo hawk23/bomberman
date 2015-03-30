@@ -1,5 +1,5 @@
-# unopp
-An awesome implementation of a well known card game.
+# bomberman
+An awesome implementation of a well known game.
 
 # Project Members
 Peter
