@@ -4,7 +4,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
-import custom_slick.AppGameContainer_FS_Custom;
+import slick.extension.AppGameContainerFSCustom;
 
 public class BombermanGame extends StateBasedGame {
 
@@ -14,14 +14,8 @@ public class BombermanGame extends StateBasedGame {
 		super(GAME_NAME);
 	}
 
-	public static void main(String[] args) throws SlickException {
-		AppGameContainer_FS_Custom container = new AppGameContainer_FS_Custom(new BombermanGame());
-		container.start();
-	}
-
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
 		
 	}
-
 }
