@@ -12,7 +12,6 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.renderer.SGL;
-import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Log;
 
 public class AppGameContainerFSCustom extends AppGameContainer {
@@ -218,8 +217,8 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 			buffer_native.setFilter(Image.FILTER_LINEAR);
 			
 			// this will be the back buffer image we draw our game onto
-			buffer = new Image(1280, 960);
-			buffer_graphics = buffer.getGraphics();
+			buffer              = new Image(960, 960);
+			buffer_graphics     = buffer.getGraphics();
 			resetGameBuffer();
 		}
 		else {
