@@ -1,4 +1,4 @@
-package custom_slick;
+package slick.extension;
 
 
 import org.lwjgl.opengl.Display;
@@ -14,7 +14,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 
-public class AppGameContainer_FS_Custom extends AppGameContainer {
+public class AppGameContainerFSCustom extends AppGameContainer {
 
 	public static final int UPDATES_PER_SECOND = 40;
 	public static final int UPDATE_RATE = 1_000 / UPDATES_PER_SECOND;
@@ -70,7 +70,7 @@ public class AppGameContainer_FS_Custom extends AppGameContainer {
 	private long ups;
 	private boolean showUPS = true;
 	
-	public AppGameContainer_FS_Custom(Game game) throws SlickException {
+	public AppGameContainerFSCustom(Game game) throws SlickException {
 		super(game, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight(), true);
 		minimumLogicInterval = maximumLogicInterval = UPDATE_RATE;
 		targetFPS = TARGET_FPS;
