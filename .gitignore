@@ -25,6 +25,6 @@ proguard/
 # Log Files
 *.log
 
-# eclipse project files (Peter)
+# eclipse project files
 *.project
 *.classpath
