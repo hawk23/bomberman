@@ -28,3 +28,6 @@ proguard/
 # eclipse project files
 *.project
 *.classpath
+
+# IntelliJ project files
+.idea/
