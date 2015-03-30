@@ -16,9 +16,9 @@ import org.newdawn.slick.util.Log;
 
 public class AppGameContainerFSCustom extends AppGameContainer {
 
-	public static final int UPDATES_PER_SECOND = 40;
-	public static final int UPDATE_RATE = 1_000 / UPDATES_PER_SECOND;
-	public static final int TARGET_FPS = 100;
+	public static final int UPDATES_PER_SECOND          = 40;
+	public static final int UPDATE_RATE                 = 1_000 / UPDATES_PER_SECOND;
+	public static final int TARGET_FPS                  = 100;
 	
 	// there will be a native back buffer depending on the actual aspect ratio of the used display
 	// and a buffer for the game canvas - will always be 1280x960
@@ -29,10 +29,10 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	// 16:10 --> 1920x1200
 	//
 	// supported aspect ratios are:
-	public static final int RATIO_4_3 = 0;
-	public static final int RATIO_5_4 = 1;
-	public static final int RATIO_16_9 = 2;
-	public static final int RATIO_16_10 = 3;
+	public static final int RATIO_4_3                   = 0;
+	public static final int RATIO_5_4                   = 1;
+	public static final int RATIO_16_9                  = 2;
+	public static final int RATIO_16_10                 = 3;
 	
 	/**
 	 * the aspect ratio of the used display
@@ -65,15 +65,16 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	private boolean showGameLoopData = false;
 	
 	// game update data
-	private long recordedUPS;
-	private long lastUPS;
-	private long ups;
-	private boolean showUPS = true;
+	private long        recordedUPS;
+	private long        lastUPS;
+	private long        ups;
+	private boolean     showUPS = true;
 	
 	public AppGameContainerFSCustom(Game game) throws SlickException {
 		super(game, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight(), true);
-		minimumLogicInterval = maximumLogicInterval = UPDATE_RATE;
-		targetFPS = TARGET_FPS;
+        maximumLogicInterval    = UPDATE_RATE;
+		minimumLogicInterval    = UPDATE_RATE;
+		targetFPS               = TARGET_FPS;
 	}
 	
 	/**
@@ -225,9 +226,6 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 			// ToDo Error message
 			exit();
 		}
-		
-		
-	
 	}
 	
 	private void resetGameBuffer() {
@@ -259,7 +257,6 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 		float ratio_5_4 = (float)5 / (float)4;
 		float ratio_16_9 = (float)16 / (float)9;
 		float ratio_16_10 = (float)16 / (float)10;
-		
 		
 		if (ratio == ratio_4_3) {
 			actualRatio = RATIO_4_3;
@@ -304,5 +301,4 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	public float getRenderInterpolation() {
 		return (float)storedDelta / (float)UPDATE_RATE;
 	}
-
 }
