@@ -3,6 +3,7 @@ package game.state;
 import game.Map;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -30,6 +31,10 @@ public class GameRoundState extends BombermanGameState
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
+        Input input = gameContainer.getInput();
 
+        if (input.isKeyDown(Input.KEY_ESCAPE)) {
+            stateBasedGame.enterState(BombermanGameState.MAIN_MENU);
+        }
     }
 }

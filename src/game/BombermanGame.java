@@ -1,6 +1,7 @@
 package game;
 
 import game.state.GameRoundState;
+import game.state.MainMenuState;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -15,6 +16,7 @@ public class BombermanGame extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
+        this.addState(new MainMenuState());
         this.addState(new GameRoundState());
     }
 }
