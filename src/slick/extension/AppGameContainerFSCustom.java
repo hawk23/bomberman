@@ -12,6 +12,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.renderer.SGL;
+import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Log;
 
 public class AppGameContainerFSCustom extends AppGameContainer {
@@ -62,13 +63,13 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	/**
 	 * should data be displayed? Key: F12
 	 */
-	private boolean showGameLoopData = false;
+	private boolean     showGameLoopData    = false;
 	
 	// game update data
 	private long        recordedUPS;
 	private long        lastUPS;
 	private long        ups;
-	private boolean     showUPS = true;
+	private boolean     showUPS             = true;
 	
 	public AppGameContainerFSCustom(Game game) throws SlickException {
 		super(game, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight(), true);
