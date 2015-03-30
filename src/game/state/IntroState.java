@@ -1,21 +1,17 @@
 package game.state;
 
-import game.Map;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * Created by Mario on 30.03.2015.
  */
-public class IntroState extends BasicGameState
+public class IntroState extends BombermanGameState
 {
-    private int id;
-
-    public IntroState (int id) {
-        this.id = id;
+    public IntroState () {
+        super(BombermanGameState.INTRO);
     }
 
     @Override
@@ -31,10 +27,5 @@ public class IntroState extends BasicGameState
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
 
-    }
-
-    @Override
-    public int getID() {
-        return this.id;
     }
 }

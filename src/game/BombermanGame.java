@@ -15,6 +15,6 @@ public class BombermanGame extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
-        this.addState(new GameRoundState(1));
+        this.addState(new GameRoundState());
     }
 }
