@@ -1,6 +1,8 @@
 package game;
 
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.tiled.TiledMap;
 
 /**
@@ -11,6 +13,8 @@ public class Map
     public static String    MAP_1               = "res/levels/level1.tmx";
 
     private TiledMap        tileMap             = null;
+    private Shape player1;
+    private Shape player2;
 
     public Map () {
 
@@ -19,6 +23,9 @@ public class Map
     public void init (String map) {
         try {
             this.tileMap = new TiledMap (map);
+
+            player1 = new Rectangle(tileMap.getObjectX(0, 0), tileMap.getObjectY(0, 0), tileMap.getObjectWidth(0, 0), tileMap.getObjectHeight(0, 0));
+            player2 = new Rectangle(tileMap.getObjectX(0, 1), tileMap.getObjectY(0, 1), tileMap.getObjectWidth(0, 1), tileMap.getObjectHeight(0, 1));
         }
         catch (SlickException ex) {
             // TODO
@@ -26,14 +33,20 @@ public class Map
     }
 
     public void render () {
-        /*
-        int background      = this.tileMap.getLayerIndex("solids");
-        int explodables     = this.tileMap.getLayerIndex("explodable");
-
-        this.tileMap.render(0,0, background);
-        this.tileMap.render(0,0, explodables);
-        */
-
         this.tileMap.render(0,0);
+    }
+
+    public boolean isBlocked(int x, int y) {
+        // TODO: implement collissions
+
+        return false;
+    }
+
+    public Shape getPlayer1() {
+        return player1;
+    }
+
+    public Shape getPlayer2() {
+        return player2;
     }
 }
