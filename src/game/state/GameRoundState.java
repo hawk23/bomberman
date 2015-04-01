@@ -8,15 +8,17 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import slick.extension.AppGameContainerFSCustom;
+import slick.extension.MovementManager_Arrow;
 
 /**
  * Created by Mario on 30.03.2015.
  */
 public class GameRoundState extends BombermanGameState
 {
-    private Map                 map                 = null;
-    private Player              player1             = null;
-    private Player              player2             = null;
+    private Map                         map                 = null;
+    private Player                      player1             = null;
+    private Player                      player2             = null;
 
     public GameRoundState () {
         super (BombermanGameState.GAME_ROUND);
@@ -28,21 +30,29 @@ public class GameRoundState extends BombermanGameState
         this.map.init(Map.MAP_1);
 
         // create players and define controls
-        this.player1                                = new Player();
-        this.player1.setInputConfiguration(new InputConfiguration(Input.KEY_UP, Input.KEY_DOWN, Input.KEY_LEFT, Input.KEY_RIGHT, Input.KEY_RCONTROL));
+        InputConfiguration          inputConfiguration1         = new InputConfiguration(Input.KEY_UP, Input.KEY_DOWN, Input.KEY_LEFT, Input.KEY_RIGHT, Input.KEY_RCONTROL);
+        MovementManager_Arrow       movementManager_arrow1      = new MovementManager_Arrow (gameContainer.getInput(), inputConfiguration1);
 
-        this.player2                                = new Player();
-        this.player2.setInputConfiguration(new InputConfiguration(Input.KEY_W, Input.KEY_S, Input.KEY_A, Input.KEY_D, Input.KEY_LCONTROL));
+        this.player1                                            = new Player(map.getPlayer1(), map, (AppGameContainerFSCustom) gameContainer, stateBasedGame, Player.PLAYER_1, movementManager_arrow1);
+
+        /*
+        TODO: create player 2
+        */
     }
 
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
         this.map.render();
+        this.player1.render(gameContainer, graphics);
+        // this.player2.render(gameContainer, graphics);
     }
 
     @Override
-    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
+    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
         Input input = gameContainer.getInput();
+
+        this.player1.update(gameContainer, delta);
+        // this.player2.update(gameContainer, delta);
 
         if (input.isKeyDown(Input.KEY_ESCAPE)) {
             stateBasedGame.enterState(BombermanGameState.MAIN_MENU);
