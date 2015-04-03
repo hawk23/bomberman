@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="15" tilewidth="64" tileheight="64" nextobjectid="1">
  <tileset firstgid="1" name="bomber_tileset" tilewidth="64" tileheight="64">
   <image source="bomber_tileset.png" width="192" height="128"/>
+  <tile id="1">
+   <properties>
+    <property name="destroyable" value="false"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="destroyable" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="background" width="15" height="15">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC2NkYGBgHMWjeBQPGAYAv/M/3IQDAAA=
   </data>
  </layer>
- <layer name="solid" width="15" height="15">
+ <layer name="blocks" width="15" height="15">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NiYGBgogCTA5D1kkOP2jtq72C0l1wMAM+LaceEAwAA
+   H4sIAAAAAAAAC2NiYGBgogDjAsx45JD1MkHVEkOj62UmkR7K9jKTaC8zw9D270Daiw0Qk57JxQCdSuMehAMAAA==
   </data>
  </layer>
- <layer name="destroyable" width="15" height="15">
+ <layer name="froeground" width="15" height="15">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC2NgGAWjYBQMJAAA7Ly31YQDAAA=
   </data>

@@ -1,6 +1,7 @@
 package prototype;
 
 import game.model.Bomb;
+import game.model.BombermanMap;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.tiled.TiledMap;
@@ -25,8 +26,7 @@ public class BombTest extends BasicGame {
     public static final int UPDATE_RATE = 1_000 / UPDATES_PER_SECOND;
     public static final int TARGET_FPS = 500;
 
-    private TiledMap tileMap;
-    private int tileLayerSolid,tileLayerExplodable;
+    private BombermanMap tileMap;
     private int BLOCK_SIZE=64;
 
     private List<Renderable> renderQue;
@@ -65,9 +65,7 @@ public class BombTest extends BasicGame {
 
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
-        tileMap = new TiledMap(MAP_PATH);
-        tileLayerSolid = tileMap.getLayerIndex("solid");
-        tileLayerExplodable = tileMap.getLayerIndex("explodable");
+        tileMap = new BombermanMap(MAP_PATH);
         BLOCK_SIZE=tileMap.getTileHeight();
         selector = new Selector(BLOCK_SIZE);
 
@@ -77,31 +75,18 @@ public class BombTest extends BasicGame {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        Point point=pixelsToTile(newx,newy);
+        Point point=tileMap.pixelsToTile(newx,newy);
 
         selector.setPosition(newx, newy);
-        infoString="("+newx+", "+newy+")=Tile("+point.x+","+point.y+")";
+        infoString="("+newx+", "+newy+")=("+point.x+","+point.y+")";
     }
 
     @Override
     public void mousePressed(int button, int x, int y) {
-        Point point=pixelsToTile(x, y);
-
-        if(tileMap.getTileId(point.x, point.y, tileLayerSolid)==0)
-            if(tileMap.getTileId(point.x,point.y,tileLayerExplodable)==0)
-            {
+        Point point=tileMap.pixelsToTile(x,y);
+        if(!tileMap.isCollision(point.x,point.y)){
                  Bomb bomb = new Bomb(point.x*BLOCK_SIZE,point.y*BLOCK_SIZE);
                  renderQue.add(bomb);
-            }
-    }
-
-    public Point pixelsToTile(int x, int y){
-        Point point = new Point(Math.round((x)/BLOCK_SIZE),
-                Math.round((y)/BLOCK_SIZE));
-        if(point.x>tileMap.getWidth())
-            point.x=tileMap.getWidth()-1;
-        if(point.y>tileMap.getWidth())
-            point.y=tileMap.getWidth()-1;
-        return point;
+        }
     }
 }
