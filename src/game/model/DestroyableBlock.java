@@ -8,7 +8,7 @@ package game.model;
  */
 public class DestroyableBlock extends Block implements IDestroyable {
 
-    private BombermanMap bombermanMap;
+    protected BombermanMap bombermanMap;
 
     public DestroyableBlock(int tileX, int tileY, int tileWidth, int tileHeight, BombermanMap bombermanMap) {
         super(tileX, tileY, tileWidth, tileHeight);
@@ -22,10 +22,15 @@ public class DestroyableBlock extends Block implements IDestroyable {
 
     @Override
     public boolean destroy() {
-        return bombermanMap.removeBlock(getTileX(),getTileY());
+        return bombermanMap.removeBlock(getTileX(), getTileY(), this);
     }
 
     private void setBombermanMap(BombermanMap bombermanMap) {
         this.bombermanMap = bombermanMap;
+    }
+
+    @Override
+    public String toString() {
+        return "DestroyableBlock ("+getTileX()+","+getTileY()+")";
     }
 }

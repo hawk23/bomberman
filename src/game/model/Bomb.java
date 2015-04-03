@@ -22,13 +22,23 @@ public class Bomb extends DestroyableBlock{
     private static final String path="res/visuals/bomb/bomb.png";
     private static final int animationInteval=40;
 
-    private BombermanMap bombermanMap;
-
     private SpriteSheet bombSheet;
     private Animation animationBurn;
 
-    private int range=1;
+    private int range;
     private float timer;
+
+    private int renderCounter=0;
+
+    private boolean isExploding=false;
+
+    /**
+     * Directions for the calculation of the blast, UP,LEFT,DOWN,RIGHT
+     */
+    private int blastDirection[][]=new int[][]{
+            {1, 0, -1, 0},
+            {0, 1, 0, -1}
+    };
 
     public Bomb(int tileX, int tileY, int tileWidth, int tileHeight, float timer, int range, BombermanMap bombermanMap) {
         super(tileX, tileY, tileWidth, tileHeight, bombermanMap);
@@ -62,14 +72,43 @@ public class Bomb extends DestroyableBlock{
 
     @Override
     public boolean destroy() {
-        return false;
+        if(!isExploding) {
+            explode();
+            return true;
+        }else
+            return false;
     }
+
+    /**
+     * Calculates the explosion.
+     * spreads in each blastDirection for its range
+     */
+    private void explode(){
+        isExploding=true;
+        for(int direction=0;direction<blastDirection[0].length;direction++){
+            for(int r=1;r<=range;r++){
+                //Debugger.log("(" + getTileX() + blastDirection[0][direction] * r + "," + getTileY() + blastDirection[1][direction] * r + ")");
+                /*If we hit a collision blast won't spread any longer in this direction*/
+                if(bombermanMap.isCollision(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r)) {
+                    bombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
+                    break;
+                }else
+                    bombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
+            }
+        }
+        bombermanMap.removeGameObject(getTileX(), getTileY(), this);
+    }
+
 
     @Override
     public void draw(float v, float v1) {
         //TODO change back, only for demonstrational of the fake zBuffering
         //animationBurn.draw(posX+v,posY+v1);
         animationBurn.draw(posX+v,posY+v1-64,64,190);
+        //TODO implement update-Que, now counting render
+        renderCounter++;
+        if(renderCounter>10000)
+            destroy();
     }
 
     private void loadImage(){

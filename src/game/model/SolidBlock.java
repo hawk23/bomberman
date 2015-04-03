@@ -11,4 +11,9 @@ public class SolidBlock extends Block {
     public SolidBlock(int tileX, int tileY) {
         super(tileX, tileY);
     }
+
+    @Override
+    public String toString() {
+        return "SolidBlock ("+getTileX()+","+getTileY()+")";
+    }
 }

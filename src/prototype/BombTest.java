@@ -84,6 +84,8 @@ public class BombTest extends BasicGame {
     @Override
     public void mousePressed(int button, int x, int y) {
         Point point=tileMap.pixelsToTile(x,y);
-        tileMap.addBomb(point.x,point.y,100,2);
+        tileMap.addBomb(point.x,point.y,100,5);
+        //tileMap.destroy(point.x,point.y);
+
     }
 }

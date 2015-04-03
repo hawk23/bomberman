@@ -1,5 +1,6 @@
 package game.model;
 
+import org.newdawn.slick.Game;
 import org.newdawn.slick.Renderable;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
@@ -118,13 +119,17 @@ public class BombermanMap extends TiledMap{
         layerForeground =   this.getLayerIndex("foreground");
     }
 
-    public boolean removeBlock(int tileX, int tileY){
+    public boolean removeBlock(int tileX, int tileY, GameObject object){
+        boolean state=false;
+
+        state=removeGameObject(tileX,tileY,object);
+
         if(getTileId(tileX,tileY,layerBlocks)!=0) {
             setTileId(tileX, tileY, layerBlocks, 0);
             removeFromCollisionMatrix(tileX,tileY);
-            return true;
+            return state&&true;
         }else{
-            return false;
+            return state;
         }
     }
 
@@ -140,6 +145,17 @@ public class BombermanMap extends TiledMap{
             if(renderQueY==mapY)
                 item.getGameObject().draw(0,0);
         }
+    }
+
+    public boolean destroy(int tileX, int tileY){
+        boolean state=false;
+        for(int i=0;i<PLAYERS_QUANTITY+1;i++)
+            if((tileX>0 && tileX<getWidth()) && (tileY>0 && tileY<getHeight()))
+                if(destructionMatrix[tileX][tileY][i]!=null){
+                    destructionMatrix[tileX][tileY][i].destroy();
+                    state=state||true;
+                }
+        return state;
     }
 
     public boolean isCollision(Point tilePosition){
@@ -237,9 +253,22 @@ public class BombermanMap extends TiledMap{
         if(object.isCollides()) {
             state=addToCollisionMatrix(tileX, tileY, object);
         }
-        if(object instanceof IDestroyable){
+        if (object instanceof IDestroyable){
             state=state&&addToDestructionMatrix(tileX, tileY,(IDestroyable) object);
         }
+        return state;
+    }
+
+    public boolean removeGameObject(int tileX,int tileY, GameObject object){
+        Debugger.log("Remove: "+object.toString());
+        boolean state=false;
+        if(object.isCollides()) {
+            state=removeFromCollisionMatrix(tileX,tileY);
+        }
+        if (object instanceof IDestroyable){
+            state=state&&removeFromDestructionMatrix(tileX,tileY,(IDestroyable)object);
+        }
+        removeFromRenderQue(object);
         return state;
     }
 
