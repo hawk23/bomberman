@@ -6,6 +6,7 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import java.awt.*;
 import java.io.InputStream;
+import java.util.*;
 
 /**
  * Created by Roland Schreier on 03.04.2015.
@@ -38,7 +39,22 @@ public class BombermanMap extends TiledMap{
      *  The destructionMatrix contains all destroyable objects, like DestroyableBlocks, Players and Bombs.
      *  There can always only be PLAYER_QUANTITY+1 at a position at a time. 2 Players and a Bomb for example.
      */
-    private GameObject[][][] destructionMatrix;
+    private IDestroyable[][][] destructionMatrix;
+
+    /**
+     *  In the RenderQue all Renderable Objects that are not the TileMap are added.
+     *  For example: players, bombs, items, explsoions
+     *
+     *  to reduce processing overhead on rendering the que gets parsed till the y-position is higher than the current line.
+     *
+     *  If a new Object is added to the RenderQue the whole Que gets sorted by the y-position of the containing Objects.
+     *  TODO sorting on changing of player-position and explosions.
+     *
+     *  TODO maybe it is better to trade memory for processing time and add a static renderMatrix. ([height][width][PLAYER_QUANTITY+1])
+     *      no need for sorting.
+     */
+    private java.util.List<RenderItem> renderQue;
+
 
     public BombermanMap(String ref) throws SlickException {
         super(ref);
@@ -66,6 +82,7 @@ public class BombermanMap extends TiledMap{
     }
 
     private void init(){
+        renderQue=new ArrayList<RenderItem>();
         initLayers();
         initMatrixes();
     }
@@ -78,18 +95,18 @@ public class BombermanMap extends TiledMap{
         int tileId;
         GameObject gameObject;
         collissionMatrix = new GameObject[this.getWidth()][this.getHeight()];
-        destructionMatrix = new GameObject[this.getWidth()][this.getHeight()][PLAYERS_QUANTITY];
+        destructionMatrix = new IDestroyable[this.getWidth()][this.getHeight()][PLAYERS_QUANTITY+1];
 
         for(int column=0;column<this.getWidth();column++) {
             for (int row = 0; row < this.getHeight(); row++) {
                 if ((tileId=getTileId(column,row,layerBlocks))!=0){
                     if(getTileProperty(tileId,"destroyable","true").equalsIgnoreCase("true")) {
                         gameObject = new DestroyableBlock(column, row, this);
-                        destructionMatrix[column][row][0] = gameObject;
+                        addToDestructionMatrix(column,row,(IDestroyable)gameObject);
                     }else{
                         gameObject = new SolidBlock(column, row);
                     }
-                    collissionMatrix[column][row] = gameObject;
+                    addToCollisionMatrix(column,row,gameObject);
                 }
             }
         }
@@ -104,7 +121,7 @@ public class BombermanMap extends TiledMap{
     public boolean removeBlock(int tileX, int tileY){
         if(getTileId(tileX,tileY,layerBlocks)!=0) {
             setTileId(tileX, tileY, layerBlocks, 0);
-            collissionMatrix[tileX][tileY]=null;
+            removeFromCollisionMatrix(tileX,tileY);
             return true;
         }else{
             return false;
@@ -113,8 +130,16 @@ public class BombermanMap extends TiledMap{
 
     @Override
     protected void renderedLine(int visualY, int mapY, int layer) {
-        //TODO add logic to render items/players in front of Blocks
+        //TODO
+        int renderQueY=0,renderQueIndex=0;
+
         super.renderedLine(visualY, mapY, layer);
+        while (renderQueY<=mapY && renderQueIndex<renderQue.size()) {
+            RenderItem item = renderQue.get(renderQueIndex++);
+            renderQueY=(item.getGameObject().getPosY())/this.tileHeight;
+            if(renderQueY==mapY)
+                item.getGameObject().draw(0,0);
+        }
     }
 
     public boolean isCollision(Point tilePosition){
@@ -135,5 +160,94 @@ public class BombermanMap extends TiledMap{
         if(point.y>getHeight()) point.y=getHeight()-1;
         if(point.y<0)point.y=0;
         return point;
+    }
+
+    public boolean addToDestructionMatrix(int tileX,int tileY, IDestroyable gameObject){
+        for(int i=0;i<PLAYERS_QUANTITY+1;i++)
+            if(destructionMatrix[tileX][tileY][i]==null){
+                destructionMatrix[tileX][tileY][i]=gameObject;
+                return true;
+            }
+        return false;
+    }
+
+    public boolean removeFromDestructionMatrix(int tileX,int tileY, IDestroyable gameObject){
+        for(int i=0;i<PLAYERS_QUANTITY+1;i++)
+            if(destructionMatrix[tileX][tileY][i]==gameObject){
+                destructionMatrix[tileX][tileY][i]=null;
+                return true;
+            }
+        return false;
+    }
+
+    public boolean addToCollisionMatrix(int tileX, int tileY, GameObject gameObject){
+        if(collissionMatrix[tileX][tileY]==null) {
+            collissionMatrix[tileX][tileY] = gameObject;
+            return true;
+        }else
+            return false;
+    }
+
+    public boolean removeFromCollisionMatrix(int tileX, int tileY){
+        if(collissionMatrix[tileX][tileY]==null)
+            return false;
+        else{
+            collissionMatrix[tileX][tileY]=null;
+            return true;
+        }
+    }
+
+    public boolean removeFromCollisionMatrix(GameObject gameObject){
+        for(int column=0;column<this.getWidth();column++) {
+            for (int row = 0; row < this.getHeight(); row++) {
+                if (collissionMatrix[column][row]==gameObject){
+                    collissionMatrix[column][row]=null;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+    public void addToRenderQue(GameObject object,int zBuff){
+        Debugger.log("Added to RenderQue: "+object.toString());
+        renderQue.add(new RenderItem(object,zBuff));
+        Collections.sort(renderQue);
+    }
+
+    public void addToRenderQue(GameObject object){
+        addToRenderQue(object, renderQue.size());
+    }
+
+    public boolean removeFromRenderQue(GameObject gameObject){
+        for(int i=0;i<renderQue.size();i++){
+            if(renderQue.get(i).getGameObject()==gameObject){
+                renderQue.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean addGameObject(int tileX,int tileY, GameObject object){
+        boolean state=false;
+        addToRenderQue(object);
+        if(object.isCollides()) {
+            state=addToCollisionMatrix(tileX, tileY, object);
+        }
+        if(object instanceof IDestroyable){
+            state=state&&addToDestructionMatrix(tileX, tileY,(IDestroyable) object);
+        }
+        return state;
+    }
+
+    public boolean addBomb(int tileX, int tileY,float timer, int range){
+        if(!isCollision(tileX,tileY)){
+            Bomb bomb=new Bomb(tileX,tileY,timer,range,this);
+            return addGameObject(tileX,tileY,bomb);
+        }else
+            return false;
     }
 }
