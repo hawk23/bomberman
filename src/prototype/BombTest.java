@@ -51,7 +51,7 @@ public class BombTest extends BasicGame {
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
-        tileMap.render(0, 0);
+        tileMap.render(0,0,0,0,20,20,true);
         for(Renderable renderable : renderQue){
             renderable.draw(0,0);
         }
@@ -84,9 +84,6 @@ public class BombTest extends BasicGame {
     @Override
     public void mousePressed(int button, int x, int y) {
         Point point=tileMap.pixelsToTile(x,y);
-        if(!tileMap.isCollision(point.x,point.y)){
-                 Bomb bomb = new Bomb(point.x*BLOCK_SIZE,point.y*BLOCK_SIZE);
-                 renderQue.add(bomb);
-        }
+        tileMap.addBomb(point.x,point.y,100,2);
     }
 }
