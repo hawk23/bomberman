@@ -19,6 +19,8 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	public static final int UPDATES_PER_SECOND          = 40;
 	public static final int UPDATE_RATE                 = 1_000 / UPDATES_PER_SECOND;
 	public static final int TARGET_FPS                  = 100;
+	public static final int GAME_CANVAS_WIDTH			= 1280;
+	public static final int GAME_CANVAS_HEIGHT			= 960;
 	
 	// there will be a native back buffer depending on the actual aspect ratio of the used display
 	// and a buffer for the game canvas - will always be 1280x960
@@ -68,7 +70,8 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	private long        recordedUPS;
 	private long        lastUPS;
 	private long        ups;
-	private boolean     showUPS             = true;
+	
+	
 	
 	public AppGameContainerFSCustom(Game game) throws SlickException {
 		super(game, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight(), true);
@@ -214,10 +217,10 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 			}
 			
 			resetNativeBuffer();
-			buffer_native.setFilter(Image.FILTER_LINEAR);
+			buffer_native.setFilter(Image.FILTER_NEAREST);
 			
 			// this will be the back buffer image we draw our game onto
-			buffer              = new Image(960, 960);
+			buffer              = new Image(GAME_CANVAS_WIDTH, GAME_CANVAS_HEIGHT);
 			buffer_graphics     = buffer.getGraphics();
 			resetGameBuffer();
 		}
@@ -290,8 +293,16 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 		ups++;
 	}
 	
-	public boolean isShowingUPS() {
-		return showUPS;
+	/**
+	 * Updated the FPS counter
+	 */
+	protected void updateFPS() {
+		if (getTime() - lastFPS >= 1000) {
+			lastFPS = getTime();
+			recordedFPS = fps;
+			fps = 0;
+		}
+		fps++;
 	}
 	
 	/**
