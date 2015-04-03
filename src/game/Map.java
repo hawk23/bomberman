@@ -5,14 +5,18 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.tiled.TiledMap;
 
+import slick.extension.AppGameContainerFSCustom;
+
 /**
  * Created by Mario on 30.03.2015.
  */
 public class Map
 {
     public static String    MAP_1               = "res/levels/level1.tmx";
-
+    public static final int TILE_SIZE			= 64;	
+    
     private TiledMap        tileMap             = null;
+    
     private Shape player1;
     private Shape player2;
 
@@ -33,7 +37,7 @@ public class Map
     }
 
     public void render () {
-        this.tileMap.render(0,0);
+        this.tileMap.render((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - tileMap.getWidth() * TILE_SIZE) / 2, 0);
     }
 
     public boolean isBlocked(int x, int y) {
