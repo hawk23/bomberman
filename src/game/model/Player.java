@@ -78,7 +78,7 @@ public class Player extends GameObject implements IDestroyable
 
     /**
      *
-     * @param shape
+     * @param shape - is the tile representation of the player
      * @param map
      * @param game
      * @param playerID
