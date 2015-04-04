@@ -107,11 +107,11 @@ public class Player extends GameObject implements IDestroyable
             case PLAYER_1: {
 
                 Image[] up = {
+                		new Image("res/visuals/classic/players/00/Bman_B_f00.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f01.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f02.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f03.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f04.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f00.png"),
+                        new Image("res/visuals/classic/players/00/Bman_B_f04.png"),             
                         new Image("res/visuals/classic/players/00/Bman_B_f05.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f06.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f07.png"),
