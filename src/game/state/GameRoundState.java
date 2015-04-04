@@ -3,11 +3,15 @@ package game.state;
 import game.Map;
 import game.model.InputConfiguration;
 import game.model.Player;
+
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+
 import slick.extension.AppGameContainerFSCustom;
 import slick.extension.MovementManager_Arrow;
 
@@ -20,14 +24,23 @@ public class GameRoundState extends BombermanGameState
     private Player                      player1             = null;
     private Player                      player2             = null;
 
+    
+    private Graphics map_graphics;
+    private Image map_buffer;
+    private int xOffset = 160;
+    
     public GameRoundState () {
         super (BombermanGameState.GAME_ROUND);
+        
     }
 
     @Override
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.map = new Map();
         this.map.init(Map.MAP_1);
+        
+       	map_buffer = new Image(960, 960);
+    	map_graphics = map_buffer.getGraphics();
 
         // create players and define controls
         InputConfiguration          inputConfiguration1         = new InputConfiguration(Input.KEY_UP, Input.KEY_DOWN, Input.KEY_LEFT, Input.KEY_RIGHT, Input.KEY_RCONTROL);
@@ -42,9 +55,15 @@ public class GameRoundState extends BombermanGameState
 
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
-        this.map.render();
-        this.player1.render(gameContainer, graphics);
-        // this.player2.render(gameContainer, graphics);
+        
+    	resetGraphics();
+    	
+        this.map.render(gameContainer, map_graphics);
+        this.player1.render(gameContainer, map_graphics);
+
+        map_graphics.flush();
+        
+        graphics.drawImage(map_buffer, xOffset, 0);
     }
 
     @Override
@@ -57,5 +76,10 @@ public class GameRoundState extends BombermanGameState
         if (input.isKeyDown(Input.KEY_ESCAPE)) {
             stateBasedGame.enterState(BombermanGameState.MAIN_MENU);
         }
+    }
+    
+    private void resetGraphics() {
+    	map_graphics.clear();
+    	map_graphics.setBackground(Color.black);
     }
 }

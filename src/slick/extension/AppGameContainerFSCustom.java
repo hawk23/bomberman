@@ -249,7 +249,7 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	
 	private void resetGameBuffer() {
 		buffer_graphics.clear();
-		buffer_graphics.setColor(Color.red);
+		buffer_graphics.setColor(Color.gray);
 		buffer_graphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());		
 	}
 	

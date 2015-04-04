@@ -1,5 +1,9 @@
 package game;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
@@ -20,12 +24,15 @@ public class Map
     private Shape player1;
     private Shape player2;
 
-    public Map () {
-
+    public Map () throws SlickException {
+ 
     }
 
     public void init (String map) {
-        try {
+        
+    	
+    	
+    	try {
             this.tileMap = new TiledMap (map);
 
             player1 = new Rectangle(tileMap.getObjectX(0, 0), tileMap.getObjectY(0, 0), tileMap.getObjectWidth(0, 0), tileMap.getObjectHeight(0, 0));
@@ -36,10 +43,11 @@ public class Map
         }
     }
 
-    public void render () {
-        this.tileMap.render((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - tileMap.getWidth() * TILE_SIZE) / 2, 0);
-    }
+    public void render(GameContainer gameContainer, Graphics map_graphics) {
+		tileMap.render(0, 0);
+	}
 
+    
     public boolean isBlocked(int x, int y) {
         // TODO: implement collissions
 
@@ -53,4 +61,5 @@ public class Map
     public Shape getPlayer2() {
         return player2;
     }
+	
 }
