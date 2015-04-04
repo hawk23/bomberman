@@ -14,6 +14,13 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 
+
+/**
+ * 
+ * @author Albert
+ * 
+ * fullscreen AppGameContainer
+ */
 public class AppGameContainerFSCustom extends AppGameContainer {
 
 	public static final int UPDATES_PER_SECOND          = 40;
@@ -164,9 +171,17 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 				Log.error(e);
 				throw new SlickException("Game.render() failure - check the game code.");
 			}
+			buffer_graphics.flush();
+			
+			// draw the game canvas in the center of the native back buffer
 			buffer_native_graphics.drawImage(buffer, (buffer_native.getWidth() - buffer.getWidth()) / 2, 
 					(buffer_native.getHeight() - buffer.getHeight()) / 2);
+			
+			buffer_native_graphics.flush();
+			
+			// scale to actual screen resolution
 			tmp_buffer = buffer_native.getScaledCopy(this.getWidth(), this.getHeight());
+			
 			getGraphics().drawImage(tmp_buffer, 0, 0);
 			getGraphics().resetTransform();
 			
@@ -216,8 +231,9 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 					break;
 			}
 			
-			resetNativeBuffer();
 			buffer_native.setFilter(Image.FILTER_NEAREST);
+			resetNativeBuffer();
+			
 			
 			// this will be the back buffer image we draw our game onto
 			buffer              = new Image(GAME_CANVAS_WIDTH, GAME_CANVAS_HEIGHT);
@@ -232,19 +248,15 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	}
 	
 	private void resetGameBuffer() {
+		buffer_graphics.clear();
 		buffer_graphics.setColor(Color.red);
-		buffer_graphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
-		buffer_graphics.resetTransform();
-		buffer_graphics.resetFont();
-		buffer_graphics.resetLineWidth();	
+		buffer_graphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());		
 	}
 	
 	private void resetNativeBuffer() {
+		buffer_native_graphics.clear();
 		buffer_native_graphics.setColor(Color.black);
 		buffer_native_graphics.fillRect(0, 0, buffer_native.getWidth(), buffer_native.getHeight());
-		buffer_native_graphics.resetTransform();
-		buffer_native_graphics.resetFont();
-		buffer_native_graphics.resetLineWidth();	
 	}
 	
 	/**
