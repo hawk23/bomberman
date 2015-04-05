@@ -20,13 +20,19 @@ public class Player extends GameObject implements IDestroyable
 
     private     Map                         map;
     private     InputManager				inputManager;
-
-    private float posX;
-    private float posY;
+    
+    private float drawPosX;
+    private float drawPosY;
     private float targetX;
     private float targetY;
     private float originalX;
     private float originalY;
+    
+    /**
+     * for render interpolation
+     */
+    private float lastDrawPosX;
+    private float lastDrawPosY;
 
     private Animation animation_actual;
     private Animation animation_up;
@@ -34,22 +40,10 @@ public class Player extends GameObject implements IDestroyable
     private Animation animation_left;
     private Animation animation_right;
 
-
-    /**
-     * for render interpolation
-     */
-    private float lastPosX;
-    private float lastPosY;
-
     /**
      * speed of the player
      */
     private float speed;
-
-    /**
-     * actual image to render
-     */
-    private Image image;
 
     /**
      * interpolation value for the movement between two points
@@ -85,18 +79,21 @@ public class Player extends GameObject implements IDestroyable
      * @param shape - is the tile representation of the player
      * @param map
      * @param playerID
+     * @param inputManager
      * @throws SlickException
      */
     public Player(Shape shape, Map map, int playerID, InputManager inputManager) throws SlickException {
-        this.map                    = map;
+        super((int)shape.getX(), (int)shape.getY());
+    	
+    	this.map                    = map;
         this.shape                  = shape;
         this.inputManager	        = inputManager;
         this.collides               = true;
 
-        posX                        = lastPosX  = shape.getX();
-        posY                        = lastPosY  = shape.getY();
-        originalX                   = targetX   = posX;
-        originalY                   = targetY   = posY;
+        drawPosX                    = lastDrawPosX  = posX;
+        drawPosY                    = lastDrawPosY  = posY;
+        originalX                   = targetX   = drawPosX;
+        originalY                   = targetY   = drawPosY;
         speed                       = 1.7f;
         moving                      = false;
         movementDirection           = Direction.DOWN;
@@ -177,15 +174,17 @@ public class Player extends GameObject implements IDestroyable
 
         g.setColor(Color.green);
         g.draw(shape);
-        image.draw((posX - lastPosX) * interpolate + lastPosX, (posY - lastPosY) * interpolate + lastPosY - shape.getHeight() - 15);
-        g.drawString(bomb, posX, posY - 64);
+        image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY - shape.getHeight() - 15);
+        g.drawString(bomb, drawPosX, drawPosY - 64);
+        g.drawString("tileX: " + posX, 0, 0);
+        g.drawString("tileY: " + posY, 0, 15);
     }
 
     public void update(GameContainer container, int delta) throws SlickException {
 
         float deltaInSecs = (float)delta * 0.001f;
-        lastPosX = posX;
-        lastPosY = posY;
+        lastDrawPosX = drawPosX;
+        lastDrawPosY = drawPosY;
 
         this.inputManager.update();
         direction = this.inputManager.getDirection();
@@ -198,9 +197,9 @@ public class Player extends GameObject implements IDestroyable
             switch(direction) {
 
                 case UP:
-                    originalY = posY;
+                    originalY = drawPosY;
                     targetY = originalY - 64f;
-                    targetX = originalX = posX;
+                    targetX = originalX = drawPosX;
                     moving = true;
                     movementDirection = Direction.UP;
                     animation_actual = animation_up;
@@ -208,9 +207,9 @@ public class Player extends GameObject implements IDestroyable
                     break;
 
                 case DOWN:
-                    originalY = posY;
+                    originalY = drawPosY;
                     targetY = originalY + 64f;
-                    targetX = originalX = posX;
+                    targetX = originalX = drawPosX;
                     moving = true;
                     movementDirection = Direction.DOWN;
                     animation_actual = animation_down;
@@ -218,9 +217,9 @@ public class Player extends GameObject implements IDestroyable
                     break;
 
                 case LEFT:
-                    originalX = posX;
+                    originalX = drawPosX;
                     targetX = originalX - 64f;
-                    targetY = originalY = posY;
+                    targetY = originalY = drawPosY;
                     moving = true;
                     movementDirection = Direction.LEFT;
                     animation_actual = animation_left;
@@ -228,9 +227,9 @@ public class Player extends GameObject implements IDestroyable
                     break;
 
                 case RIGHT:
-                    originalX = posX;
+                    originalX = drawPosX;
                     targetX = originalX + 64f;
-                    targetY = originalY = posY;
+                    targetY = originalY = drawPosY;
                     moving = true;
                     movementDirection = Direction.RIGHT;
                     animation_actual = animation_right;
@@ -298,25 +297,25 @@ public class Player extends GameObject implements IDestroyable
                         case UP:
                             originalY = targetY;
                             targetY = originalY - 64f;
-                            targetX = originalX = posX;
+                            targetX = originalX = drawPosX;
                             break;
 
                         case DOWN:
                             originalY = targetY;
                             targetY = originalY + 64f;
-                            targetX = originalX = posX;
+                            targetX = originalX = drawPosX;
                             break;
 
                         case LEFT:
                             originalX = targetX;
                             targetX = originalX - 64f;
-                            targetY = originalY = posY;
+                            targetY = originalY = drawPosY;
                             break;
 
                         case RIGHT:
                             originalX = targetX;
                             targetX = originalX + 64f;
-                            targetY = originalY = posY;
+                            targetY = originalY = drawPosY;
                             break;
 
                         default:
@@ -340,8 +339,8 @@ public class Player extends GameObject implements IDestroyable
             }
 
             // interpolate x and y coordinates
-            posX = lerp(originalX, targetX, movementInterpolation);
-            posY = lerp(originalY, targetY, movementInterpolation);
+            drawPosX = lerp(originalX, targetX, movementInterpolation);
+            drawPosY = lerp(originalY, targetY, movementInterpolation);
 
         }
 
@@ -375,6 +374,8 @@ public class Player extends GameObject implements IDestroyable
 
         if (movementInterpolation >= 0.5f) {
             shape.setLocation(targetX, targetY);
+            posX = (int) targetX;
+            posY = (int) targetY;
         }
         
         bomb = "";
