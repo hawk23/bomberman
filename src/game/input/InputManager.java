@@ -77,7 +77,7 @@ public class InputManager {
 		// Drop Key pressed?
 		bombDrop = false;
 		
-		if (input.isKeyDown(inputConfiguration.getDrop())) {
+		if (input.isKeyPressed(inputConfiguration.getDrop())) {
 			bombDrop = true;
 		}	
 	}

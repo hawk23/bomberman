@@ -76,6 +76,10 @@ public class Player extends GameObject implements IDestroyable
      */
     private Shape shape;
 
+    
+    // testing
+    private String bomb = "";
+    
     /**
      *
      * @param shape - is the tile representation of the player
@@ -174,6 +178,7 @@ public class Player extends GameObject implements IDestroyable
         g.setColor(Color.green);
         g.draw(shape);
         image.draw((posX - lastPosX) * interpolate + lastPosX, (posY - lastPosY) * interpolate + lastPosY - shape.getHeight() - 15);
+        g.drawString(bomb, posX, posY - 64);
     }
 
     public void update(GameContainer container, int delta) throws SlickException {
@@ -370,6 +375,11 @@ public class Player extends GameObject implements IDestroyable
 
         if (movementInterpolation >= 0.5f) {
             shape.setLocation(targetX, targetY);
+        }
+        
+        bomb = "";
+        if (inputManager.bombDrop()) {
+        	bomb = "drop bomb";
         }
     }
 
