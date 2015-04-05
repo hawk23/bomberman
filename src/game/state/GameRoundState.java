@@ -1,7 +1,8 @@
 package game.state;
 
 import game.Map;
-import game.model.InputConfiguration;
+import game.input.InputConfiguration;
+import game.input.InputManager;
 import game.model.Player;
 
 import org.newdawn.slick.Color;
@@ -11,9 +12,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-
-import slick.extension.AppGameContainerFSCustom;
-import slick.extension.MovementManager_Arrow;
 
 /**
  * Created by Mario on 30.03.2015.
@@ -44,9 +42,9 @@ public class GameRoundState extends BombermanGameState
 
         // create players and define controls
         InputConfiguration          inputConfiguration1         = new InputConfiguration(Input.KEY_UP, Input.KEY_DOWN, Input.KEY_LEFT, Input.KEY_RIGHT, Input.KEY_RCONTROL);
-        MovementManager_Arrow       movementManager_arrow1      = new MovementManager_Arrow (gameContainer.getInput(), inputConfiguration1);
+        InputManager       			inputManager1      			= new InputManager(gameContainer.getInput(), inputConfiguration1);
 
-        this.player1                                            = new Player(map.getPlayer1(), map, (AppGameContainerFSCustom) gameContainer, stateBasedGame, Player.PLAYER_1, movementManager_arrow1);
+        this.player1                                            = new Player(map.getPlayer1(), map, Player.PLAYER_1, inputManager1);
 
         /*
         TODO: create player 2

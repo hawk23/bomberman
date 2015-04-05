@@ -1,26 +1,37 @@
-package slick.extension;
-import game.model.Direction;
-import game.model.InputConfiguration;
+package game.input;
+
 import org.newdawn.slick.Input;
 
 /**
  * 
  * @author Albert
- * 
- * smooth movement manager for arrow keys (up, down, left, right)
+ * InputManager for the player objects - has an InputConfiguration (Keys for moving and key for dropping a bomb)
  */
-public class MovementManager_Arrow extends MovementManager {
-
-	private Direction direction;
-	private Direction directionPressed;
-	private int lastKeyPressed = -1;
+public class InputManager {
 	
-	public MovementManager_Arrow(Input input, InputConfiguration inputConfiguration) {
-		super(input, inputConfiguration);
+	private Input input = null;
+    private InputConfiguration inputConfiguration = null;
+    private Direction direction = null;
+	private Direction directionPressed = null;
+	private int lastKeyPressed = -1;
+	private boolean bombDrop = false;
+    
+    
+	/**
+	 * 
+	 * @param input of slick game container and an input-configuration
+	 */
+	public InputManager(Input input, InputConfiguration inputConfiguration) {
+		this.input = input;
+        this.inputConfiguration = inputConfiguration;
 	}
-
+	
+	/**
+	 * this method should be called each update to get the currently pressed key
+	 */
 	public void update() {
 		
+		// Direction ?
 		if (input.isKeyPressed(inputConfiguration.getUp())) {
 			lastKeyPressed = inputConfiguration.getUp();
 			directionPressed = Direction.UP;
@@ -61,10 +72,29 @@ public class MovementManager_Arrow extends MovementManager {
 				}
 				
 			}
+		}
+		
+		// Drop Key pressed?
+		bombDrop = false;
+		
+		if (input.isKeyDown(inputConfiguration.getDrop())) {
+			bombDrop = true;
 		}	
 	}
-
+	
+	/**
+	 * 
+	 * @return current pressed Direction
+	 */
 	public Direction getDirection() {
 		return direction;
+	}
+	
+	/**
+	 * 
+	 * @return true if drop key is pressed
+	 */
+	public boolean bombDrop() {
+		return bombDrop;
 	}
 }

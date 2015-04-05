@@ -1,4 +1,4 @@
-package game.model;
+package game.input;
 
 /**
  * Created by Albert on 31.03.2015.

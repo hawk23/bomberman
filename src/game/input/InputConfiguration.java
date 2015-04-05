@@ -1,4 +1,4 @@
-package game.model;
+package game.input;
 
 /**
  * Created by Mario on 30.03.2015.

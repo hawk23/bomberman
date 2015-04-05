@@ -1,11 +1,13 @@
 package game.model;
 
 import game.Map;
+import game.input.Direction;
+import game.input.InputManager;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.state.StateBasedGame;
+
 import slick.extension.AppGameContainerFSCustom;
-import slick.extension.MovementManager;
 
 /**
  * Created by Albert on 30.03.2015.
@@ -16,10 +18,8 @@ public class Player extends GameObject implements IDestroyable
     public static final int PLAYER_2 = 1;
     //......
 
-    private     StateBasedGame              game;
     private     Map                         map;
-    private     AppGameContainerFSCustom    gameContainer;
-    private     MovementManager             movementManager;
+    private     InputManager				inputManager;
 
     private float posX;
     private float posY;
@@ -80,16 +80,13 @@ public class Player extends GameObject implements IDestroyable
      *
      * @param shape - is the tile representation of the player
      * @param map
-     * @param game
      * @param playerID
      * @throws SlickException
      */
-    public Player(Shape shape, Map map, AppGameContainerFSCustom gameContainer, StateBasedGame game, int playerID, MovementManager movementManager) throws SlickException {
-        this.game                   = game;
+    public Player(Shape shape, Map map, int playerID, InputManager inputManager) throws SlickException {
         this.map                    = map;
         this.shape                  = shape;
-        this.gameContainer          = gameContainer;
-        this.movementManager        = movementManager;
+        this.inputManager	        = inputManager;
         this.collides               = true;
 
         posX                        = lastPosX  = shape.getX();
@@ -172,7 +169,7 @@ public class Player extends GameObject implements IDestroyable
 
     public void render(GameContainer container, Graphics g) throws SlickException {
 
-        float interpolate = this.gameContainer.getRenderInterpolation();
+        float interpolate = ((AppGameContainerFSCustom)container).getRenderInterpolation();
 
         g.setColor(Color.green);
         g.draw(shape);
@@ -185,8 +182,8 @@ public class Player extends GameObject implements IDestroyable
         lastPosX = posX;
         lastPosY = posY;
 
-        this.movementManager.update();
-        direction = this.movementManager.getDirection();
+        this.inputManager.update();
+        direction = this.inputManager.getDirection();
 
         // stopped
         if (!moving) {
