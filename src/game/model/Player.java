@@ -1,6 +1,7 @@
 package game.model;
 
 import game.Map;
+import game.config.PlayerConfig;
 import game.input.Direction;
 import game.input.InputManager;
 
@@ -18,7 +19,7 @@ public class Player extends GameObject implements IDestroyable
     public static final int PLAYER_2 = 1;
     //......
 
-    private     Map                         map;
+    private     BombermanMap                map;
     private     InputManager				inputManager;
     
     private float drawPosX;
@@ -70,6 +71,7 @@ public class Player extends GameObject implements IDestroyable
      */
     private Shape shape;
 
+    private PlayerConfig playerConfig;
     
     // testing
     private String bomb = "";
@@ -82,12 +84,13 @@ public class Player extends GameObject implements IDestroyable
      * @param inputManager
      * @throws SlickException
      */
-    public Player(Shape shape, Map map, int playerID, InputManager inputManager) throws SlickException {
+    public Player(Shape shape, BombermanMap map, int playerID, InputManager inputManager, PlayerConfig playerConfig) throws SlickException {
         super((int)shape.getX(), (int)shape.getY());
     	
     	this.map                    = map;
         this.shape                  = shape;
         this.inputManager	        = inputManager;
+        this.playerConfig           = playerConfig;
         this.collides               = true;
 
         drawPosX                    = lastDrawPosX  = posX;

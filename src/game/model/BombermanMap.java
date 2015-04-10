@@ -3,11 +3,14 @@ package game.model;
 import org.newdawn.slick.Game;
 import org.newdawn.slick.Renderable;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.tiled.TiledMap;
 
-import java.awt.*;
+import java.awt.Point;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Roland Schreier on 03.04.2015.
@@ -55,7 +58,10 @@ public class BombermanMap extends TiledMap{
      *      no need for sorting.
      */
     private java.util.List<RenderItem> renderQue;
-
+    private Shape player1Shape;
+    private Shape player2Shape;
+    private Player player1;
+    private Player player2;
 
     public BombermanMap(String ref) throws SlickException {
         super(ref);
@@ -86,6 +92,9 @@ public class BombermanMap extends TiledMap{
         renderQue=new ArrayList<RenderItem>();
         initLayers();
         initMatrixes();
+
+        this.player1Shape = new Rectangle(this.getObjectX(0, 0), this.getObjectY(0, 0), this.getObjectWidth(0, 0), this.getObjectHeight(0, 0));
+        this.player2Shape = new Rectangle(this.getObjectX(0, 1), this.getObjectY(0, 1), this.getObjectWidth(0, 1), this.getObjectHeight(0, 1));
     }
 
     /**
@@ -278,5 +287,43 @@ public class BombermanMap extends TiledMap{
             return addGameObject(tileX,tileY,bomb);
         }else
             return false;
+    }
+
+    public boolean isBlocked (int x, int y)
+    {
+        // TODO
+        return false;
+    }
+
+    public Shape getPlayer1Shape() {
+        return player1Shape;
+    }
+
+    public void setPlayer1Shape(Shape player1Shape) {
+        this.player1Shape = player1Shape;
+    }
+
+    public Shape getPlayer2Shape() {
+        return player2Shape;
+    }
+
+    public void setPlayer2Shape(Shape player2Shape) {
+        this.player2Shape = player2Shape;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    public void setPlayer2(Player player2) {
+        this.player2 = player2;
     }
 }

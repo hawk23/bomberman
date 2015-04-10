@@ -6,6 +6,7 @@ import game.PauseMenuScreen;
 import game.config.GameRoundConfig;
 import game.config.InputConfiguration;
 import game.input.InputManager;
+import game.model.BombermanMap;
 import game.model.Player;
 
 import org.newdawn.slick.Color;
@@ -29,8 +30,10 @@ public class GameRoundState extends BombermanGameState
 	
 	private GameRoundConfig 		gameRoundConfig		= null;
     
-	private Map                     map                 = null;
+	private BombermanMap            map                 = null;
     private Player                  player1             = null;
+    private Player                  player2             = null;
+
 
     private Graphics 				map_graphics		= null;
     private Image 					map_buffer			= null;
@@ -57,7 +60,7 @@ public class GameRoundState extends BombermanGameState
         
     	if (!paused) {
     		resetGraphics();
-            this.map.render(container, map_graphics);
+            this.map.render(0,0,0,0,20,20,true);
             this.player1.render(container, map_graphics);
             map_graphics.flush();
             graphics.drawImage(map_buffer, xOffset, 0);
@@ -105,9 +108,6 @@ public class GameRoundState extends BombermanGameState
             	
             }
     	}
-        
-
-        
     }
     
     private void resetGraphics() {
@@ -120,16 +120,14 @@ public class GameRoundState extends BombermanGameState
     	
     	paused = false;
     	
-    	this.map = new Map();
-        this.map.init(Map.MAP_1);
+    	this.map = new BombermanMap(this.gameRoundConfig.getMapConfig().getPath());
 
         // create players and define controls
-        InputConfiguration          inputConfiguration1         = new InputConfiguration(Input.KEY_UP, Input.KEY_DOWN, Input.KEY_LEFT, Input.KEY_RIGHT, Input.KEY_RCONTROL);
-        InputManager       			inputManager1      			= new InputManager(container.getInput(), inputConfiguration1);
+        InputManager    inputManager1   = new InputManager(container.getInput(), this.gameRoundConfig.getCurrentInputConfigs().get(0));
+        InputManager    inputManager2   = new InputManager(container.getInput(), this.gameRoundConfig.getCurrentInputConfigs().get(1));
 
-        this.player1                                            = new Player(map.getPlayer1(), map, Player.PLAYER_1, inputManager1);
-
-
+        this.player1                    = new Player(this.map.getPlayer1Shape(), this.map, 0, inputManager1, this.gameRoundConfig.getCurrentPlayerConfigs().get(0));
+        //this.player2                    = new Player(this.map.getPlayer2Shape(), this.map, 1, inputManager2, this.gameRoundConfig.getCurrentPlayerConfigs().get(1));
     }
     
     @Override
