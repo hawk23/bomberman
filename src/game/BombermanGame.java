@@ -1,5 +1,6 @@
 package game;
 
+import game.config.InputConfiguration;
 import game.config.MapConfig;
 import game.config.PlayerConfig;
 import game.state.GameRoundState;
@@ -7,6 +8,7 @@ import game.state.IntroState;
 import game.state.MainMenuState;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -16,8 +18,9 @@ public class BombermanGame extends StateBasedGame {
 
 	public static final String GAME_NAME = "Bomberman";
 
-    private ArrayList<PlayerConfig> playerConfigs   = new ArrayList<PlayerConfig>();
-    private ArrayList<MapConfig>    mapConfigs      = new ArrayList<MapConfig>();
+    private ArrayList<PlayerConfig>         playerConfigs           = new ArrayList<PlayerConfig>();
+    private ArrayList<MapConfig>            mapConfigs              = new ArrayList<MapConfig>();
+    private ArrayList<InputConfiguration>   inputConfigurations     = new ArrayList<InputConfiguration>();
 
 	public BombermanGame() throws SlickException
     {
@@ -42,6 +45,7 @@ public class BombermanGame extends StateBasedGame {
     {
         this.createPlayerConfig();
         this.createMapConfig();
+        this.createInputConfig();
     }
 
     private void createPlayerConfig () throws SlickException
@@ -82,6 +86,15 @@ public class BombermanGame extends StateBasedGame {
 
         this.mapConfigs.add(mapConfig1);
         this.mapConfigs.add(mapConfig2);
+    }
+
+    private void createInputConfig () throws SlickException
+    {
+        InputConfiguration inputConfiguration1 = new InputConfiguration(Input.KEY_UP, Input.KEY_DOWN, Input.KEY_LEFT, Input.KEY_RIGHT, Input.KEY_RCONTROL);
+        InputConfiguration inputConfiguration2 = new InputConfiguration(Input.KEY_W, Input.KEY_S, Input.KEY_A, Input.KEY_D, Input.KEY_LCONTROL);
+
+        this.inputConfigurations.add(inputConfiguration1);
+        this.inputConfigurations.add(inputConfiguration2);
     }
 
 	public ArrayList<PlayerConfig> getPlayerConfigs() {
