@@ -57,6 +57,7 @@ public class MainMenuState extends BombermanGameState
 		        
 		        case MainMenuScreen.GAME_START_PVP: 
 		        	((GameRoundState)game.getState(GAME_ROUND)).setGameRoundConfig(createConfig(game));
+		        	game.enterState(GAME_ROUND);
 		        	break;
 	        }
         	
@@ -79,7 +80,9 @@ public class MainMenuState extends BombermanGameState
     	
     	GameRoundConfig config = new GameRoundConfig();
     	config.setCurrentPlayerConfigs(((BombermanGame)game).getPlayerConfigs());
-    	
+    	config.setCurrentInputConfigs(((BombermanGame)game).getInputConfigurations());
+    	config.setMapConfig(mainMenu.getSelectedMapConfig());
+    	config.setTimeLimit(1_000 * 60 * 5);
     	return config;
     }
 }

@@ -104,4 +104,8 @@ public class BombermanGame extends StateBasedGame {
 	public ArrayList<MapConfig> getMapConfigs() {
 		return mapConfigs;
 	}
+
+	public ArrayList<InputConfiguration> getInputConfigurations() {
+		return inputConfigurations;
+	}
 }

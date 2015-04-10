@@ -345,4 +345,18 @@ public class MainMenuScreen extends OptionScreen {
 		this.action = action;
 	}
 
+	public MapConfig getSelectedMapConfig() {
+		return selectedMapConfig;
+	}
+
+	public void setSelectedMapConfig(MapConfig selectedMapConfig) {
+		this.selectedMapConfig = selectedMapConfig;
+	}
+	
+	@Override
+	public void reset() {
+		selectedMapConfig = null;
+		super.reset();
+	}
+
 }
