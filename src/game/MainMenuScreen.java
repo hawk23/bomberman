@@ -4,25 +4,26 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import game.config.MapConfig;
 import game.options.Option;
 import game.options.OptionLayer;
 import game.options.OptionScreen;
-import game.state.BombermanGameState;
 
 public class MainMenuScreen extends OptionScreen {
-
-	private static final int GAME_EXIT = 0;
-	private static final int GAME_START_PVP = 1;
-	private static final int GAME_START_SP = 2;
 	
-	private int action = -1;
+	public static final int NO_ACTION = -1;
+	public static final int GAME_EXIT = 0;
+	public static final int GAME_START_PVP = 1;
+	public static final int GAME_START_SP = 2;
 	
+	private int action = NO_ACTION;
 	
-	public MainMenuScreen(BasicGameState state, int width, int height) {
-		super(state, width, height);
+	private MapConfig selectedMapConfig = null;
+	
+	public MainMenuScreen(StateBasedGame game, int width, int height) {
+		super(game, width, height);
 	}
 
 	public void init() throws SlickException {
@@ -94,38 +95,33 @@ public class MainMenuScreen extends OptionScreen {
 		layers.add(layer_3);
 		layer_3.resetOptionLayer();
 		
+		// Layer 4: options - Map Selection
+		OptionLayer layer_4 = new OptionLayer(this);
+		
+		Image heading_4 = new Image("res/visuals/option_pics/heading_mapselection.png");
+		layer_4.setHeading(heading_4, (width - heading_4.getWidth()) / 2, 300);
+		
+		Option option_4_0 = new Option("res/visuals/option_pics/option_map1.png", "res/visuals/option_pics/option_map1_selected.png");
+		option_4_0.setCoordinates(200, 500);
+		layer_4.addOption(option_4_0);
+		
+		Option option_4_1 = new Option("res/visuals/option_pics/option_map2.png", "res/visuals/option_pics/option_map2_selected.png");
+		option_4_1.setCoordinates(200, 600);
+		layer_4.addOption(option_4_1);
+
+		
+		layers.add(layer_4);
+		layer_4.resetOptionLayer();
+		
+		
 		// start Layer = Layer 0
 		setLayerIndex(0);
-		action = -1;
 	}
 	
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) {
-		
-		// check actions
-		if (action != -1) {
-			switch(action) {
-			
-				case GAME_EXIT:
-					action = -1;
-					container.exit();
-					break;
-					
-				case GAME_START_PVP:
-					action = -1;
-					game.enterState(BombermanGameState.GAME_ROUND);
-					break;
-					
-				case GAME_START_SP:
-					action = -1;
-					break;
-					
-				default: 
-					break;
-			}
-		}
 		
 	}
 
@@ -145,6 +141,8 @@ public class MainMenuScreen extends OptionScreen {
 				case 2: break;
 				
 				case 3: getActualLayer().lastOption(); break;
+				
+				case 4: getActualLayer().lastOption(); break;
 			}
 		}
 		
@@ -159,6 +157,8 @@ public class MainMenuScreen extends OptionScreen {
 				case 2: break;
 				
 				case 3: getActualLayer().nextOption(); break;
+				
+				case 4: getActualLayer().nextOption(); break;
 			}
 		}
 		
@@ -173,6 +173,8 @@ public class MainMenuScreen extends OptionScreen {
 				case 2: break;
 				
 				case 3: break;
+				
+				case 4: break;
 			}
 		}
 		
@@ -187,6 +189,8 @@ public class MainMenuScreen extends OptionScreen {
 				case 2: break;
 				
 				case 3: break;
+				
+				case 4: break;
 			}
 		}
 		
@@ -262,12 +266,11 @@ public class MainMenuScreen extends OptionScreen {
 					
 						// singleplayer
 						case 0: 
-							action = GAME_START_SP;
 							break;
 						
 						// pvp
 						case 1: 
-							action = GAME_START_PVP;
+							setLayerIndex(4);
 							break;
 						
 						// back
@@ -278,6 +281,30 @@ public class MainMenuScreen extends OptionScreen {
 					}
 					break;
 				}
+				
+				// Layer 4
+				case 4: {
+				
+					switch(getActualLayer().getOptionIndex()) {
+					
+						// map 0
+						case 0: 
+							selectedMapConfig = ((BombermanGame)game).getMapConfigs().get(0);
+							action = GAME_START_PVP;
+							break;
+						
+						// map 1
+						case 1: 
+							selectedMapConfig = ((BombermanGame)game).getMapConfigs().get(1);
+							action = GAME_START_PVP;
+							break;
+						
+
+					}
+					
+					break;
+				}
+				
 			}
 		}
 		
@@ -291,23 +318,31 @@ public class MainMenuScreen extends OptionScreen {
 					break;
 				
 				case 1: 
-					//layers.get(0).resetOptionLayer();
 					setLayerIndex(0);
 					break;
 				
 				case 2: 
-					//layers.get(0).resetOptionLayer();
 					setLayerIndex(0);
 					break;
 				
 				case 3: 
-					//layers.get(0).resetOptionLayer();
 					setLayerIndex(0);
+					break;
+					
+				case 4: 
+					setLayerIndex(3);
 					break;
 			}
 		}
 	
 	}
 
+	public int getAction() {
+		return action;
+	}
+
+	public void setAction(int action) {
+		this.action = action;
+	}
 
 }

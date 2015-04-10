@@ -70,17 +70,25 @@ public class BombermanGame extends StateBasedGame {
     {
         MapConfig mapConfig1 = new MapConfig();
         mapConfig1.setId(0);
-        mapConfig1.setPath("res/level/0/map.tmx");
-        mapConfig1.setImage("res/level/0/thumbnail.png");
+        mapConfig1.setPath("res/levels/0/map.tmx");
+        mapConfig1.setImage("res/levels/0/thumbnail.png");
         mapConfig1.setName("Map 1");
 
         MapConfig mapConfig2 = new MapConfig();
         mapConfig2.setId(1);
-        mapConfig2.setPath("res/level/1/map.tmx");
-        mapConfig2.setImage("res/level/1/thumbnail.png");
+        mapConfig2.setPath("res/levels/1/map.tmx");
+        mapConfig2.setImage("res/levels/1/thumbnail.png");
         mapConfig2.setName("Map 2");
 
         this.mapConfigs.add(mapConfig1);
         this.mapConfigs.add(mapConfig2);
     }
+
+	public ArrayList<PlayerConfig> getPlayerConfigs() {
+		return playerConfigs;
+	}
+
+	public ArrayList<MapConfig> getMapConfigs() {
+		return mapConfigs;
+	}
 }

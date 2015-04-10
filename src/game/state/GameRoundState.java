@@ -1,6 +1,7 @@
 package game.state;
 
 import game.Map;
+import game.config.GameRoundConfig;
 import game.config.InputConfiguration;
 import game.input.InputManager;
 import game.model.Player;
@@ -18,6 +19,7 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class GameRoundState extends BombermanGameState
 {
+	private GameRoundConfig 			gameRoundConfig		= null;
     private Map                         map                 = null;
     private Player                      player1             = null;
 
@@ -86,5 +88,9 @@ public class GameRoundState extends BombermanGameState
     public void leave(GameContainer container, StateBasedGame game) throws SlickException {
     	container.getInput().clearKeyPressedRecord();
     }
+
+	public void setGameRoundConfig(GameRoundConfig gameRoundConfig) {
+		this.gameRoundConfig = gameRoundConfig;
+	}
 
 }

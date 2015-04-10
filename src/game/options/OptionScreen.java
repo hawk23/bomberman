@@ -1,25 +1,30 @@
 package game.options;
 
+import game.BombermanGame;
+import game.config.MapConfig;
+
 import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 
 public abstract class OptionScreen {
 
-	protected BasicGameState state;
+	protected StateBasedGame game;
 	protected ArrayList<OptionLayer> layers;
 	protected int width;
 	protected int height;
 	protected int layerIndex;
+	protected ArrayList<MapConfig> mapConfigs;
 	
-	public OptionScreen(BasicGameState state, int width, int height) {
+	public OptionScreen(StateBasedGame game, int width, int height) {
 		
-		this.state = state;
+		this.game = game;
 		this.width = width;
 		this.height = height;
 		layers = new ArrayList<OptionLayer>();
@@ -30,10 +35,17 @@ public abstract class OptionScreen {
 	protected abstract void update(GameContainer container, StateBasedGame game, int delta);
 	protected abstract void input(Input input);
 	
-	public void render(GameContainer container, StateBasedGame game, Graphics g) {
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
 		
 		if (getLayerCount() > 0 && layers.size() > layerIndex) {
 			layers.get(layerIndex).render(container, game, g);		
+		}
+		
+		if (layerIndex == 4) {
+			String path = ((BombermanGame)game).getMapConfigs().get(getActualLayer().getOptionIndex()).getImage();
+			Image tmp = new Image(path);
+			
+			g.drawImage(tmp.getScaledCopy(0.7f), 600, 450);
 		}
 		
 	}
