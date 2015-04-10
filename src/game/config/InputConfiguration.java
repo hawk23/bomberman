@@ -1,4 +1,4 @@
-package game.input;
+package game.config;
 
 /**
  * Created by Mario on 30.03.2015.

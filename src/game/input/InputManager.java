@@ -1,5 +1,6 @@
 package game.input;
 
+import game.config.InputConfiguration;
 import org.newdawn.slick.Input;
 
 /**

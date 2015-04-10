@@ -20,7 +20,7 @@ public class BombTest extends BasicGame {
     public static final int GAME_WIDTH = 1280;
     public static final int GAME_HEIGHT = 960;
     public static final String GAME_NAME = "BombTester";
-    public static final String MAP_PATH = "res/levels/level1.tmx";
+    public static final String MAP_PATH = "res/levels/0/map.tmx";
 
     public static final int UPDATES_PER_SECOND = 40;
     public static final int UPDATE_RATE = 1_000 / UPDATES_PER_SECOND;

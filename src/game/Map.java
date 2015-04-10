@@ -16,7 +16,7 @@ import slick.extension.AppGameContainerFSCustom;
  */
 public class Map
 {
-    public static String    MAP_1               = "res/levels/level1.tmx";
+    public static String    MAP_1               = "res/levels/0/map.tmx";
     public static final int TILE_SIZE			= 64;	
     
     private TiledMap        tileMap             = null;

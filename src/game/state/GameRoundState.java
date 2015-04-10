@@ -1,7 +1,7 @@
 package game.state;
 
 import game.Map;
-import game.input.InputConfiguration;
+import game.config.InputConfiguration;
 import game.input.InputManager;
 import game.model.Player;
 
