@@ -1,6 +1,7 @@
 package game;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -123,6 +124,19 @@ public class MainMenuScreen extends OptionScreen {
 	public void update(GameContainer container, StateBasedGame game,
 			int delta) {
 		
+	}
+	
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+		
+		super.render(container, game, g);
+		
+		if (layerIndex == 4) {
+			String path = ((BombermanGame)game).getMapConfigs().get(getActualLayer().getOptionIndex()).getImage();
+			Image tmp = new Image(path);
+			
+			g.drawImage(tmp.getScaledCopy(0.7f), 600, 450);
+		}
 	}
 
 	@Override

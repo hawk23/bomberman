@@ -248,10 +248,10 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	
 	private void resetGameBuffer() {
 		buffer_graphics.clear();
-		buffer_graphics.setColor(Color.white);
+		buffer_graphics.setColor(Color.black);
 		buffer_graphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
 		buffer_graphics.setFont(getGraphics().getFont());
-		buffer_graphics.setColor(Color.black);
+		buffer_graphics.setColor(Color.white);
 	}
 	
 	private void resetNativeBuffer() {

@@ -3,9 +3,12 @@ package game.state;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+
+import slick.extension.AppGameContainerFSCustom;
 
 /**
  * Created by Mario on 30.03.2015.
@@ -22,21 +25,21 @@ public class IntroState extends BombermanGameState
 	private int time;
 	private boolean leaveIntro;
 	
+	private Image background;
+	
     public IntroState () {
         super(BombermanGameState.INTRO);
     }
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-
+    	background = new Image("res/visuals/backgrounds/intro.png");
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
-    	
-    	graphics.setColor(Color.black);
-    	graphics.drawString("intro", 50, 50);
-      	
+    	background.draw((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - background.getWidth()) / 2,
+    			(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - background.getHeight()) / 2); 	
     }
 
     @Override

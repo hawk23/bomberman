@@ -41,13 +41,6 @@ public abstract class OptionScreen {
 			layers.get(layerIndex).render(container, game, g);		
 		}
 		
-		if (layerIndex == 4) {
-			String path = ((BombermanGame)game).getMapConfigs().get(getActualLayer().getOptionIndex()).getImage();
-			Image tmp = new Image(path);
-			
-			g.drawImage(tmp.getScaledCopy(0.7f), 600, 450);
-		}
-		
 	}
 	
 	protected int getLayerCount() {
