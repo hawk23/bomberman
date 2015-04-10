@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="15" tilewidth="64" tileheight="64" nextobjectid="8">
  <tileset firstgid="1" name="bomber_tileset" tilewidth="64" tileheight="64">
   <image source="bomber_tileset_2.png" width="960" height="960"/>
@@ -14,7 +13,7 @@
    </properties>
   </tile>
  </tileset>
- <layer name="background" width="15" height="15" visible="0">
+ <layer name="background" width="15" height="15">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC2NkYGBgHMWjeBQPGAYAv/M/3IQDAAA=
   </data>
@@ -24,12 +23,12 @@
    H4sIAAAAAAAAC2NmYGBgpgDDABMRGAaQ9TJD5Yih0fUSYyey3dS0Fxlg8yOyOnR7CdmPrg45nLHZic1uatpLqX+HWvwSazcDml5yMQCjF+2ohAMAAA==
   </data>
  </layer>
- <layer name="foreground" width="15" height="15" visible="0">
+ <layer name="foreground" width="15" height="15">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC2NgGAWjYBQMJAAA7Ly31YQDAAA=
   </data>
  </layer>
- <objectgroup name="spawnpoints">
+ <objectgroup name="spawnpoints" width="960" height="960">
   <object id="4" name="spawn_player1" x="64" y="64" width="64" height="64" visible="0"/>
   <object id="5" name="spawn_player2" x="832" y="64" width="64" height="64" visible="0"/>
   <object id="6" name="spawn_player3" x="64" y="832" width="64" height="64" visible="0"/>
