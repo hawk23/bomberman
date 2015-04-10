@@ -10,9 +10,6 @@ public class GameRoundConfig
     private MapConfig mapConfig;
     private ArrayList<PlayerConfig> currentPlayerConfigs;
     private ArrayList<InputConfiguration> currentInputConfigs;
-    /**
-     * time limit in millisecs
-     */
     private int timeLimit;
 
     public MapConfig getMapConfig() {
@@ -39,6 +36,9 @@ public class GameRoundConfig
         this.currentInputConfigs = currentInputConfigs;
     }
 
+    /**
+     * time limit in millisecs
+     */
     public int getTimeLimit() {
         return timeLimit;
     }
