@@ -61,7 +61,7 @@ public class GameRoundState extends BombermanGameState
     	if (!paused) {
     		resetGraphics();
             this.map.render(0,0,0,0,20,20,true);
-            this.player1.render(container, map_graphics);
+            this.player1.render(container, game, map_graphics);
             map_graphics.flush();
             graphics.drawImage(map_buffer, xOffset, 0);
     	}
@@ -80,7 +80,7 @@ public class GameRoundState extends BombermanGameState
             	paused = true;
             }
         	
-        	this.player1.update(container, delta);   
+        	this.player1.update(container, game, delta);
             
     	}
     	else {

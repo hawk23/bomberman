@@ -8,6 +8,7 @@ import game.input.InputManager;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Shape;
 
+import org.newdawn.slick.state.StateBasedGame;
 import slick.extension.AppGameContainerFSCustom;
 
 /**
@@ -171,7 +172,7 @@ public class Player extends GameObject implements IDestroyable
         image = animation_down.getImage(0);
     }
 
-    public void render(GameContainer container, Graphics g) throws SlickException {
+    public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g) {
 
         float interpolate = ((AppGameContainerFSCustom)container).getRenderInterpolation();
 
@@ -183,7 +184,7 @@ public class Player extends GameObject implements IDestroyable
         g.drawString("tileY: " + posY, 0, 15);
     }
 
-    public void update(GameContainer container, int delta) throws SlickException {
+    public void update(GameContainer container, StateBasedGame stateBasedGame, int delta) {
 
         float deltaInSecs = (float)delta * 0.001f;
         lastDrawPosX = drawPosX;

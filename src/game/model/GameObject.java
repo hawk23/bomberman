@@ -1,8 +1,7 @@
 package game.model;
 
-import org.newdawn.slick.Renderable;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * Created by Mario on 30.03.2015.
@@ -13,7 +12,7 @@ import org.newdawn.slick.SlickException;
  *      setImage
  *      Constructor
  */
-public class GameObject implements Renderable{
+public abstract class GameObject implements IRenderable, IUpdateable {
     protected int         id;
     protected int         posX;
     protected int         posY;
@@ -61,9 +60,6 @@ public class GameObject implements Renderable{
     public void setCollides(boolean collides) {
         this.collides = collides;
     }
-
-    @Override
-    public void draw(float v, float v1) { image.draw(posX+v,posY+v1,1); }
 
     private void setImage(String path){
         if(path==null)

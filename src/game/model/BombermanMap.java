@@ -151,8 +151,10 @@ public class BombermanMap extends TiledMap{
         while (renderQueY<=mapY && renderQueIndex<renderQue.size()) {
             RenderItem item = renderQue.get(renderQueIndex++);
             renderQueY=(item.getGameObject().getPosY())/this.tileHeight;
-            if(renderQueY==mapY)
-                item.getGameObject().draw(0,0);
+            if(renderQueY==mapY){
+                // TODO
+                // item.getGameObject().render(0,0);
+            }
         }
     }
 
