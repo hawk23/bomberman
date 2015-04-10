@@ -250,6 +250,7 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 		buffer_graphics.clear();
 		buffer_graphics.setColor(Color.white);
 		buffer_graphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+		buffer_graphics.setFont(getGraphics().getFont());
 		buffer_graphics.setColor(Color.black);
 	}
 	
@@ -257,6 +258,7 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 		buffer_native_graphics.clear();
 		buffer_native_graphics.setColor(Color.black);
 		buffer_native_graphics.fillRect(0, 0, buffer_native.getWidth(), buffer_native.getHeight());	
+		buffer_native_graphics.setFont(getGraphics().getFont());
 		buffer_native_graphics.setColor(Color.white);
 	}
 	
