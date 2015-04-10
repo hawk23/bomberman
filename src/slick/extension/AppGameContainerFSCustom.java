@@ -231,13 +231,12 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 					break;
 			}
 			
-			buffer_native.setFilter(Image.FILTER_NEAREST);
-			resetNativeBuffer();
-			
-			
+
 			// this will be the back buffer image we draw our game onto
 			buffer              = new Image(GAME_CANVAS_WIDTH, GAME_CANVAS_HEIGHT);
 			buffer_graphics     = buffer.getGraphics();
+			
+			resetNativeBuffer();
 			resetGameBuffer();
 		}
 		else {
@@ -249,14 +248,16 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	
 	private void resetGameBuffer() {
 		buffer_graphics.clear();
-		buffer_graphics.setColor(Color.gray);
-		buffer_graphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());		
+		buffer_graphics.setColor(Color.white);
+		buffer_graphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+		buffer_graphics.setColor(Color.black);
 	}
 	
 	private void resetNativeBuffer() {
 		buffer_native_graphics.clear();
 		buffer_native_graphics.setColor(Color.black);
-		buffer_native_graphics.fillRect(0, 0, buffer_native.getWidth(), buffer_native.getHeight());
+		buffer_native_graphics.fillRect(0, 0, buffer_native.getWidth(), buffer_native.getHeight());	
+		buffer_native_graphics.setColor(Color.white);
 	}
 	
 	/**

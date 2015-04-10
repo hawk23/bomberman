@@ -1,9 +1,12 @@
 package game.state;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
 
 /**
- * Created by Mario on 30.03.2015.
+ * Created by Mario and Albert
  */
 public abstract class BombermanGameState extends BasicGameState
 {
@@ -20,5 +23,17 @@ public abstract class BombermanGameState extends BasicGameState
     @Override
     public int getID() {
         return this.id;
-    }
+    } 
+    
+    /**
+     * is called when entering a state
+     */
+    @Override
+    public abstract void enter(GameContainer container, StateBasedGame game) throws SlickException;
+    
+    /**
+     * is called when leaving a state
+     */
+    @Override
+    public abstract void leave(GameContainer container, StateBasedGame game) throws SlickException;
 }
