@@ -82,7 +82,7 @@ public class GameRoundState extends BombermanGameState
         
     	if (!paused) {
     		resetGraphics();
-            this.map.render(0,0,0,0,20,20,true);
+            this.map.render(0,0,0,0,15,15,true);
             this.player1.render(container, game, map_graphics);
             
             graphics.drawImage(map_buffer, xOffset, 0);
