@@ -21,7 +21,8 @@ public class MainMenuScreen extends OptionScreen {
 	
 	private int action = NO_ACTION;
 	
-	private MapConfig selectedMapConfig = null;
+	private MapConfig 	selectedMapConfig 	= null;
+	private Image		mapPreview			= null;
 	
 	public MainMenuScreen(StateBasedGame game, int width, int height) {
 		super(game, width, height);
@@ -133,9 +134,9 @@ public class MainMenuScreen extends OptionScreen {
 		
 		if (layerIndex == 4) {
 			String path = ((BombermanGame)game).getMapConfigs().get(getActualLayer().getOptionIndex()).getImage();
-			Image tmp = new Image(path);
+			mapPreview = new Image(path);
 			
-			g.drawImage(tmp.getScaledCopy(0.7f), 600, 450);
+			g.drawImage(mapPreview.getScaledCopy(0.7f), 600, 450);
 		}
 	}
 
