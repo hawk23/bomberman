@@ -1,10 +1,13 @@
 package game.state;
 
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.IOException;
+import java.io.InputStream;
+
 import game.MainMenuScreen;
-import game.Map;
 import game.PauseMenuScreen;
 import game.config.GameRoundConfig;
-import game.config.InputConfiguration;
 import game.input.InputManager;
 import game.model.BombermanMap;
 import game.model.Player;
@@ -15,7 +18,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.ResourceLoader;
 
 import slick.extension.AppGameContainerFSCustom;
 
@@ -27,16 +32,16 @@ public class GameRoundState extends BombermanGameState
 	private boolean 				paused				= false;
 	private PauseMenuScreen 		pauseMenu			= null;
 	private Image 					background			= null;
-	
+	private Image					playerStatsBackground	= null;
 	private GameRoundConfig 		gameRoundConfig		= null;
     
 	private BombermanMap            map                 = null;
     private Player                  player1             = null;
     private Player                  player2             = null;
 
-
     private Graphics 				map_graphics		= null;
     private Image 					map_buffer			= null;
+    private TrueTypeFont 			font				= null;
     
     private final int 				xOffset 			= 160;
     
@@ -53,6 +58,23 @@ public class GameRoundState extends BombermanGameState
         		AppGameContainerFSCustom.GAME_CANVAS_HEIGHT);
     	pauseMenu.init();
     	background = new Image("res/visuals/backgrounds/menuBackground.png");
+    	playerStatsBackground = new Image("res/visuals/backgrounds/playerStats_background.png");
+    	
+    	// create a TrueTypeFont
+		try {
+			InputStream inputStream	= ResourceLoader.getResourceAsStream("res/fonts/Steampunk.ttf"); 
+			Font awtFont;
+			awtFont = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+			awtFont = awtFont.deriveFont(50f); // set font size
+			font = new TrueTypeFont(awtFont, true);
+		} catch (FontFormatException | IOException e) {
+			e.printStackTrace();
+		}
+			
+		if (font == null) {
+			font = (TrueTypeFont) container.getDefaultFont();
+		}
+		
     }
 
     @Override
@@ -62,8 +84,13 @@ public class GameRoundState extends BombermanGameState
     		resetGraphics();
             this.map.render(0,0,0,0,20,20,true);
             this.player1.render(container, game, map_graphics);
-            map_graphics.flush();
+            
             graphics.drawImage(map_buffer, xOffset, 0);
+            graphics.drawImage(playerStatsBackground, 0, 0);
+            graphics.drawImage(playerStatsBackground, xOffset + map.getWidth() * 64, 0);
+            
+            font.drawString(0, 0, "Player 1", Color.green);
+            font.drawString(xOffset + map.getWidth() * 64, 0, "Player 2", Color.green);
     	}
     	else {
     		background.draw(0, 0);
@@ -111,8 +138,8 @@ public class GameRoundState extends BombermanGameState
     }
     
     private void resetGraphics() {
-    	map_graphics.clear();
     	map_graphics.setBackground(Color.black);
+    	map_graphics.clear();
     }
     
     @Override
