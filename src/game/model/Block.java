@@ -1,5 +1,9 @@
 package game.model;
 
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
 /**
  * Created by Roland Schreier on 03.04.2015.
  *
@@ -44,5 +48,15 @@ public class Block extends GameObject{
     public void setTilePosition(int tileX, int tileY){
         setTileX(tileX);
         setTileY(tileY);
+    }
+
+    @Override
+    public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g) {
+
+    }
+
+    @Override
+    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) {
+
     }
 }

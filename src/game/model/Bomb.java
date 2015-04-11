@@ -100,7 +100,7 @@ public class Bomb extends DestroyableBlock{
     }
 
 
-    @Override
+    // TODO: update und render methods from IUpdateable and IRenderable should be used instead of draw
     public void draw(float v, float v1) {
         //TODO change back, only for demonstrational of the fake zBuffering
         //animationBurn.draw(posX+v,posY+v1);
