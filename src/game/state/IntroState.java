@@ -1,5 +1,6 @@
 package game.state;
 
+import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -39,7 +40,7 @@ public class IntroState extends BombermanGameState
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
     	background.draw((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - background.getWidth()) / 2,
-    			(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - background.getHeight()) / 2); 	
+    			(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - background.getHeight()) / 2); 
     }
 
     @Override

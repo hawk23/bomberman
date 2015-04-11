@@ -62,12 +62,7 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	/**
 	 * graphics object of the native buffer image
 	 */
-	private Graphics buffer_native_graphics;
-	/**
-	 * image used to scale to actual Display Mode
-	 */
-	private Image tmp_buffer;
-	
+	private Graphics buffer_native_graphics;	
 	/**
 	 * should data be displayed? Key: F12
 	 */
@@ -165,24 +160,21 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 			
 			resetNativeBuffer();
 			resetGameBuffer();
+			
 			try {
 				game.render(this, buffer_graphics);
 			} catch (Throwable e) {
 				Log.error(e);
 				throw new SlickException("Game.render() failure - check the game code.");
 			}
-			buffer_graphics.flush();
 			
 			// draw the game canvas in the center of the native back buffer
 			buffer_native_graphics.drawImage(buffer, (buffer_native.getWidth() - buffer.getWidth()) / 2, 
 					(buffer_native.getHeight() - buffer.getHeight()) / 2);
 			
 			buffer_native_graphics.flush();
+			buffer_native.draw(0, 0, this.getWidth(), this.getHeight());
 			
-			// scale to actual screen resolution
-			tmp_buffer = buffer_native.getScaledCopy(this.getWidth(), this.getHeight());
-			
-			getGraphics().drawImage(tmp_buffer, 0, 0);
 			getGraphics().resetTransform();
 			
 			if (showGameLoopData) {
@@ -212,25 +204,21 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 			
 				case RATIO_4_3:
 					buffer_native = new Image(1280, 960);
-					buffer_native_graphics = buffer_native.getGraphics();
 					break;
 					
 				case RATIO_5_4:
 					buffer_native = new Image(1280, 1024);
-					buffer_native_graphics = buffer_native.getGraphics();
 					break;
 					
 				case RATIO_16_9:
 					buffer_native = new Image(1920, 1080);
-					buffer_native_graphics = buffer_native.getGraphics();
 					break;
 					
 				case RATIO_16_10:
 					buffer_native = new Image(1920, 1200);
-					buffer_native_graphics = buffer_native.getGraphics();
 					break;
 			}
-			
+			buffer_native_graphics = buffer_native.getGraphics();
 
 			// this will be the back buffer image we draw our game onto
 			buffer              = new Image(GAME_CANVAS_WIDTH, GAME_CANVAS_HEIGHT);
@@ -247,19 +235,13 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 	}
 	
 	private void resetGameBuffer() {
+		buffer_graphics.setBackground(Color.black);
 		buffer_graphics.clear();
-		buffer_graphics.setColor(Color.black);
-		buffer_graphics.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
-		buffer_graphics.setFont(getGraphics().getFont());
-		buffer_graphics.setColor(Color.white);
 	}
 	
 	private void resetNativeBuffer() {
+		buffer_native_graphics.setBackground(Color.black);
 		buffer_native_graphics.clear();
-		buffer_native_graphics.setColor(Color.black);
-		buffer_native_graphics.fillRect(0, 0, buffer_native.getWidth(), buffer_native.getHeight());	
-		buffer_native_graphics.setFont(getGraphics().getFont());
-		buffer_native_graphics.setColor(Color.white);
 	}
 	
 	/**
