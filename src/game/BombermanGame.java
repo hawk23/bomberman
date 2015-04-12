@@ -6,6 +6,8 @@ import game.config.PlayerConfig;
 import game.state.GameRoundState;
 import game.state.IntroState;
 import game.state.MainMenuState;
+
+import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -17,7 +19,10 @@ import java.util.ArrayList;
 public class BombermanGame extends StateBasedGame {
 
 	public static final String GAME_NAME = "Bomberman";
-
+	
+	AngelCodeFont font;
+	AngelCodeFont fontOutline;
+	
     private ArrayList<PlayerConfig>         playerConfigs           = new ArrayList<PlayerConfig>();
     private ArrayList<MapConfig>            mapConfigs              = new ArrayList<MapConfig>();
     private ArrayList<InputConfiguration>   inputConfigurations     = new ArrayList<InputConfiguration>();
@@ -46,8 +51,12 @@ public class BombermanGame extends StateBasedGame {
     	loadFonts();
     }
     
-    private void loadFonts() {
-    	
+	private void loadFonts() throws SlickException  {
+		AngelCodeFont font = new AngelCodeFont("res/fonts/steampunk.fnt", new Image("res/fonts/steampunk.png"));
+		this.font = font;
+		
+		AngelCodeFont fontOutline = new AngelCodeFont("res/fonts/steampunkOutline.fnt", new Image("res/fonts/steampunkOutline.png"));
+		this.fontOutline = fontOutline;
     }
 
     private void createConfig () throws SlickException
@@ -116,5 +125,13 @@ public class BombermanGame extends StateBasedGame {
 
 	public ArrayList<InputConfiguration> getInputConfigurations() {
 		return inputConfigurations;
+	}
+
+	public AngelCodeFont getFont() {
+		return font;
+	}
+
+	public AngelCodeFont getFontOutline() {
+		return fontOutline;
 	}
 }

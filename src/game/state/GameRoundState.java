@@ -1,10 +1,6 @@
 package game.state;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.io.IOException;
-import java.io.InputStream;
-
+import game.BombermanGame;
 import game.MainMenuScreen;
 import game.PauseMenuScreen;
 import game.config.GameRoundConfig;
@@ -18,15 +14,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.util.ResourceLoader;
 
 import slick.extension.AppGameContainerFSCustom;
 
-/**
- * Created by Mario on 30.03.2015.
- */
 public class GameRoundState extends BombermanGameState
 {
 	private boolean 				paused				= false;
@@ -41,35 +33,21 @@ public class GameRoundState extends BombermanGameState
 
     private Graphics 				map_graphics		= null;
     private Image 					map_buffer			= null;
-    private TrueTypeFont 			font				= null;
     
     private final int 				xOffset 			= 160;
     
     public GameRoundState () {
-        super (BombermanGameState.GAME_ROUND);
-        
+        super (BombermanGameState.GAME_ROUND);   
     }
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-       	map_buffer = new Image(960, 960);
-    	map_graphics = map_buffer.getGraphics();
-    	pauseMenu = new PauseMenuScreen(game, AppGameContainerFSCustom.GAME_CANVAS_WIDTH, 
-        		AppGameContainerFSCustom.GAME_CANVAS_HEIGHT);
+       	map_buffer 				= new Image(960, 960);
+    	map_graphics 			= map_buffer.getGraphics();
+    	pauseMenu 				= new PauseMenuScreen(game, AppGameContainerFSCustom.GAME_CANVAS_WIDTH, AppGameContainerFSCustom.GAME_CANVAS_HEIGHT);
     	pauseMenu.init();
-    	background = new Image("res/visuals/backgrounds/menuBackground.png");
-    	playerStatsBackground = new Image("res/visuals/backgrounds/playerStats_background.png");
-    	
-    	// create a TrueTypeFont
-		try {
-			InputStream inputStream	= ResourceLoader.getResourceAsStream("res/fonts/Steampunk.ttf"); 
-			Font awtFont;
-			awtFont = Font.createFont(Font.TRUETYPE_FONT, inputStream);
-			awtFont = awtFont.deriveFont(50f); // set font size
-			font = new TrueTypeFont(awtFont, true);
-		} catch (FontFormatException | IOException e) {
-			e.printStackTrace();
-		}		
+    	background 				= new Image("res/visuals/backgrounds/menuBackground.png");
+    	playerStatsBackground 	= new Image("res/visuals/backgrounds/playerStats_background.png");	
     }
 
     @Override
@@ -83,9 +61,7 @@ public class GameRoundState extends BombermanGameState
             graphics.drawImage(map_buffer, xOffset, 0);
             graphics.drawImage(playerStatsBackground, 0, 0);
             graphics.drawImage(playerStatsBackground, xOffset + map.getWidth() * 64, 0);
-            
-            font.drawString(0, 0, "Player 1", Color.green);
-            font.drawString(xOffset + map.getWidth() * 64, 0, "Player 2", Color.green);
+
     	}
     	else {
     		background.draw(0, 0);
@@ -121,6 +97,7 @@ public class GameRoundState extends BombermanGameState
     		        	break;
     		        
     		        case PauseMenuScreen.GAME_RESTART:
+    		        	restart(container, game);
     		        	break;
     		        
     		        case PauseMenuScreen.GAME_ROUND_EXIT:
@@ -160,6 +137,11 @@ public class GameRoundState extends BombermanGameState
 
 	public void setGameRoundConfig(GameRoundConfig gameRoundConfig) {
 		this.gameRoundConfig = gameRoundConfig;
+	}
+	
+	private void restart(GameContainer container, StateBasedGame game) throws SlickException {
+		leave(container, game);
+		enter(container, game);
 	}
 
 }

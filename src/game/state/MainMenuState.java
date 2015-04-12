@@ -36,6 +36,9 @@ public class MainMenuState extends BombermanGameState
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
     	background.draw(0, 0);
     	mainMenu.render(container, game, graphics); 
+    	
+    	((BombermanGame)game).getFont().drawString(300, 100, "ABC test TEST");
+    	((BombermanGame)game).getFontOutline().drawString(300, 200, "ABC test TEST");
     }
 
     @Override
