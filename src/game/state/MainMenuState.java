@@ -37,8 +37,8 @@ public class MainMenuState extends BombermanGameState
     	background.draw(0, 0);
     	mainMenu.render(container, game, graphics); 
     	
-    	((BombermanGame)game).getFont().drawString(300, 100, "ABC test TEST");
-    	((BombermanGame)game).getFontOutline().drawString(300, 200, "ABC test TEST");
+    	((BombermanGame)game).getFont().drawString(300, 100, "abc test abc");
+    	((BombermanGame)game).getFontOutline().drawString(300, 200, "< map 1 >");
     }
 
     @Override
