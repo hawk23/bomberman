@@ -6,8 +6,8 @@ import game.config.PlayerConfig;
 import game.state.GameRoundState;
 import game.state.IntroState;
 import game.state.MainMenuState;
-
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -25,8 +25,6 @@ public class BombermanGame extends StateBasedGame {
 	public BombermanGame() throws SlickException
     {
 		super(GAME_NAME);
-
-        this.createConfig();
 	}
 
     @Override
@@ -39,6 +37,17 @@ public class BombermanGame extends StateBasedGame {
     	// other states
         addState(new MainMenuState());
         addState(new GameRoundState());
+        
+        doInitialization();
+    }
+    
+    private void doInitialization() throws SlickException {
+    	createConfig();
+    	loadFonts();
+    }
+    
+    private void loadFonts() {
+    	
     }
 
     private void createConfig () throws SlickException
@@ -53,7 +62,7 @@ public class BombermanGame extends StateBasedGame {
         PlayerConfig player1 = new PlayerConfig();
         player1.setId(1);
         player1.setPath("res/visuals/players/0/spritesheet.png");
-        player1.setImage("res/visuals/players/0/avatar.png");
+        player1.setImage(new Image("res/visuals/players/0/avatar.png"));
         player1.setName("Hans");
         player1.setInitialBombLimit(1);
         player1.setInitialSpeed(100);
@@ -61,7 +70,7 @@ public class BombermanGame extends StateBasedGame {
         PlayerConfig player2 = new PlayerConfig();
         player2.setId(2);
         player2.setPath("res/visuals/players/1/spritesheet.png");
-        player2.setImage("res/visuals/players/1/avatar.png");
+        player2.setImage(new Image("res/visuals/players/1/avatar.png"));
         player2.setName("Hubert");
         player2.setInitialBombLimit(1);
         player2.setInitialSpeed(100);
@@ -75,13 +84,13 @@ public class BombermanGame extends StateBasedGame {
         MapConfig mapConfig1 = new MapConfig();
         mapConfig1.setId(0);
         mapConfig1.setPath("res/levels/0/map.tmx");
-        mapConfig1.setImage("res/levels/0/thumbnail.png");
+        mapConfig1.setImage(new Image("res/levels/0/thumbnail.png"));
         mapConfig1.setName("Map 1");
 
         MapConfig mapConfig2 = new MapConfig();
         mapConfig2.setId(1);
         mapConfig2.setPath("res/levels/1/map.tmx");
-        mapConfig2.setImage("res/levels/1/thumbnail.png");
+        mapConfig2.setImage(new Image("res/levels/1/thumbnail.png"));
         mapConfig2.setName("Map 2");
 
         this.mapConfigs.add(mapConfig1);

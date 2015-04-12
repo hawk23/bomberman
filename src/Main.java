@@ -7,7 +7,8 @@ import game.BombermanGame;
  */
 public class Main {
     public static void main(String[] args) throws SlickException {
-        AppGameContainerFSCustom container = new AppGameContainerFSCustom(new BombermanGame());
+    	BombermanGame game = new BombermanGame();
+        AppGameContainerFSCustom container = new AppGameContainerFSCustom(game);
         container.start();
     }
 }

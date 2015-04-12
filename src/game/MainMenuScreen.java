@@ -1,5 +1,7 @@
 package game;
 
+import java.util.ArrayList;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -22,13 +24,19 @@ public class MainMenuScreen extends OptionScreen {
 	private int action = NO_ACTION;
 	
 	private MapConfig 	selectedMapConfig 	= null;
-	private Image		mapPreview			= null;
+	private ArrayList<Image> mapThumbnails	= null;
 	
 	public MainMenuScreen(StateBasedGame game, int width, int height) {
 		super(game, width, height);
 	}
 
 	public void init() throws SlickException {
+		
+		// load the map thumbnails
+		mapThumbnails = new ArrayList<Image>();
+		for (MapConfig config : ((BombermanGame)game).getMapConfigs()) {
+			mapThumbnails.add(config.getImage());
+		}
 		
 		// Layer 0: options- NEW GAME/CONTROLS/EXIT GAME
 		OptionLayer layer_0 = new OptionLayer(this);
@@ -133,10 +141,8 @@ public class MainMenuScreen extends OptionScreen {
 		super.render(container, game, g);
 		
 		if (layerIndex == 4) {
-			String path = ((BombermanGame)game).getMapConfigs().get(getActualLayer().getOptionIndex()).getImage();
-			mapPreview = new Image(path);
-			
-			g.drawImage(mapPreview.getScaledCopy(0.7f), 600, 450);
+			Image thumbnail = mapThumbnails.get(getActualLayer().getOptionIndex());
+			g.drawImage(thumbnail.getScaledCopy(0.7f), 600, 450);
 		}
 	}
 

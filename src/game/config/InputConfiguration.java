@@ -1,8 +1,5 @@
 package game.config;
 
-/**
- * Created by Mario on 30.03.2015.
- */
 public class InputConfiguration {
     private int up;
     private int down;

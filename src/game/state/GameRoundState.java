@@ -69,12 +69,7 @@ public class GameRoundState extends BombermanGameState
 			font = new TrueTypeFont(awtFont, true);
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();
-		}
-			
-		if (font == null) {
-			font = (TrueTypeFont) container.getDefaultFont();
-		}
-		
+		}		
     }
 
     @Override

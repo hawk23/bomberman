@@ -1,15 +1,12 @@
 package game.config;
 
-import java.awt.*;
+import org.newdawn.slick.Image;
 
-/**
- * Created by Mario on 10.04.2015.
- */
 public class GameObjectConfig
 {
     private int id;
     private String path;
-    private String image;
+    private Image image;
     private String name;
 
     private String description = "";
@@ -17,7 +14,7 @@ public class GameObjectConfig
     public GameObjectConfig() {
     }
 
-    public GameObjectConfig(int id, String path, String image, String name, String description) {
+    public GameObjectConfig(int id, String path, Image image, String name, String description) {
         this.id = id;
         this.path = path;
         this.image = image;
@@ -41,11 +38,11 @@ public class GameObjectConfig
         this.path = path;
     }
 
-    public String getImage() {
+    public Image getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(Image image) {
         this.image = image;
     }
 

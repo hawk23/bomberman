@@ -2,9 +2,6 @@ package game.config;
 
 import java.util.ArrayList;
 
-/**
- * Created by Mario on 10.04.2015.
- */
 public class GameRoundConfig
 {
     private MapConfig mapConfig;
