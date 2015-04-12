@@ -19,9 +19,9 @@ import java.util.ArrayList;
 public class BombermanGame extends StateBasedGame {
 
 	public static final String GAME_NAME = "Bomberman";
-	
-	AngelCodeFont font;
-	AngelCodeFont fontOutline;
+
+	private ArrayList<AngelCodeFont> 		fonts 					= new ArrayList<AngelCodeFont>();
+	private ArrayList<AngelCodeFont> 		outlinedFonts 			= new ArrayList<AngelCodeFont>();
 	
     private ArrayList<PlayerConfig>         playerConfigs           = new ArrayList<PlayerConfig>();
     private ArrayList<MapConfig>            mapConfigs              = new ArrayList<MapConfig>();
@@ -53,10 +53,9 @@ public class BombermanGame extends StateBasedGame {
     
 	private void loadFonts() throws SlickException  {
 		AngelCodeFont font = new AngelCodeFont("res/fonts/steampunk.fnt", new Image("res/fonts/steampunk.png"));
-		this.font = font;
-		
+		fonts.add(font);
 		AngelCodeFont fontOutline = new AngelCodeFont("res/fonts/steampunkOutline.fnt", new Image("res/fonts/steampunkOutline.png"));
-		this.fontOutline = fontOutline;
+		outlinedFonts.add(fontOutline);
     }
 
     private void createConfig () throws SlickException
@@ -127,11 +126,11 @@ public class BombermanGame extends StateBasedGame {
 		return inputConfigurations;
 	}
 
-	public AngelCodeFont getFont() {
-		return font;
+	public ArrayList<AngelCodeFont> getFonts() {
+		return fonts;
 	}
 
-	public AngelCodeFont getFontOutline() {
-		return fontOutline;
+	public ArrayList<AngelCodeFont> getOutlinedFonts() {
+		return outlinedFonts;
 	}
 }

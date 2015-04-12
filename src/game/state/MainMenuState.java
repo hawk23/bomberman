@@ -19,7 +19,6 @@ public class MainMenuState extends BombermanGameState
 	MainMenuScreen mainMenu 		= null;
 	Image background				= null;
 	
-
     public MainMenuState () {
         super(BombermanGameState.MAIN_MENU);    
     }
@@ -36,14 +35,12 @@ public class MainMenuState extends BombermanGameState
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
     	background.draw(0, 0);
     	mainMenu.render(container, game, graphics); 
-    	
-    	((BombermanGame)game).getFont().drawString(300, 100, "abc test abc");
-    	((BombermanGame)game).getFontOutline().drawString(300, 200, "< map 1 >");
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         Input input = container.getInput();
+    
         mainMenu.input(input);
         mainMenu.update(container, game, delta);
         
