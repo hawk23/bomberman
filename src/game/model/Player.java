@@ -2,34 +2,41 @@ package game.model;
 
 import game.Map;
 import game.config.PlayerConfig;
+import game.debug.Debugger;
 import game.input.Direction;
 import game.input.InputManager;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Shape;
 
 import org.newdawn.slick.state.StateBasedGame;
 import slick.extension.AppGameContainerFSCustom;
 
+import java.awt.*;
+
 /**
  * Created by Albert on 30.03.2015.
  */
-public class Player extends GameObject implements IDestroyable
-{
+public class Player extends GameObject implements IDestroyable {
     public static final int PLAYER_1 = 0;
     public static final int PLAYER_2 = 1;
     //......
 
-    private     BombermanMap                map;
-    private     InputManager				inputManager;
-    
+
+    private BombermanMap map;
+    private InputManager inputManager;
+
     private float drawPosX;
     private float drawPosY;
     private float targetX;
     private float targetY;
     private float originalX;
     private float originalY;
-    
+
+
     /**
      * for render interpolation
      */
@@ -46,6 +53,15 @@ public class Player extends GameObject implements IDestroyable
      * speed of the player
      */
     private float speed;
+
+    /**
+     * settings for the bomb
+     * TODO move to PlayerConfig ?!
+     */
+    private float bombTimer = 1000;
+    private int bombRange = 1;
+    private int bombLimit = 1;
+    private int bombCount = 0;
 
     /**
      * interpolation value for the movement between two points
@@ -73,47 +89,46 @@ public class Player extends GameObject implements IDestroyable
     private Shape shape;
 
     private PlayerConfig playerConfig;
-    
+
     // testing
     private String bomb = "";
-    
+
     /**
-     *
-     * @param shape - is the tile representation of the player
+     * @param shape        - is the tile representation of the player
      * @param map
      * @param playerID
      * @param inputManager
      * @throws SlickException
      */
     public Player(Shape shape, BombermanMap map, int playerID, InputManager inputManager, PlayerConfig playerConfig) throws SlickException {
-        super((int)shape.getX(), (int)shape.getY());
-    	
-    	this.map                    = map;
-        this.shape                  = shape;
-        this.inputManager	        = inputManager;
-        this.playerConfig           = playerConfig;
-        this.collides               = true;
+        super((int) shape.getX(), (int) shape.getY());
 
-        drawPosX                    = lastDrawPosX  = posX;
-        drawPosY                    = lastDrawPosY  = posY;
-        originalX                   = targetX   = drawPosX;
-        originalY                   = targetY   = drawPosY;
-        speed                       = 1.7f;
-        moving                      = false;
-        movementDirection           = Direction.DOWN;
-        movementInterpolation       = 0.0f;
+        setMap(map);
+        this.shape = shape;
+        this.inputManager = inputManager;
+        this.playerConfig = playerConfig;
+        this.collides = true;
 
-        switch(playerID) {
+        drawPosX = lastDrawPosX = posX;
+        drawPosY = lastDrawPosY = posY;
+        originalX = targetX = drawPosX;
+        originalY = targetY = drawPosY;
+        speed = 1.7f;
+        moving = false;
+        movementDirection = Direction.DOWN;
+        movementInterpolation = 0.0f;
+
+        switch (playerID) {
 
             // loading data from player_0
             case PLAYER_1: {
 
                 Image[] up = {
-                		new Image("res/visuals/classic/players/00/Bman_B_f00.png"),
+                        new Image("res/visuals/classic/players/00/Bman_B_f00.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f01.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f02.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f03.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f04.png"),             
+                        new Image("res/visuals/classic/players/00/Bman_B_f04.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f05.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f06.png"),
                         new Image("res/visuals/classic/players/00/Bman_B_f07.png"),
@@ -174,19 +189,18 @@ public class Player extends GameObject implements IDestroyable
 
     public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g) {
 
-        float interpolate = ((AppGameContainerFSCustom)container).getRenderInterpolation();
+        float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
 
         g.setColor(Color.green);
         g.draw(shape);
         image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY - shape.getHeight() - 15);
-        g.drawString(bomb, drawPosX, drawPosY - 64);
         g.drawString("tileX: " + posX, 0, 0);
         g.drawString("tileY: " + posY, 0, 15);
     }
 
     public void update(GameContainer container, StateBasedGame stateBasedGame, int delta) {
 
-        float deltaInSecs = (float)delta * 0.001f;
+        float deltaInSecs = (float) delta * 0.001f;
         lastDrawPosX = drawPosX;
         lastDrawPosY = drawPosY;
 
@@ -198,7 +212,7 @@ public class Player extends GameObject implements IDestroyable
 
             movementInterpolation = 0.0f;
 
-            switch(direction) {
+            switch (direction) {
 
                 case UP:
                     originalY = drawPosY;
@@ -296,7 +310,7 @@ public class Player extends GameObject implements IDestroyable
                 // flawless movement?
                 if (movementDirection == direction) {
 
-                    switch(direction) {
+                    switch (direction) {
 
                         case UP:
                             originalY = targetY;
@@ -336,7 +350,8 @@ public class Player extends GameObject implements IDestroyable
             }
 
             //  check if target tile is blocked
-            if (map.isBlocked((int)targetX, (int)targetY)) {
+            Point tilePos = map.pixelsToTile((int) targetX, (int) targetY);
+            if (map.isBlocked(tilePos.x, tilePos.y)) {
                 targetX = originalX;
                 targetY = originalY;
                 moving = false;
@@ -351,9 +366,8 @@ public class Player extends GameObject implements IDestroyable
         if (moving) {
             image = animation_actual.getCurrentFrame();
             animation_actual.update(delta);
-        }
-        else {
-            switch(movementDirection) {
+        } else {
+            switch (movementDirection) {
 
                 case UP:
                     image = animation_up.getImage(0);
@@ -381,15 +395,16 @@ public class Player extends GameObject implements IDestroyable
             posX = (int) targetX;
             posY = (int) targetY;
         }
-        
-        bomb = "";
+
+
         if (inputManager.bombDrop()) {
-        	bomb = "drop bomb";
+           addBomb();
         }
     }
 
     /**
      * linear interpolation between two points
+     *
      * @param original
      * @param target
      * @param interpolationValue
@@ -405,6 +420,7 @@ public class Player extends GameObject implements IDestroyable
 
     /**
      * checks if a direction-change to opposite direction occurred
+     *
      * @return true if so false if not
      */
     private boolean checkOppositeMovement() {
@@ -413,7 +429,7 @@ public class Player extends GameObject implements IDestroyable
 
         if (moving && movementDirection != null && direction != null) {
 
-            switch(movementDirection) {
+            switch (movementDirection) {
 
                 case UP:
                     if (direction == Direction.DOWN) {
@@ -450,6 +466,44 @@ public class Player extends GameObject implements IDestroyable
 
     @Override
     public boolean destroy() {
+        Debugger.log("die Bomberman, DIE!");
         return false;
+    }
+
+    public BombermanMap getMap() {
+        return map;
+    }
+
+    public void setMap(BombermanMap map) {
+        this.map = map;
+    }
+
+    public float getBombTimer() {
+        return bombTimer;
+    }
+
+    public void setBombTimer(float bombTimer) {
+        this.bombTimer = bombTimer;
+    }
+
+    public int getBombRange() {
+        return bombRange;
+    }
+
+    public void setBombRange(int bombRange) {
+        this.bombRange = bombRange;
+    }
+
+    public void removeBomb() {
+        bombCount--;
+        if (bombCount < 0) bombCount = 0;
+    }
+
+    public void addBomb() {
+        if (bombCount < bombLimit) {
+            Point tilePos = map.pixelsToTile(posX, posY);
+            map.addBomb(tilePos.x, tilePos.y, this);
+            bombCount++;
+        }
     }
 }

@@ -1,9 +1,8 @@
 package game.model;
 
-import org.newdawn.slick.Animation;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
+import game.debug.Debugger;
+import org.newdawn.slick.*;
+import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * Created by Roland Schreier on 31.03.2015.
@@ -13,9 +12,6 @@ import org.newdawn.slick.SpriteSheet;
  *
  * needs the BombermanMap to remove itself and calculate the explosion
  *
- * TODO: add update-Interface so the time can be decreased on every main update-loop
- *       add updateQue to the BombermanMap and call the BombermanMap in the Game class
- *       add the logic for the explosion
  */
 public class Bomb extends DestroyableBlock{
 
@@ -27,10 +23,9 @@ public class Bomb extends DestroyableBlock{
 
     private int range;
     private float timer;
-
-    private int renderCounter=0;
-
     private boolean isExploding=false;
+
+    private Player player;
 
     /**
      * Directions for the calculation of the blast, UP,LEFT,DOWN,RIGHT
@@ -40,17 +35,13 @@ public class Bomb extends DestroyableBlock{
             {0, 1, 0, -1}
     };
 
-    public Bomb(int tileX, int tileY, int tileWidth, int tileHeight, float timer, int range, BombermanMap bombermanMap) {
-        super(tileX, tileY, tileWidth, tileHeight, bombermanMap);
-        setTimer(timer);
-        setRange(range);
-        loadImage();
-    }
 
-    public Bomb(int tileX, int tileY, float timer, int range,BombermanMap bombermanMap) {
-        super(tileX, tileY, bombermanMap);
-        setTimer(timer);
-        setRange(range);
+
+    public Bomb(int tileX, int tileY, Player player) {
+        super(tileX, tileY, player.getMap());
+        this.player=player;
+        setTimer(player.getBombTimer());
+        setRange(player.getBombRange());
         loadImage();
     }
 
@@ -89,26 +80,29 @@ public class Bomb extends DestroyableBlock{
             for(int r=1;r<=range;r++){
                 //Debugger.log("(" + getTileX() + blastDirection[0][direction] * r + "," + getTileY() + blastDirection[1][direction] * r + ")");
                 /*If we hit a collision blast won't spread any longer in this direction*/
-                if(bombermanMap.isCollision(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r)) {
-                    bombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
+                if(bombermanMap.isBlocked(getTileX() + blastDirection[0][direction] * r, getTileY() + blastDirection[1][direction] * r)) {
+                    bombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY() +blastDirection[1][direction]*r);
                     break;
                 }else
                     bombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
             }
         }
+        player.removeBomb();
         bombermanMap.removeGameObject(getTileX(), getTileY(), this);
     }
 
+    @Override
+    public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g) {
+        animationBurn.draw(posX,posY,64,64);
+    }
 
-    // TODO: update und render methods from IUpdateable and IRenderable should be used instead of draw
-    public void draw(float v, float v1) {
-        //TODO change back, only for demonstrational of the fake zBuffering
-        //animationBurn.draw(posX+v,posY+v1);
-        animationBurn.draw(posX+v,posY+v1-64,64,190);
-        //TODO implement update-Que, now counting render
-        renderCounter++;
-        if(renderCounter>10000)
+
+    @Override
+    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) {
+        Debugger.log("BombTimer: " + timer);
+        if(timer<=0)
             destroy();
+        timer-=delta;
     }
 
     private void loadImage(){
@@ -119,7 +113,6 @@ public class Bomb extends DestroyableBlock{
             //TODO
         }
     }
-
 
     @Override
     public String toString() {

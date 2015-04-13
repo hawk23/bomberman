@@ -15,7 +15,15 @@ import game.options.OptionLayer;
 import game.options.OptionScreen;
 
 public class MainMenuScreen extends OptionScreen {
-	
+
+	private static final int SPREAD = 100;
+
+	private static final int NEWGAME_Y = 380;
+	private static final int OPTIONS_Y = NEWGAME_Y+SPREAD;
+	private static final int EXITGAME_Y = OPTIONS_Y + SPREAD;
+
+	private static final int MAPSELECT_Y =120;
+
 	public static final int NO_ACTION = -1;
 	public static final int GAME_EXIT = 0;
 	public static final int GAME_START_PVP = 1;
@@ -42,15 +50,15 @@ public class MainMenuScreen extends OptionScreen {
 		OptionLayer layer_0 = new OptionLayer(this);
 		
 		Option option_0_0 = new Option("res/visuals/option_pics/option_newGame.png", "res/visuals/option_pics/option_newGame_selected.png");
-		option_0_0.setCoordinates((width - option_0_0.getWidth()) / 2, 500);
+		option_0_0.setCoordinates((width - option_0_0.getWidth()) / 2, NEWGAME_Y);
 		layer_0.addOption(option_0_0);
 		
 		Option option_0_1 = new Option("res/visuals/option_pics/option_controls.png", "res/visuals/option_pics/option_controls_selected.png");
-		option_0_1.setCoordinates((width - option_0_1.getWidth()) / 2, 600);
+		option_0_1.setCoordinates((width - option_0_1.getWidth()) / 2, OPTIONS_Y);
 		layer_0.addOption(option_0_1);
 		
 		Option option_0_2 = new Option("res/visuals/option_pics/option_exitGame.png", "res/visuals/option_pics/option_exitGame_selected.png");
-		option_0_2.setCoordinates((width - option_0_2.getWidth()) / 2, 700);
+		option_0_2.setCoordinates((width - option_0_2.getWidth()) / 2, EXITGAME_Y);
 		layer_0.addOption(option_0_2);
 		
 		layers.add(layer_0);
@@ -60,14 +68,14 @@ public class MainMenuScreen extends OptionScreen {
 		OptionLayer layer_1 = new OptionLayer(this);
 		
 		Image heading_1 = new Image("res/visuals/option_pics/heading_exitGame.png");
-		layer_1.setHeading(heading_1, (width - heading_1.getWidth()) / 2, 500);
+		layer_1.setHeading(heading_1, (width - heading_1.getWidth()) / 2, NEWGAME_Y);
 		
 		Option option_1_0 = new Option("res/visuals/option_pics/option_yes.png", "res/visuals/option_pics/option_yes_selected.png");
-		option_1_0.setCoordinates(((width - option_1_0.getWidth()) / 2) - 100, 600);
+		option_1_0.setCoordinates(((width - option_1_0.getWidth()) / 2) - 100, EXITGAME_Y);
 		layer_1.addOption(option_1_0);
 		
 		Option option_1_1 = new Option("res/visuals/option_pics/option_no.png", "res/visuals/option_pics/option_no_selected.png");
-		option_1_1.setCoordinates(((width - option_1_1.getWidth()) / 2) + 100, 600);
+		option_1_1.setCoordinates(((width - option_1_1.getWidth()) / 2) + 100, EXITGAME_Y);
 		layer_1.addOption(option_1_1);
 
 		layers.add(layer_1);
@@ -81,7 +89,7 @@ public class MainMenuScreen extends OptionScreen {
 //		layer_2.setHeading(heading_2, (width - heading_2.getWidth()) / 2, 30);
 		
 		Option option_2_0 = new Option("res/visuals/option_pics/option_back.png", "res/visuals/option_pics/option_back_selected.png");
-		option_2_0.setCoordinates((width - option_2_0.getWidth()) / 2, 700);
+		option_2_0.setCoordinates((width - option_2_0.getWidth()) / 2, EXITGAME_Y);
 		layer_2.addOption(option_2_0);
 		
 		layers.add(layer_2);
@@ -91,15 +99,15 @@ public class MainMenuScreen extends OptionScreen {
 		OptionLayer layer_3 = new OptionLayer(this);
 		
 		Option option_3_0 = new Option("res/visuals/option_pics/option_singleplayer.png", "res/visuals/option_pics/option_singleplayer_selected.png");
-		option_3_0.setCoordinates((width - option_3_0.getWidth()) / 2, 500);
+		option_3_0.setCoordinates((width - option_3_0.getWidth()) / 2, NEWGAME_Y);
 		layer_3.addOption(option_3_0);
 		
 		Option option_3_1 = new Option("res/visuals/option_pics/option_versus.png", "res/visuals/option_pics/option_versus_selected.png");
-		option_3_1.setCoordinates((width - option_3_1.getWidth()) / 2, 600);
+		option_3_1.setCoordinates((width - option_3_1.getWidth()) / 2, OPTIONS_Y);
 		layer_3.addOption(option_3_1);
 		
 		Option option_3_2 = new Option("res/visuals/option_pics/option_back.png", "res/visuals/option_pics/option_back_selected.png");
-		option_3_2.setCoordinates((width - option_3_2.getWidth()) / 2, 700);
+		option_3_2.setCoordinates((width - option_3_2.getWidth()) / 2, EXITGAME_Y);
 		layer_3.addOption(option_3_2);
 		
 		layers.add(layer_3);
@@ -109,14 +117,14 @@ public class MainMenuScreen extends OptionScreen {
 		OptionLayer layer_4 = new OptionLayer(this);
 		
 		Image heading_4 = new Image("res/visuals/option_pics/heading_mapselection.png");
-		layer_4.setHeading(heading_4, (width - heading_4.getWidth()) / 2, 300);
+		layer_4.setHeading(heading_4, (width - heading_4.getWidth()) / 2, MAPSELECT_Y);
 		
 		Option option_4_0 = new Option("res/visuals/option_pics/option_map1.png", "res/visuals/option_pics/option_map1_selected.png");
-		option_4_0.setCoordinates(200, 500);
+		option_4_0.setCoordinates(200, NEWGAME_Y);
 		layer_4.addOption(option_4_0);
 		
 		Option option_4_1 = new Option("res/visuals/option_pics/option_map2.png", "res/visuals/option_pics/option_map2_selected.png");
-		option_4_1.setCoordinates(200, 600);
+		option_4_1.setCoordinates(200, OPTIONS_Y);
 		layer_4.addOption(option_4_1);
 
 		

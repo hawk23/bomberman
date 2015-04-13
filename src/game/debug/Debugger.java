@@ -1,4 +1,4 @@
-package game.model;
+package game.debug;
 
 /**
  * Created by Roland Schreier on 03.04.2015.

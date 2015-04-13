@@ -2,8 +2,10 @@ package prototype;
 
 import game.model.Bomb;
 import game.model.BombermanMap;
+import game.model.Player;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
 import java.awt.*;
@@ -26,7 +28,7 @@ public class BombTest extends BasicGame {
     public static final int UPDATE_RATE = 1_000 / UPDATES_PER_SECOND;
     public static final int TARGET_FPS = 500;
 
-    private BombermanMap tileMap;
+    private BombermanMap map;
     private int BLOCK_SIZE=64;
 
     private List<Renderable> renderQue;
@@ -51,22 +53,23 @@ public class BombTest extends BasicGame {
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
-        tileMap.render(0,0,0,0,20,20,true);
+        map.render(0,0,0,0,20,20,true);
         for(Renderable renderable : renderQue){
             renderable.draw(0,0);
         }
         graphics.drawString(infoString, 10, 25);
     }
 
+
     @Override
     public void update(GameContainer gameContainer, int i) throws SlickException {
-
+        map.update(gameContainer,null,i);
     }
 
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
-        tileMap = new BombermanMap(MAP_PATH);
-        BLOCK_SIZE=tileMap.getTileHeight();
+        map = new BombermanMap(MAP_PATH);
+        BLOCK_SIZE=map.getTileHeight();
         selector = new Selector(BLOCK_SIZE);
 
         renderQue=new ArrayList<Renderable>();
@@ -75,17 +78,20 @@ public class BombTest extends BasicGame {
 
     @Override
     public void mouseMoved(int oldx, int oldy, int newx, int newy) {
-        Point point=tileMap.pixelsToTile(newx,newy);
+        Point point=map.pixelsToTile(newx,newy);
 
         selector.setPosition(newx, newy);
         infoString="("+newx+", "+newy+")=("+point.x+","+point.y+")";
     }
 
     @Override
-    public void mousePressed(int button, int x, int y) {
-        Point point=tileMap.pixelsToTile(x,y);
-        tileMap.addBomb(point.x,point.y,100,5);
-        //tileMap.destroy(point.x,point.y);
+    public void mousePressed(int button, int x, int y){
+        Point point=map.pixelsToTile(x,y);
+        try {
+            map.addBomb(point.x, point.y, new Player(null, map, 0, null, null));
+        }catch(SlickException e){
+        }
+        //map.destroy(point.x,point.y);
 
     }
 }

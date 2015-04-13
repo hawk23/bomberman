@@ -1,10 +1,10 @@
 package game.model;
 
-import org.newdawn.slick.Game;
-import org.newdawn.slick.Renderable;
-import org.newdawn.slick.SlickException;
+import game.debug.Debugger;
+import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
 import java.awt.Point;
@@ -21,7 +21,18 @@ import java.util.Collections;
  *      -manages destroy
  *
  */
-public class BombermanMap extends TiledMap{
+public class BombermanMap extends TiledMap implements IRenderable, IUpdateable{
+
+
+    /**
+     *  Used only for rendering the RenderQue till we get our head arround the IRenderable Interface (currently parameters like container, graphics etc. are used
+     *  TODO: remove when IRenderable is changed
+     *
+     *
+     */
+    private GameContainer container;
+    private StateBasedGame stateBasedGame;
+    private Graphics g;
 
     private static final int PLAYERS_QUANTITY=2;
     /**
@@ -129,7 +140,7 @@ public class BombermanMap extends TiledMap{
     }
 
     public boolean removeBlock(int tileX, int tileY, GameObject object){
-        boolean state=false;
+        boolean state;
 
         state=removeGameObject(tileX,tileY,object);
 
@@ -153,8 +164,25 @@ public class BombermanMap extends TiledMap{
             renderQueY=(item.getGameObject().getPosY())/this.tileHeight;
             if(renderQueY==mapY){
                 // TODO
-                // item.getGameObject().render(0,0);
+                 item.getGameObject().render(container,stateBasedGame,g);
             }
+        }
+    }
+
+    @Override
+    public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g) {
+        this.container=container;
+        this.stateBasedGame=stateBasedGame;
+        this.g=g;
+
+        this.render(0,0,0,0,getWidth(),getHeight(),true);
+    }
+
+
+    @Override
+    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) {
+        for(int i=0;i<renderQue.size();i++) {
+           renderQue.get(i).getGameObject().update(gameContainer,stateBasedGame,delta);
         }
     }
 
@@ -167,17 +195,6 @@ public class BombermanMap extends TiledMap{
                     state=state||true;
                 }
         return state;
-    }
-
-    public boolean isCollision(Point tilePosition){
-        return isCollision(tilePosition.x,tilePosition.y);
-    }
-
-    public boolean isCollision(int tileX,int tileY){
-        if(collissionMatrix[tileX][tileY]!=null)
-            return true;
-        else
-            return false;
     }
 
     public Point pixelsToTile(int x, int y){
@@ -239,7 +256,7 @@ public class BombermanMap extends TiledMap{
 
 
     public void addToRenderQue(GameObject object,int zBuff){
-        Debugger.log("Added to RenderQue: "+object.toString());
+        Debugger.log("Added to RenderQue: " + object.toString());
         renderQue.add(new RenderItem(object,zBuff));
         Collections.sort(renderQue);
     }
@@ -265,7 +282,7 @@ public class BombermanMap extends TiledMap{
             state=addToCollisionMatrix(tileX, tileY, object);
         }
         if (object instanceof IDestroyable){
-            state=state&&addToDestructionMatrix(tileX, tileY,(IDestroyable) object);
+            state=state&&addToDestructionMatrix(tileX, tileY, (IDestroyable) object);
         }
         return state;
     }
@@ -283,18 +300,21 @@ public class BombermanMap extends TiledMap{
         return state;
     }
 
-    public boolean addBomb(int tileX, int tileY,float timer, int range){
-        if(!isCollision(tileX,tileY)){
-            Bomb bomb=new Bomb(tileX,tileY,timer,range,this);
+    public boolean addBomb(int tileX, int tileY,Player player){
+        if(!isBlocked(tileX, tileY)){
+            Bomb bomb=new Bomb(tileX,tileY,player);
             return addGameObject(tileX,tileY,bomb);
         }else
             return false;
     }
 
-    public boolean isBlocked (int x, int y)
+    public boolean isBlocked (int tileX, int tileY)
     {
-        // TODO
-        return false;
+        if(collissionMatrix[tileX][tileY]!=null) {
+            Debugger.log("is blocked!: "+tileX+","+tileY);
+            return true;
+        }else
+            return false;
     }
 
     public Shape getPlayer1Shape() {
