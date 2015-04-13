@@ -1,6 +1,7 @@
 package game.state;
 
 import game.BombermanGame;
+import game.MainMenu;
 import game.MainMenuScreen;
 import game.config.GameRoundConfig;
 
@@ -19,6 +20,8 @@ public class MainMenuState extends BombermanGameState
 	MainMenuScreen mainMenu 		= null;
 	Image background				= null;
 	
+	MainMenu menu = null;
+	
     public MainMenuState () {
         super(BombermanGameState.MAIN_MENU);    
     }
@@ -29,12 +32,16 @@ public class MainMenuState extends BombermanGameState
         		AppGameContainerFSCustom.GAME_CANVAS_HEIGHT);
     	mainMenu.init();
     	background = new Image("res/visuals/backgrounds/menuBackground.png");
+    	
+    	menu = new MainMenu();
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
     	background.draw(0, 0);
     	mainMenu.render(container, game, graphics); 
+    	
+    	//menu.render(container, game, graphics);
     }
 
     @Override

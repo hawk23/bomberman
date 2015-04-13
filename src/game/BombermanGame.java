@@ -19,9 +19,18 @@ import java.util.ArrayList;
 public class BombermanGame extends StateBasedGame {
 
 	public static final String GAME_NAME = "Bomberman";
-
-	private ArrayList<AngelCodeFont> 		fonts 					= new ArrayList<AngelCodeFont>();
-	private ArrayList<AngelCodeFont> 		outlinedFonts 			= new ArrayList<AngelCodeFont>();
+	
+	public static AngelCodeFont STEAMPUNK_FONT;
+	public static AngelCodeFont STEAMPUNK_FONT_OL;
+	
+	public static AngelCodeFont OCR_FONT_BIG;
+	public static AngelCodeFont OCR_FONT_OL_BIG;
+	public static AngelCodeFont OCR_FONT_MED;
+	public static AngelCodeFont OCR_FONT_OL_MED;
+	
+	public static AngelCodeFont BASKERVILLE_FONT_BIG;
+	public static AngelCodeFont BASKERVILLE_FONT_OL_BIG;
+	
 	
     private ArrayList<PlayerConfig>         playerConfigs           = new ArrayList<PlayerConfig>();
     private ArrayList<MapConfig>            mapConfigs              = new ArrayList<MapConfig>();
@@ -52,10 +61,17 @@ public class BombermanGame extends StateBasedGame {
     }
     
 	private void loadFonts() throws SlickException  {
-		AngelCodeFont font = new AngelCodeFont("res/fonts/steampunk.fnt", new Image("res/fonts/steampunk.png"));
-		fonts.add(font);
-		AngelCodeFont fontOutline = new AngelCodeFont("res/fonts/steampunkOutline.fnt", new Image("res/fonts/steampunkOutline.png"));
-		outlinedFonts.add(fontOutline);
+		STEAMPUNK_FONT = new AngelCodeFont("res/fonts/steampunk.fnt", new Image("res/fonts/steampunk.png"));
+		STEAMPUNK_FONT_OL = new AngelCodeFont("res/fonts/steampunkOutline.fnt", new Image("res/fonts/steampunkOutline.png"));
+		
+		OCR_FONT_BIG = new AngelCodeFont("res/fonts/OCR_80.fnt", new Image("res/fonts/OCR_80.png"));
+		OCR_FONT_OL_BIG = new AngelCodeFont("res/fonts/OCR_ol_80.fnt", new Image("res/fonts/OCR_ol_80.png"));
+		
+		OCR_FONT_MED = new AngelCodeFont("res/fonts/OCR_60.fnt", new Image("res/fonts/OCR_60.png"));
+		OCR_FONT_OL_MED = new AngelCodeFont("res/fonts/OCR_ol_60.fnt", new Image("res/fonts/OCR_ol_60.png"));
+		
+		BASKERVILLE_FONT_BIG = new AngelCodeFont("res/fonts/Baskerville_80.fnt", new Image("res/fonts/Baskerville_80.png"));
+		BASKERVILLE_FONT_OL_BIG = new AngelCodeFont("res/fonts/Baskerville_ol_80.fnt", new Image("res/fonts/Baskerville_ol_80.png"));
     }
 
     private void createConfig () throws SlickException
@@ -124,13 +140,5 @@ public class BombermanGame extends StateBasedGame {
 
 	public ArrayList<InputConfiguration> getInputConfigurations() {
 		return inputConfigurations;
-	}
-
-	public ArrayList<AngelCodeFont> getFonts() {
-		return fonts;
-	}
-
-	public ArrayList<AngelCodeFont> getOutlinedFonts() {
-		return outlinedFonts;
 	}
 }
