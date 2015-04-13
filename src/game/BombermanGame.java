@@ -23,6 +23,9 @@ public class BombermanGame extends StateBasedGame {
 	public static AngelCodeFont STEAMPUNK_FONT;
 	public static AngelCodeFont STEAMPUNK_FONT_OL;
 	
+	public static AngelCodeFont STEAMPUNK_FONT_MED;
+	public static AngelCodeFont STEAMPUNK_FONT_OL_MED;
+	
 	public static AngelCodeFont OCR_FONT_BIG;
 	public static AngelCodeFont OCR_FONT_OL_BIG;
 	public static AngelCodeFont OCR_FONT_MED;
@@ -63,6 +66,9 @@ public class BombermanGame extends StateBasedGame {
 	private void loadFonts() throws SlickException  {
 		STEAMPUNK_FONT = new AngelCodeFont("res/fonts/steampunk.fnt", new Image("res/fonts/steampunk.png"));
 		STEAMPUNK_FONT_OL = new AngelCodeFont("res/fonts/steampunkOutline.fnt", new Image("res/fonts/steampunkOutline.png"));
+		
+		STEAMPUNK_FONT_MED = new AngelCodeFont("res/fonts/steam_80.fnt", new Image("res/fonts/steam_80.png"));
+		STEAMPUNK_FONT_OL_MED = new AngelCodeFont("res/fonts/steam_ol_80.fnt", new Image("res/fonts/steam_ol_80.png"));
 		
 		OCR_FONT_BIG = new AngelCodeFont("res/fonts/OCR_80.fnt", new Image("res/fonts/OCR_80.png"));
 		OCR_FONT_OL_BIG = new AngelCodeFont("res/fonts/OCR_ol_80.fnt", new Image("res/fonts/OCR_ol_80.png"));

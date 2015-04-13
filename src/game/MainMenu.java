@@ -38,9 +38,13 @@ public class MainMenu {
 //		BombermanGame.OCR_FONT_MED.drawString((canvasWidth - BombermanGame.OCR_FONT_MED.getWidth(option_0_1)) / 2, 480, option_0_1);
 //		BombermanGame.OCR_FONT_MED.drawString((canvasWidth - BombermanGame.OCR_FONT_MED.getWidth(option_0_2)) / 2, 580, option_0_2);
 		
-		BombermanGame.BASKERVILLE_FONT_OL_BIG.drawString((canvasWidth - BombermanGame.BASKERVILLE_FONT_OL_BIG.getWidth(option_0_0)) / 2, 380, option_0_0);
-		BombermanGame.BASKERVILLE_FONT_BIG.drawString((canvasWidth - BombermanGame.BASKERVILLE_FONT_BIG.getWidth(option_0_1)) / 2, 480, option_0_1);
-		BombermanGame.BASKERVILLE_FONT_BIG.drawString((canvasWidth - BombermanGame.BASKERVILLE_FONT_BIG.getWidth(option_0_2)) / 2, 580, option_0_2);
+//		BombermanGame.BASKERVILLE_FONT_OL_BIG.drawString((canvasWidth - BombermanGame.BASKERVILLE_FONT_OL_BIG.getWidth(option_0_0)) / 2, 380, option_0_0);
+//		BombermanGame.BASKERVILLE_FONT_BIG.drawString((canvasWidth - BombermanGame.BASKERVILLE_FONT_BIG.getWidth(option_0_1)) / 2, 480, option_0_1);
+//		BombermanGame.BASKERVILLE_FONT_BIG.drawString((canvasWidth - BombermanGame.BASKERVILLE_FONT_BIG.getWidth(option_0_2)) / 2, 580, option_0_2);
+		
+		BombermanGame.STEAMPUNK_FONT_OL_MED.drawString((canvasWidth - BombermanGame.STEAMPUNK_FONT_OL_MED.getWidth(option_0_0)) / 2, 380, option_0_0);
+		BombermanGame.STEAMPUNK_FONT_MED.drawString((canvasWidth - BombermanGame.STEAMPUNK_FONT_MED.getWidth(option_0_1)) / 2, 480, option_0_1);
+		BombermanGame.STEAMPUNK_FONT_MED.drawString((canvasWidth - BombermanGame.STEAMPUNK_FONT_MED.getWidth(option_0_2)) / 2, 580, option_0_2);
 	}
 
 	public void update(GameContainer container, StateBasedGame game, int delta) {
