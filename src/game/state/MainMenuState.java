@@ -1,26 +1,18 @@
 package game.state;
 
 import game.BombermanGame;
-import game.MainMenu;
-import game.MainMenuScreen;
-import game.config.GameRoundConfig;
+import game.menu.MainMenu;
+import game.menu.Menu.Action;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
-import slick.extension.AppGameContainerFSCustom;
 
-
-/**
- * Created by Mario on 30.03.2015.
- */
 public class MainMenuState extends BombermanGameState
 {
 		
-	MainMenuScreen mainMenu 		= null;
-	Image background				= null;
-	
-	MainMenu menu = null;
+	private Image background				= null;
+	private MainMenu menu 					= null;
 	
     public MainMenuState () {
         super(BombermanGameState.MAIN_MENU);    
@@ -28,68 +20,57 @@ public class MainMenuState extends BombermanGameState
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-    	mainMenu = new MainMenuScreen(game, AppGameContainerFSCustom.GAME_CANVAS_WIDTH, 
-        		AppGameContainerFSCustom.GAME_CANVAS_HEIGHT);
-    	mainMenu.init();
+    	
     	background = new Image("res/visuals/backgrounds/menuBackground.png");
     	
-    	menu = new MainMenu();
+    	menu = new MainMenu(((BombermanGame)game).getDefaultGameRoundConfig(),
+    			((BombermanGame)game).getMapConfigs(),
+    			((BombermanGame)game).getPlayerConfigs(),
+    			((BombermanGame)game).getInputConfigurations());
+    	menu.init();
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
-    	background.draw(0, 0);
-    	mainMenu.render(container, game, graphics); 
     	
-    	//menu.render(container, game, graphics);
+    	background.draw(0, 0);
+    	menu.render(container, game, graphics);
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        Input input = container.getInput();
-    
-        mainMenu.input(input);
-        mainMenu.update(container, game, delta);
         
-        if (mainMenu.getAction() != MainMenuScreen.NO_ACTION) {
+        menu.update(container, game, delta);
+        
+        if (menu.getActualAction() != Action.NO_ACTION) {
         	
-        	int currentAction = mainMenu.getAction();
-        	mainMenu.setAction(MainMenuScreen.NO_ACTION);
+        	Action currentAction = menu.getActualAction();
+        	menu.setActualAction(Action.NO_ACTION);
         	
-        	switch(currentAction) {
+        	switch (currentAction) {
+        	
+        		case EXIT_GAME: 
+        			((BombermanGame)game).exitGame();
+        			break;
         		
-		        case MainMenuScreen.GAME_EXIT: 
-		        	container.exit();
-		        	break;
-		        
-		        case MainMenuScreen.GAME_START_PVP: 
-		        	((GameRoundState)game.getState(GAME_ROUND)).setGameRoundConfig(createConfig(game));
+        		case START_GAME_ROUND:
+        			((GameRoundState)game.getState(GAME_ROUND)).setGameRoundConfig(menu.getGameRoundConfig());
 		        	game.enterState(GAME_ROUND);
 		        	break;
-	        }
-        	
-        }
-        
+        			
+        		default: break;
+        	}
+        }        
     }
     
     @Override
     public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-    
+    	menu.reset();
     }
 
     @Override
     public void leave(GameContainer container, StateBasedGame game) throws SlickException {
-    	mainMenu.reset();
     	container.getInput().clearKeyPressedRecord();
     }
     
-    private GameRoundConfig createConfig(StateBasedGame game) {
-    	
-    	GameRoundConfig config = new GameRoundConfig();
-    	config.setCurrentPlayerConfigs(((BombermanGame)game).getPlayerConfigs());
-    	config.setCurrentInputConfigs(((BombermanGame)game).getInputConfigurations());
-    	config.setMapConfig(mainMenu.getSelectedMapConfig());
-    	config.setTimeLimit(1_000 * 60 * 5);
-    	return config;
-    }
 }
