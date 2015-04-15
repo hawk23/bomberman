@@ -109,10 +109,9 @@ public class Player extends GameObject implements IDestroyable {
         this.playerConfig = playerConfig;
         this.collides = true;
 
-        drawPosX = lastDrawPosX = posX;
-        drawPosY = lastDrawPosY = posY;
-        originalX = targetX = drawPosX;
-        originalY = targetY = drawPosY;
+        originalX = targetX = drawPosX = lastDrawPosX = posX;
+        originalY = targetY = drawPosY = lastDrawPosY = posY;
+        
         speed = 1.7f;
         moving = false;
         movementDirection = Direction.DOWN;
@@ -215,19 +214,19 @@ public class Player extends GameObject implements IDestroyable {
             switch (direction) {
 
                 case UP:
-                    originalY = drawPosY;
-                    targetY = originalY - 64f;
-                    targetX = originalX = drawPosX;
-                    moving = true;
-                    movementDirection = Direction.UP;
-                    animation_actual = animation_up;
-                    animation_actual.restart();
+                	originalY = posY;
+                	targetY = originalY - 64f;
+                	targetX = originalX = posX;
+                	moving = true;
+                	movementDirection = Direction.UP;
+                	animation_actual = animation_up;
+                	animation_actual.restart();
                     break;
 
                 case DOWN:
-                    originalY = drawPosY;
+                    originalY = posY;
                     targetY = originalY + 64f;
-                    targetX = originalX = drawPosX;
+                    targetX = originalX = posX;
                     moving = true;
                     movementDirection = Direction.DOWN;
                     animation_actual = animation_down;
@@ -235,9 +234,9 @@ public class Player extends GameObject implements IDestroyable {
                     break;
 
                 case LEFT:
-                    originalX = drawPosX;
+                    originalX = posX;
                     targetX = originalX - 64f;
-                    targetY = originalY = drawPosY;
+                    targetY = originalY = posY;
                     moving = true;
                     movementDirection = Direction.LEFT;
                     animation_actual = animation_left;
@@ -245,9 +244,9 @@ public class Player extends GameObject implements IDestroyable {
                     break;
 
                 case RIGHT:
-                    originalX = drawPosX;
+                    originalX = posX;
                     targetX = originalX + 64f;
-                    targetY = originalY = drawPosY;
+                    targetY = originalY = posY;
                     moving = true;
                     movementDirection = Direction.RIGHT;
                     animation_actual = animation_right;
@@ -257,7 +256,15 @@ public class Player extends GameObject implements IDestroyable {
                 default:
                     break;
             }
+            
+            if (isBlocked(targetX, targetY)) {
+            	targetX = originalX;
+            	targetY = originalY;
+            	moving = false;
+            }
         }
+        
+
 
 
         // currently moving between tiles?
@@ -339,22 +346,22 @@ public class Player extends GameObject implements IDestroyable {
                         default:
                             break;
                     }
-
-                    movementInterpolation = movementInterpolation % 1.0f;
+                    
+                    if (isBlocked(targetX, targetY)) {
+                    	targetX = originalX;
+                    	targetY = originalY;
+                    	movementInterpolation = 1.0f;
+                    	moving = false;
+                    }
+                    else {
+                    	movementInterpolation = movementInterpolation % 1.0f;
+                    }  
                 }
                 // or stop?
                 else {
                     movementInterpolation = 1.0f;
                     moving = false;
                 }
-            }
-
-            //  check if target tile is blocked
-            Point tilePos = map.pixelsToTile((int) targetX, (int) targetY);
-            if (map.isBlocked(tilePos.x, tilePos.y)) {
-                targetX = originalX;
-                targetY = originalY;
-                moving = false;
             }
 
             // interpolate x and y coordinates
@@ -505,5 +512,16 @@ public class Player extends GameObject implements IDestroyable {
             map.addBomb(tilePos.x, tilePos.y, this);
             bombCount++;
         }
+    }
+    
+    private boolean isBlocked(float x, float y) {
+    	Point tilePos = map.pixelsToTile((int)x, (int)y);
+    	if (map.isBlocked(tilePos.x, tilePos.y)) {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
+    	
     }
 }
