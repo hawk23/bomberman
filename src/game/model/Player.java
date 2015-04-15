@@ -60,7 +60,7 @@ public class Player extends GameObject implements IDestroyable {
      */
     private float bombTimer = 1000;
     private int bombRange = 1;
-    private int bombLimit = 1;
+    private int bombLimit = 100;
     private int bombCount = 0;
 
     /**

@@ -80,6 +80,7 @@ public class AppGameContainerFSCustom extends AppGameContainer {
         maximumLogicInterval    = UPDATE_RATE;
 		minimumLogicInterval    = UPDATE_RATE;
 		targetFPS               = TARGET_FPS;
+		setMouseGrabbed(true);
 	}
 	
 	/**
