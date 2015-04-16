@@ -26,6 +26,9 @@ public class BombermanGame extends StateBasedGame {
 	public static AngelCodeFont STEAMPUNK_FONT_MED;
 	public static AngelCodeFont STEAMPUNK_FONT_OL_MED;
 	
+	public static AngelCodeFont STEAMPUNK2_FONT;
+	public static AngelCodeFont STEAMPUNK2_FONT_OL;
+	
 	public static AngelCodeFont JAMES_FONT;
 	public static AngelCodeFont JAMES_FONT_OL;
 	
@@ -76,6 +79,9 @@ public class BombermanGame extends StateBasedGame {
 		
 		STEAMPUNK_FONT_MED = new AngelCodeFont("res/fonts/steam_80.fnt", new Image("res/fonts/steam_80.png"));
 		STEAMPUNK_FONT_OL_MED = new AngelCodeFont("res/fonts/steam_ol_80.fnt", new Image("res/fonts/steam_ol_80.png"));
+		
+		STEAMPUNK2_FONT = new AngelCodeFont("res/fonts/steampunk2.fnt", new Image("res/fonts/steampunk2.png"));
+		STEAMPUNK2_FONT_OL = new AngelCodeFont("res/fonts/steampunk2_ol.fnt", new Image("res/fonts/steampunk2_ol.png"));
 		
 		JAMES_FONT = new AngelCodeFont("res/fonts/james.fnt", new Image("res/fonts/james.png"));
 		JAMES_FONT_OL = new AngelCodeFont("res/fonts/james_ol.fnt", new Image("res/fonts/james_ol.png"));

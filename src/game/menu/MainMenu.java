@@ -17,11 +17,11 @@ import slick.extension.AppGameContainerFSCustom;
 
 public class MainMenu extends Menu{
 	
-	private GameRoundConfig gameRoundConfig;
-	private ArrayList<MapConfig> mapConfigs; 
-	private ArrayList<PlayerConfig> playerConfigs;
+	private GameRoundConfig gameRoundConfig 			= new GameRoundConfig();
+	private ArrayList<MapConfig> mapConfigs 			= new ArrayList<MapConfig>();
+	private ArrayList<PlayerConfig> playerConfigs 		= new ArrayList<PlayerConfig>();
 	private ArrayList<PlayerConfig> actualPlayerConfigs = new ArrayList<PlayerConfig>();
-	private ArrayList<InputConfiguration> inputConfigs;
+	private ArrayList<InputConfiguration> inputConfigs 	= new ArrayList<InputConfiguration>();
 
 	// MainLayer
 	private int mainLayerIndex;
@@ -43,10 +43,10 @@ public class MainMenu extends Menu{
 	// SettingsLayer1
 	private int settingsLayer1Index;
 	private int settingsLayer1Size = 6;
-	private int space = 80;
-	private int xOffset = 500;
-	private int xOffset2 = 550;
-	private int yOffset = 630;
+	private int settings_space = 80;
+	private int settings_xOffset = 500;
+	private int settings_xOffset2 = 550;
+	private int settings_yOffset = 630;
 	private int timeLimit;
 	private int maxTimeLimit = 10;
 	private int players;
@@ -59,6 +59,24 @@ public class MainMenu extends Menu{
 	private String settingsLayer1_3 = "Avatar Selection";
 	private String settingsLayer1_4 = "Map";
 	private String settingsLayer1_5 = "Back";
+	
+	// AvatarLayer
+	private int avatarLayerIndex;
+	private int avatarLayerSize;
+	private int avatar_space = 80;
+	private int avatar_xOffset = 500;
+	private int avatar_xOffset2 = 550;
+	private int avatar_yOffset = 580;
+	private int actualPlayer1;
+	private int actualPlayer2;
+	private int actualPlayer3;
+	private int actualPlayer4;
+	private String avatarLayer_0 = "Back";
+	private String avatarLayer_1 = "Player 1";
+	private String avatarLayer_2 = "Player 2";
+	private String avatarLayer_3 = "Player 3";
+	private String avatarLayer_4 = "Player 4";
+	
 	
 	public MainMenu(GameRoundConfig gameRoundConfig, ArrayList<MapConfig> mapConfigs, 
 			ArrayList<PlayerConfig> playerConfigs, ArrayList<InputConfiguration> inputConfigs) {
@@ -80,6 +98,7 @@ public class MainMenu extends Menu{
 		resetExitLayer();
 		resetControlsLayer();
 		resetSettingsLayer1();
+		resetAvatarLayer();
 		actualAction = Action.NO_ACTION;
 		actualLayer = Layer.MAIN_LAYER;
 	}
@@ -114,11 +133,82 @@ public class MainMenu extends Menu{
 			case SETTINGS_LAYER_1:
 				renderSettingsLayer1(container, game, graphics);
 				break;
+			case AVATAR_LAYER:
+				renderAvatarLayer(container, game, graphics);
+				break;
 			
 			default: break;
 		}
 	}
 	
+	private void renderAvatarLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
+		fontOutline2.drawString(50, 10, "Avatar Selection");
+		
+		graphics.scale(0.7f, 0.7f);
+		
+		if (avatarLayerIndex == 0) {
+			fontOutline.drawString(avatar_xOffset, avatar_yOffset, avatarLayer_0);
+		}
+		else {
+			font.drawString(avatar_xOffset, avatar_yOffset, avatarLayer_0);
+		}
+		
+		for (int i = 0; i < actualPlayerConfigs.size(); i++) {
+			
+			PlayerConfig p = actualPlayerConfigs.get(i);
+			if (i == 0) {
+				if (avatarLayerIndex == 1) {
+					fontOutline.drawString(avatar_xOffset, avatar_yOffset + avatar_space * (i + 1), avatarLayer_1);
+					fontOutline.drawString(avatar_xOffset2 + (canvasWidth - fontOutline.getWidth("<" + p.getName() + ">")) / 2,
+							avatar_yOffset + avatar_space * (i + 1), "<" + p.getName() + ">");
+				}
+				else {
+					font.drawString(avatar_xOffset, avatar_yOffset + avatar_space * (i + 1), avatarLayer_1);
+					font.drawString(avatar_xOffset2 + (canvasWidth - font.getWidth("<" + p.getName() + ">")) / 2,
+							avatar_yOffset + avatar_space * (i + 1), "<" + p.getName() + ">");
+				}
+			}
+			if (i == 1) {
+				if (avatarLayerIndex == 2) {
+					fontOutline.drawString(avatar_xOffset, avatar_yOffset + avatar_space * (i + 1), avatarLayer_2);
+					fontOutline.drawString(avatar_xOffset2 + (canvasWidth - fontOutline.getWidth("<" + p.getName() + ">")) / 2,
+							avatar_yOffset + avatar_space * (i + 1), "<" + p.getName() + ">");
+				}
+				else {
+					font.drawString(avatar_xOffset, avatar_yOffset + avatar_space * (i + 1), avatarLayer_2);
+					font.drawString(avatar_xOffset2 + (canvasWidth - font.getWidth("<" + p.getName() + ">")) / 2,
+							avatar_yOffset + avatar_space * (i + 1), "<" + p.getName() + ">");
+				}
+			}
+			if (i == 2) {
+				if (avatarLayerIndex == 3) {
+					fontOutline.drawString(avatar_xOffset, avatar_yOffset + avatar_space * (i + 1), avatarLayer_3);
+					fontOutline.drawString(avatar_xOffset2 + (canvasWidth - fontOutline.getWidth("<" + p.getName() + ">")) / 2,
+							avatar_yOffset + avatar_space * (i + 1), "<" + p.getName() + ">");
+				}
+				else {
+					font.drawString(avatar_xOffset, avatar_yOffset + avatar_space * (i + 1), avatarLayer_3);
+					font.drawString(avatar_xOffset2 + (canvasWidth - font.getWidth("<" + p.getName() + ">")) / 2,
+							avatar_yOffset + avatar_space * (i + 1), "<" + p.getName() + ">");
+				}
+			}
+			if (i == 3) {
+				if (avatarLayerIndex == 4) {
+					fontOutline.drawString(avatar_xOffset, avatar_yOffset + avatar_space * (i + 1), avatarLayer_4);
+					fontOutline.drawString(avatar_xOffset2 + (canvasWidth - fontOutline.getWidth("<" + p.getName() + ">")) / 2,
+							avatar_yOffset + avatar_space * (i + 1), "<" + p.getName() + ">");
+				}
+				else {
+					font.drawString(avatar_xOffset, avatar_yOffset + avatar_space * (i + 1), avatarLayer_4);
+					font.drawString(avatar_xOffset2 + (canvasWidth - font.getWidth("<" + p.getName() + ">")) / 2,
+							avatar_yOffset + avatar_space * (i + 1), "<" + p.getName() + ">");
+				}
+			}
+		}
+		
+		graphics.resetTransform();
+	}
+
 	private void renderSettingsLayer1(GameContainer container, StateBasedGame game, Graphics graphics) {
 		
 		int xPaddingMap = 320;
@@ -177,66 +267,66 @@ public class MainMenu extends Menu{
 		
 		graphics.scale(0.7f, 0.7f);
 		if (settingsLayer1Index == 1) {
-			fontOutline.drawString(xOffset, yOffset, settingsLayer1_1);
+			fontOutline.drawString(settings_xOffset, settings_yOffset, settingsLayer1_1);
 			if (timeLimit == 0) {
-				fontOutline.drawString(xOffset2 + (canvasWidth - fontOutline.getWidth("<" + "No Limit" + ">")) / 2, 
-						yOffset, "<" + "No Limit" + ">");
+				fontOutline.drawString(settings_xOffset2 + (canvasWidth - fontOutline.getWidth("<" + "No Limit" + ">")) / 2, 
+						settings_yOffset, "<" + "No Limit" + ">");
 			}
 			else {
-				fontOutline.drawString(xOffset2 + (canvasWidth - fontOutline.getWidth("<" + timeLimit + " Min" + ">")) / 2, 
-						yOffset, "<" + timeLimit + " Min" + ">");
+				fontOutline.drawString(settings_xOffset2 + (canvasWidth - fontOutline.getWidth("<" + timeLimit + " Min" + ">")) / 2, 
+						settings_yOffset, "<" + timeLimit + " Min" + ">");
 			}
 
 		}
 		else {
-			font.drawString(xOffset, yOffset, settingsLayer1_1);
+			font.drawString(settings_xOffset, settings_yOffset, settingsLayer1_1);
 			if (timeLimit == 0) {
-				font.drawString(xOffset2 + (canvasWidth - font.getWidth("No Limit")) / 2,
-						yOffset, "No Limit");
+				font.drawString(settings_xOffset2 + (canvasWidth - font.getWidth("No Limit")) / 2,
+						settings_yOffset, "No Limit");
 			}
 			else {
-				font.drawString(xOffset2 + (canvasWidth - font.getWidth("" + timeLimit + " Min")) / 2,
-						yOffset, "" + timeLimit + " Min");
+				font.drawString(settings_xOffset2 + (canvasWidth - font.getWidth("" + timeLimit + " Min")) / 2,
+						settings_yOffset, "" + timeLimit + " Min");
 			}
 		}
 		if (settingsLayer1Index == 2) {
-			fontOutline.drawString(xOffset, yOffset + space, settingsLayer1_2);
-			fontOutline.drawString(xOffset2 + (canvasWidth - fontOutline.getWidth("<" + players + ">")) / 2,
-					yOffset + space, "<" + players + ">");
+			fontOutline.drawString(settings_xOffset, settings_yOffset + settings_space, settingsLayer1_2);
+			fontOutline.drawString(settings_xOffset2 + (canvasWidth - fontOutline.getWidth("<" + players + ">")) / 2,
+					settings_yOffset + settings_space, "<" + players + ">");
 		}
 		else {
-			font.drawString(xOffset, yOffset + space, settingsLayer1_2);
-			font.drawString(xOffset2 + (canvasWidth - font.getWidth("" + players)) / 2, 
-					yOffset + space, "" + players);
+			font.drawString(settings_xOffset, settings_yOffset + settings_space, settingsLayer1_2);
+			font.drawString(settings_xOffset2 + (canvasWidth - font.getWidth("" + players)) / 2, 
+					settings_yOffset + settings_space, "" + players);
 		}
 		if (settingsLayer1Index == 3) {
-			fontOutline.drawString(xOffset, yOffset + 2 * space, settingsLayer1_3);
+			fontOutline.drawString(settings_xOffset, settings_yOffset + 2 * settings_space, settingsLayer1_3);
 		}
 		else {
-			font.drawString(xOffset, yOffset + 2 * space, settingsLayer1_3);
+			font.drawString(settings_xOffset, settings_yOffset + 2 * settings_space, settingsLayer1_3);
 		}
 		if (settingsLayer1Index == 4) {
-			fontOutline.drawString(xOffset, yOffset + 3 * space, settingsLayer1_4);
-			fontOutline.drawString(xOffset2 + (canvasWidth - fontOutline.getWidth("<" + mapConfigs.get(actualMap).getName() + ">")) / 2, 
-					yOffset + 3 * space, "<" + mapConfigs.get(actualMap).getName() + ">");
+			fontOutline.drawString(settings_xOffset, settings_yOffset + 3 * settings_space, settingsLayer1_4);
+			fontOutline.drawString(settings_xOffset2 + (canvasWidth - fontOutline.getWidth("<" + mapConfigs.get(actualMap).getName() + ">")) / 2, 
+					settings_yOffset + 3 * settings_space, "<" + mapConfigs.get(actualMap).getName() + ">");
 		}
 		else {
-			font.drawString(xOffset, yOffset + 3 * space, settingsLayer1_4);
-			font.drawString(xOffset2 + (canvasWidth - font.getWidth("" + mapConfigs.get(actualMap).getName())) / 2, 
-					yOffset + 3 * space, "" + mapConfigs.get(actualMap).getName());
+			font.drawString(settings_xOffset, settings_yOffset + 3 * settings_space, settingsLayer1_4);
+			font.drawString(settings_xOffset2 + (canvasWidth - font.getWidth("" + mapConfigs.get(actualMap).getName())) / 2, 
+					settings_yOffset + 3 * settings_space, "" + mapConfigs.get(actualMap).getName());
 		}
 		if (settingsLayer1Index == 5) {
-			fontOutline.drawString(xOffset, yOffset + 4 * space, settingsLayer1_5);
+			fontOutline.drawString(settings_xOffset, settings_yOffset + 4 * settings_space, settingsLayer1_5);
 		}
 		else {
-			font.drawString(xOffset, yOffset + 4 * space, settingsLayer1_5);
+			font.drawString(settings_xOffset, settings_yOffset + 4 * settings_space, settingsLayer1_5);
 		}
 		
 		graphics.resetTransform();
 	}
 
 	private void renderControlsLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
-		fontOutline2.drawString(100, 50, "Controls");
+		fontOutline2.drawString(50, 10, "Controls");
 		
 		graphics.scale(0.7f, 0.7f);
 		fontOutline.drawString((canvasWidth - fontOutline.getWidth(controlsLayer_0)) / 2 /0.7f, 
@@ -310,8 +400,106 @@ public class MainMenu extends Menu{
 			case SETTINGS_LAYER_1:
 				settingsLayer1_checkInput(input);
 				break;
+			case AVATAR_LAYER:
+				avatarLayer_checkInput(input);
+				break;
 			
 			default: break;
+		}
+	}
+
+	private void avatarLayer_checkInput(Input input) {
+		if (input.isKeyPressed(Input.KEY_W) || input.isKeyPressed(Input.KEY_UP)) {
+			avatarLayerSize = actualPlayerConfigs.size() + 1;
+			if (avatarLayerIndex - 1 >= 0) {
+				avatarLayerIndex--;
+			}
+		}
+		if (input.isKeyPressed(Input.KEY_S) || input.isKeyPressed(Input.KEY_DOWN)) {
+			avatarLayerSize = actualPlayerConfigs.size() + 1;
+			if (avatarLayerIndex + 1 < avatarLayerSize) {
+				avatarLayerIndex++;
+			}
+		}
+		if (input.isKeyPressed(Input.KEY_A) || input.isKeyPressed(Input.KEY_LEFT)) {
+			
+			switch (avatarLayerIndex) {
+			
+				case 1: 
+					actualPlayer1 = playerConfigs.indexOf(actualPlayerConfigs.get(0));
+					if (actualPlayer1 - 1 >= 0) {
+						actualPlayer1--;
+						actualPlayerConfigs.set(0, playerConfigs.get(actualPlayer1));
+					}
+					break;
+				case 2: 
+					actualPlayer2 = playerConfigs.indexOf(actualPlayerConfigs.get(1));
+					if (actualPlayer2 - 1 >= 0) {
+						actualPlayer2--;
+						actualPlayerConfigs.set(1, playerConfigs.get(actualPlayer2));
+					}
+					break;
+				case 3: 
+					actualPlayer3 = playerConfigs.indexOf(actualPlayerConfigs.get(2));
+					if (actualPlayer3 - 1 >= 0) {
+						actualPlayer3--;
+						actualPlayerConfigs.set(2, playerConfigs.get(actualPlayer3));
+					}
+					break;
+				case 4: 
+					actualPlayer4 = playerConfigs.indexOf(actualPlayerConfigs.get(3));
+					if (actualPlayer4 - 1 >= 0) {
+						actualPlayer4--;
+						actualPlayerConfigs.set(3, playerConfigs.get(actualPlayer4));
+					}
+					break;
+			}
+		}
+		if (input.isKeyPressed(Input.KEY_D) || input.isKeyPressed(Input.KEY_RIGHT)) {
+			
+			switch (avatarLayerIndex) {
+			
+			case 1: 
+				actualPlayer1 = playerConfigs.indexOf(actualPlayerConfigs.get(0));
+				if (actualPlayer1 + 1 < playerConfigs.size()) {
+					actualPlayer1++;
+					actualPlayerConfigs.set(0, playerConfigs.get(actualPlayer1));
+				}
+				break;
+			case 2: 
+				actualPlayer2 = playerConfigs.indexOf(actualPlayerConfigs.get(1));
+				if (actualPlayer2 + 1 < playerConfigs.size()) {
+					actualPlayer2++;
+					actualPlayerConfigs.set(1, playerConfigs.get(actualPlayer2));
+				}
+				break;
+			case 3: 
+				actualPlayer3 = playerConfigs.indexOf(actualPlayerConfigs.get(2));
+				if (actualPlayer3 + 1 < playerConfigs.size()) {
+					actualPlayer3++;
+					actualPlayerConfigs.set(2, playerConfigs.get(actualPlayer3));
+				}
+				break;
+			case 4: 
+				actualPlayer4 = playerConfigs.indexOf(actualPlayerConfigs.get(3));
+				if (actualPlayer4 + 1 < playerConfigs.size()) {
+					actualPlayer4++;
+					actualPlayerConfigs.set(3, playerConfigs.get(actualPlayer4));
+				}
+				break;
+		}
+		}
+		if (input.isKeyPressed(Input.KEY_ENTER)) {
+			switch (avatarLayerIndex) {
+				case 0: 
+					actualLayer = Layer.SETTINGS_LAYER_1;
+					resetAvatarLayer();
+					break;
+			}
+		}
+		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+			actualLayer = Layer.SETTINGS_LAYER_1;
+			resetAvatarLayer();
 		}
 	}
 
@@ -375,6 +563,7 @@ public class MainMenu extends Menu{
 					actualAction = Action.START_GAME_ROUND;
 					break;
 				case 3: 
+					actualLayer = Layer.AVATAR_LAYER;
 					break;
 				case 5: 
 					actualLayer = Layer.MAIN_LAYER;
@@ -467,6 +656,10 @@ public class MainMenu extends Menu{
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			actualLayer = Layer.EXIT_LAYER;
 		}
+	}
+	
+	private void resetAvatarLayer() {
+		avatarLayerIndex = 0;
 	}
 	
 	private void resetSettingsLayer1() {
