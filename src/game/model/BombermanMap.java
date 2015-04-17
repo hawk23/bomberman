@@ -34,7 +34,8 @@ public class BombermanMap extends TiledMap implements IRenderable, IUpdateable{
     private StateBasedGame stateBasedGame;
     private Graphics g;
 
-    private static final int PLAYERS_QUANTITY=2;
+    private static final int PLAYERS_QUANTITY = 2;
+//    private static int nrPlayers;
     /**
      *  The TileMaps contain 3 Layer to seperate the Map for Rendering:
      *      Background: always behind players and items
@@ -73,6 +74,9 @@ public class BombermanMap extends TiledMap implements IRenderable, IUpdateable{
     private Shape player2Shape;
     private Player player1;
     private Player player2;
+    
+//    private Player[]	players;
+//    private Shape[]	playerShapes;
 
     public BombermanMap(String ref) throws SlickException {
         super(ref);
@@ -99,10 +103,19 @@ public class BombermanMap extends TiledMap implements IRenderable, IUpdateable{
         init();
     }
 
-    private void init(){
+    private void init()
+    {
         renderQue=new ArrayList<RenderItem>();
         initLayers();
         initMatrixes();
+        
+//        this.players		= new Player[nrPlayers];
+//        this.playerShapes	= new Shape[nrPlayers];
+        
+//        for(int i = 0; i < nrPlayers; i++)
+//        {
+//        	
+//        }
 
         this.player1Shape = new Rectangle(this.getObjectX(0, 0), this.getObjectY(0, 0), this.getObjectWidth(0, 0), this.getObjectHeight(0, 0));
         this.player2Shape = new Rectangle(this.getObjectX(0, 1), this.getObjectY(0, 1), this.getObjectWidth(0, 1), this.getObjectHeight(0, 1));
