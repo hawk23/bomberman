@@ -19,15 +19,16 @@ public class BombermanMap implements IUpdateable, IRenderable
 	TiledMapWrapper			wrapper;
 	Player[]				players;
 	Bomb[][]				bombs;
+	Explosion[][]			explosions;
 	ArrayList<GameObject>	objects;
 	
 	public BombermanMap(GameRoundConfig config, GameContainer container) throws SlickException
 	{
-		this.wrapper = new TiledMapWrapper(config.getMapConfig().getPath());
-		this.players = new Player[config.getCurrentPlayerConfigs().size()];
-		this.bombs	 = new Bomb[wrapper.getHeight()][wrapper.getWidth()];
-
-		this.objects = new ArrayList<GameObject>();
+		this.wrapper 	= new TiledMapWrapper(config.getMapConfig().getPath());
+		this.players 	= new Player[config.getCurrentPlayerConfigs().size()];
+		this.bombs	 	= new Bomb[wrapper.getHeight()][wrapper.getWidth()];
+		this.explosions	= new Explosion[wrapper.getHeight()][wrapper.getWidth()];
+		this.objects	= new ArrayList<GameObject>();
 		
     	// create players and define controls
 		for (int i = 0; i < this.players.length; i++)
@@ -61,7 +62,15 @@ public class BombermanMap implements IUpdateable, IRenderable
 			for (int j = 0; j < this.bombs[i].length; j++)
 			{
 				if(this.bombs[i][j] != null)
+				{
 					this.bombs[i][j].update(container, game, delta);
+				}
+					
+				if(this.bombs[i][j].isExploded())
+				{
+					this.explosions[i][j] = new Explosion(this.bombs[i][j].getBombRange());
+					// TODO remove bomb from game objects and bombs
+				}
 			}
 		}
 		

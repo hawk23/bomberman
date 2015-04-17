@@ -10,14 +10,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
-/**
- * Created by Roland Schreier on 31.03.2015.
- *
- * is collidable
- * is destroyable
- *
- * needs the BombermanMap to remove itself and calculate the explosion
- */
 public class Bomb extends GameObject implements IDestroyable
 {
     private static final String path 				= "res/visuals/bomb/bomb.png";
@@ -28,9 +20,9 @@ public class Bomb extends GameObject implements IDestroyable
     private int					range;
     private int					timer;
     private int					time;
-    private boolean				isExploding			= false;
     private Player				player;
-
+    private boolean				exploded;
+    
     /**
      * Directions for the calculation of the blast, UP,LEFT,DOWN,RIGHT
      */
@@ -39,11 +31,11 @@ public class Bomb extends GameObject implements IDestroyable
     public Bomb(int tileX, int tileY, int bombRange, int bombTimer, Player player)
     {
         super(tileX, tileY);
-        this.player = player;
-        this.timer = bombTimer;
-        this.range = bombRange;
-        this.time = 0;
-        
+        this.player		= player;
+        this.timer		= bombTimer;
+        this.range		= bombRange;
+        this.time		= 0;
+        this.exploded	= false;
         loadImage();
     }
 
@@ -70,12 +62,12 @@ public class Bomb extends GameObject implements IDestroyable
     @Override
     public boolean destroy()
     {
-        if(!isExploding)
-        {
-            explode();
-            return true;
-        }
-        else
+//        if(!isExploding)
+//        {
+//            explode();
+//            return true;
+//        }
+//        else
             return false;
     }
 
@@ -85,7 +77,6 @@ public class Bomb extends GameObject implements IDestroyable
      */
     private void explode()
     {
-//        isExploding=true;
 //        for(int direction=0;direction<blastDirection[0].length;direction++){
 //            for(int r=1;r<=range;r++){
 //                //Debugger.log("(" + getTileX() + blastDirection[0][direction] * r + "," + getTileY() + blastDirection[1][direction] * r + ")");
@@ -112,11 +103,28 @@ public class Bomb extends GameObject implements IDestroyable
     {
     	if(time >= timer)
     	{
-    		// TODO add explosion
-    		// remove bomb
+    		this.setExploded();
     	}
+    	
+    	time += delta;
+    }
+    
+    public void setExploded()
+    {
+    	this.exploded = true;
+    	this.player.reduceBombCounter();
+    }
+    
+    public boolean isExploded()
+    {
+    	return this.exploded;
     }
 
+    public int getBombRange()
+    {
+    	return this.range;
+    }
+    
     private void loadImage()
     {
         try
