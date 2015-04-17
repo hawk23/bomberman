@@ -96,7 +96,7 @@ public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderabl
     }
 
 	@Override
-	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta)
+	public void update(GameContainer container, StateBasedGame game, int delta)
 	{
 		for (int i = 0; i < this.blockMatrix.length; i++)
 		{
@@ -115,7 +115,7 @@ public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderabl
 	}
 
 	@Override
-	public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g)
+	public void render(GameContainer container, StateBasedGame game, Graphics g)
 	{
 		super.render(0, 0);
 	}

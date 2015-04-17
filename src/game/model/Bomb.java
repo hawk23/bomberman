@@ -1,6 +1,7 @@
 package game.model;
 
 import game.debug.Debugger;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -92,20 +93,23 @@ public class Bomb extends GameObject implements IDestroyable
     }
 
     @Override
-    public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g) {
-        animationBurn.draw(posX,posY,64,64);
+    public void render(GameContainer container, StateBasedGame game, Graphics g)
+    {
+//        animationBurn.draw(posX,posY,64,64);
     }
 
 
     @Override
-    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) {
-        Debugger.log("BombTimer: " + timer);
+    public void update(GameContainer container, StateBasedGame game, int delta)
+    {
+    	Debugger.log("BombTimer: " + timer);
         if(timer<=0)
             destroy();
         timer-=delta;
     }
 
-    private void loadImage(){
+    private void loadImage()
+    {
         try {
             bombSheet = new SpriteSheet(path,64,64);
             animationBurn = new Animation(bombSheet,animationInteval);
