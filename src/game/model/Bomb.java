@@ -1,5 +1,6 @@
 package game.model;
 
+import game.config.GameSettings;
 import game.debug.Debugger;
 
 import org.newdawn.slick.*;
@@ -12,37 +13,31 @@ import org.newdawn.slick.state.StateBasedGame;
  * is destroyable
  *
  * needs the BombermanMap to remove itself and calculate the explosion
- *
  */
 public class Bomb extends GameObject implements IDestroyable
 {
+    private static final String path 				= "res/visuals/bomb/bomb.png";
+    private static final int	animationInteval	= 40;
 
-    private static final String path="res/visuals/bomb/bomb.png";
-    private static final int animationInteval=40;
-
-    private SpriteSheet bombSheet;
-    private Animation animationBurn;
-
-    private int range;
-    private float timer;
-    private boolean isExploding=false;
-
-    private Player player;
+    private SpriteSheet			bombSheet;
+    private Animation			animationBurn;
+    private int					range;
+    private int					timer;
+    private boolean				isExploding			= false;
+    private Player				player;
 
     /**
      * Directions for the calculation of the blast, UP,LEFT,DOWN,RIGHT
      */
-    private int blastDirection[][]=new int[][]{
-            {1, 0, -1, 0},
-            {0, 1, 0, -1}
-    };
+    private int blastDirection[][] = {{1, 0, -1, 0}, {0, 1, 0, -1}};
 
-    public Bomb(int tileX, int tileY, Player player)
+    public Bomb(int tileX, int tileY, int bombRange, int bombTimer, Player player)
     {
         super(tileX, tileY);
-        this.player=player;
-        setTimer(player.getBombTimer());
-        setRange(player.getBombRange());
+        this.player = player;
+        this.timer = bombTimer;
+        this.range = bombRange;
+
         loadImage();
     }
 
@@ -54,28 +49,32 @@ public class Bomb extends GameObject implements IDestroyable
         this.range = range;
     }
 
-    public float getTimer() {
+    public int getTimer() {
         return timer;
     }
 
-    public void setTimer(float timer) {
+    public void setTimer(int timer) {
         this.timer = timer;
     }
 
     @Override
-    public boolean destroy() {
-        if(!isExploding) {
+    public boolean destroy()
+    {
+        if(!isExploding)
+        {
             explode();
             return true;
-        }else
+        }
+        else
             return false;
     }
 
     /**
      * Calculates the explosion.
      * spreads in each blastDirection for its range
-//     */
-    private void explode(){
+     */
+    private void explode()
+    {
 //        isExploding=true;
 //        for(int direction=0;direction<blastDirection[0].length;direction++){
 //            for(int r=1;r<=range;r++){
@@ -95,9 +94,8 @@ public class Bomb extends GameObject implements IDestroyable
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
-//        animationBurn.draw(posX,posY,64,64);
+        animationBurn.draw(tileX * GameSettings.TILE_HEIGHT, tileY * GameSettings.TILE_WIDTH);
     }
-
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta)
@@ -110,10 +108,13 @@ public class Bomb extends GameObject implements IDestroyable
 
     private void loadImage()
     {
-        try {
-            bombSheet = new SpriteSheet(path,64,64);
-            animationBurn = new Animation(bombSheet,animationInteval);
-        }catch (SlickException e) {
+        try
+        {
+            bombSheet		= new SpriteSheet(path, 64, 64);
+            animationBurn	= new Animation(bombSheet, animationInteval);
+        }
+        catch (SlickException e)
+        {
             //TODO
         }
     }

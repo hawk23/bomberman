@@ -1,22 +1,20 @@
 package game.model;
 
-import game.Map;
 import game.config.PlayerConfig;
 import game.debug.Debugger;
 import game.input.Direction;
 import game.input.InputManager;
 
-import org.newdawn.slick.*;
-import org.newdawn.slick.Color;
+import java.awt.Point;
+
+import org.newdawn.slick.Animation;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.tiled.TileSet;
 
 import slick.extension.AppGameContainerFSCustom;
-
-import java.awt.*;
 
 /**
  * Created by Albert on 30.03.2015.
@@ -57,7 +55,7 @@ public class Player extends GameObject implements IDestroyable
      * settings for the bomb
      * TODO move to PlayerConfig ?!
      */
-    private float bombTimer = 1000;
+    private int bombTimer = 1000;
     private int bombRange = 1;
     private int bombLimit = 100;
     private int bombCount = 0;
@@ -183,7 +181,9 @@ public class Player extends GameObject implements IDestroyable
     public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
         float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
-
+        
+        g.drawString("posX: " + tileX, 0, 0);
+        g.drawString("posY: " + tileY, 0, 10);
         image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY - 64 - 15);
     }
 
@@ -466,11 +466,11 @@ public class Player extends GameObject implements IDestroyable
         return false;
     }
 
-    public float getBombTimer() {
+    public int getBombTimer() {
         return bombTimer;
     }
 
-    public void setBombTimer(float bombTimer) {
+    public void setBombTimer(int bombTimer) {
         this.bombTimer = bombTimer;
     }
 
@@ -489,12 +489,15 @@ public class Player extends GameObject implements IDestroyable
 
     public void addBomb()
     {
-//        if (bombCount < bombLimit)
-//        {
-//            Point tilePos = map.pixelsToTile(posX, posY);
-//            map.addBomb(tilePos.x, tilePos.y, this);
-//            bombCount++;
-//        }
+        if (bombCount < bombLimit)
+        {
+        	if(!(this.map.isBlocked(tileX, tileY)))
+        	{
+        		Bomb bomb = new Bomb(tileX, tileY, bombRange, bombTimer, this);
+        		this.map.addBomb(bomb);
+        		this.bombCount++;
+        	}
+        }
     }
     
     private boolean isBlocked(float x, float y)

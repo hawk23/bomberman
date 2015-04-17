@@ -316,10 +316,10 @@ public class OldBombermanMap extends TiledMap implements IRenderable, IUpdateabl
     }
 
     public boolean addBomb(int tileX, int tileY,Player player){
-        if(!isBlocked(tileX, tileY)){
-            Bomb bomb=new Bomb(tileX,tileY,player);
-            return addGameObject(tileX,tileY,bomb);
-        }else
+//        if(!isBlocked(tileX, tileY)){
+////            Bomb bomb=new Bomb(tileX,tileY,player);
+////            return addGameObject(tileX,tileY,bomb);
+//        }else
             return false;
     }
 
