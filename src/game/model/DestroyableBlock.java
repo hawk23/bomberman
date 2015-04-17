@@ -8,25 +8,25 @@ package game.model;
  */
 public class DestroyableBlock extends Block implements IDestroyable {
 
-    protected BombermanMap bombermanMap;
+    protected OldBombermanMap oldBombermanMap;
 
-    public DestroyableBlock(int tileX, int tileY, int tileWidth, int tileHeight, BombermanMap bombermanMap) {
+    public DestroyableBlock(int tileX, int tileY, int tileWidth, int tileHeight, OldBombermanMap oldBombermanMap) {
         super(tileX, tileY, tileWidth, tileHeight);
-        setBombermanMap(bombermanMap);
+        setBombermanMap(oldBombermanMap);
     }
 
-    public DestroyableBlock(int tileX, int tileY, BombermanMap bombermanMap) {
+    public DestroyableBlock(int tileX, int tileY, OldBombermanMap oldBombermanMap) {
         super(tileX, tileY);
-        setBombermanMap(bombermanMap);
+        setBombermanMap(oldBombermanMap);
     }
 
     @Override
     public boolean destroy() {
-        return bombermanMap.removeBlock(getTileX(), getTileY(), this);
+        return oldBombermanMap.removeBlock(getTileX(), getTileY(), this);
     }
 
-    private void setBombermanMap(BombermanMap bombermanMap) {
-        this.bombermanMap = bombermanMap;
+    private void setBombermanMap(OldBombermanMap oldBombermanMap) {
+        this.oldBombermanMap = oldBombermanMap;
     }
 
     @Override

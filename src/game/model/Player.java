@@ -26,7 +26,7 @@ public class Player extends GameObject implements IDestroyable {
     //......
 
 
-    private BombermanMap map;
+    private OldBombermanMap map;
     private InputManager inputManager;
 
     private float drawPosX;
@@ -100,7 +100,7 @@ public class Player extends GameObject implements IDestroyable {
      * @param inputManager
      * @throws SlickException
      */
-    public Player(Shape shape, BombermanMap map, int playerID, InputManager inputManager, PlayerConfig playerConfig) throws SlickException {
+    public Player(Shape shape, OldBombermanMap map, int playerID, InputManager inputManager, PlayerConfig playerConfig) throws SlickException {
         super((int) shape.getX(), (int) shape.getY());
 
         setMap(map);
@@ -477,11 +477,11 @@ public class Player extends GameObject implements IDestroyable {
         return false;
     }
 
-    public BombermanMap getMap() {
+    public OldBombermanMap getMap() {
         return map;
     }
 
-    public void setMap(BombermanMap map) {
+    public void setMap(OldBombermanMap map) {
         this.map = map;
     }
 

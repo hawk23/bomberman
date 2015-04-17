@@ -80,15 +80,15 @@ public class Bomb extends DestroyableBlock{
             for(int r=1;r<=range;r++){
                 //Debugger.log("(" + getTileX() + blastDirection[0][direction] * r + "," + getTileY() + blastDirection[1][direction] * r + ")");
                 /*If we hit a collision blast won't spread any longer in this direction*/
-                if(bombermanMap.isBlocked(getTileX() + blastDirection[0][direction] * r, getTileY() + blastDirection[1][direction] * r)) {
-                    bombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY() +blastDirection[1][direction]*r);
+                if(oldBombermanMap.isBlocked(getTileX() + blastDirection[0][direction] * r, getTileY() + blastDirection[1][direction] * r)) {
+                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY() +blastDirection[1][direction]*r);
                     break;
                 }else
-                    bombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
+                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
             }
         }
         player.removeBomb();
-        bombermanMap.removeGameObject(getTileX(), getTileY(), this);
+        oldBombermanMap.removeGameObject(getTileX(), getTileY(), this);
     }
 
     @Override

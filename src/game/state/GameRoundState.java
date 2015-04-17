@@ -4,7 +4,7 @@ import game.config.GameRoundConfig;
 import game.input.InputManager;
 import game.menu.PauseMenu;
 import game.menu.Menu.Action;
-import game.model.BombermanMap;
+import game.model.OldBombermanMap;
 import game.model.Player;
 
 import org.newdawn.slick.Color;
@@ -28,7 +28,7 @@ public class GameRoundState extends BombermanGameState
     
     
     
-	private BombermanMap            map                 	= null;
+	private OldBombermanMap            map                 	= null;
     private Player                  player1             	= null;
     private Player                  player2             	= null;
 
@@ -123,7 +123,7 @@ public class GameRoundState extends BombermanGameState
     	menu.reset();
     	
 
-    	this.map = new BombermanMap(this.gameRoundConfig.getMapConfig().getPath());
+    	this.map = new OldBombermanMap(this.gameRoundConfig.getMapConfig().getPath());
         // create players and define controls
         InputManager    inputManager1   = new InputManager(container.getInput(), this.gameRoundConfig.getCurrentInputConfigs().get(0));
         InputManager    inputManager2   = new InputManager(container.getInput(), this.gameRoundConfig.getCurrentInputConfigs().get(1));

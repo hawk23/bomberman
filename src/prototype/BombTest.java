@@ -1,7 +1,7 @@
 package prototype;
 
 import game.model.Bomb;
-import game.model.BombermanMap;
+import game.model.OldBombermanMap;
 import game.model.Player;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
@@ -28,7 +28,7 @@ public class BombTest extends BasicGame {
     public static final int UPDATE_RATE = 1_000 / UPDATES_PER_SECOND;
     public static final int TARGET_FPS = 500;
 
-    private BombermanMap map;
+    private OldBombermanMap map;
     private int BLOCK_SIZE=64;
 
     private List<Renderable> renderQue;
@@ -68,7 +68,7 @@ public class BombTest extends BasicGame {
 
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
-        map = new BombermanMap(MAP_PATH);
+        map = new OldBombermanMap(MAP_PATH);
         BLOCK_SIZE=map.getTileHeight();
         selector = new Selector(BLOCK_SIZE);
 
