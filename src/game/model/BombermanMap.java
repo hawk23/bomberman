@@ -24,7 +24,7 @@ public class BombermanMap implements IUpdateable, IRenderable
 		for (int i = 0; i < this.players.length; i++)
 		{
 	        InputManager inputManager = new InputManager(container.getInput(), config.getCurrentInputConfigs().get(i));
-			this.players[i] = new Player(this, inputManager, config.getCurrentPlayerConfigs().get(i), this.wrapper.getSpawnPoint(i)); 	
+			this.players[i] = new Player(this, inputManager, config.getCurrentPlayerConfigs().get(i), this.wrapper.getSpawnPoint(i));
 		}
 	}
 	
@@ -48,6 +48,11 @@ public class BombermanMap implements IUpdateable, IRenderable
 		{
 			this.players[i].update(container, game, delta);
 		}
+	}
+	
+	public boolean isBlocked(int tileX, int tileY)
+	{
+		return this.wrapper.isBlocked(tileX, tileY);
 	}
 	
 	public int getWidth() 

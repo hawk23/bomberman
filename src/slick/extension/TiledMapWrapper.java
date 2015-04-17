@@ -119,4 +119,17 @@ public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderabl
 	{
 		super.render(0, 0);
 	}
+	
+	
+	public boolean isBlocked(int tileX, int tileY)
+	{
+		if(this.blockMatrix[tileX][tileY] == null)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
 }
