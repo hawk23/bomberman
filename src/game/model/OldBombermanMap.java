@@ -1,16 +1,19 @@
 package game.model;
 
 import game.debug.Debugger;
-import org.newdawn.slick.*;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.tiled.TiledMap;
 
 import java.awt.Point;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 /**
  * Created by Roland Schreier on 03.04.2015.
@@ -21,9 +24,8 @@ import java.util.Collections;
  *      -manages destroy
  *
  */
-public class OldBombermanMap extends TiledMap implements IRenderable, IUpdateable{
-
-
+public class OldBombermanMap extends TiledMap implements IRenderable, IUpdateable
+{
     /**
      *  Used only for rendering the RenderQue till we get our head arround the IRenderable Interface (currently parameters like container, graphics etc. are used
      *  TODO: remove when IRenderable is changed
@@ -181,9 +183,10 @@ public class OldBombermanMap extends TiledMap implements IRenderable, IUpdateabl
     }
 
     @Override
-    public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g) {
+    public void render(GameContainer container, StateBasedGame game, Graphics g)
+    {
         this.container=container;
-        this.stateBasedGame=stateBasedGame;
+        this.stateBasedGame=(StateBasedGame) game;
         this.g=g;
 
         this.render(0,0,0,0,getWidth(),getHeight(),true);
@@ -191,9 +194,10 @@ public class OldBombermanMap extends TiledMap implements IRenderable, IUpdateabl
 
 
     @Override
-    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) {
-        for(int i=0;i<renderQue.size();i++) {
-           renderQue.get(i).getGameObject().update(gameContainer,stateBasedGame,delta);
+	public void update(GameContainer container, StateBasedGame game, int delta)
+	{
+		for(int i=0;i<renderQue.size();i++) {
+           renderQue.get(i).getGameObject().update(container,stateBasedGame,delta);
         }
     }
 

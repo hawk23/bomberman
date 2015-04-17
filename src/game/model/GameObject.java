@@ -10,12 +10,12 @@ public abstract class GameObject implements IRenderable, IUpdateable
     /**
      * tile based
      */
-    protected int       posX;
+    protected int       tileX;
 
     /**
      * tile based
      */
-    protected int       posY;
+    protected int       tileY;
     
     protected boolean   collides;
     protected Image		image;
@@ -44,22 +44,22 @@ public abstract class GameObject implements IRenderable, IUpdateable
 
     public int getPosX()
     {
-        return posX;
+        return tileX;
     }
 
     public void setPosX(int posX)
     {
-        this.posX = posX;
+        this.tileX = posX;
     }
 
     public int getPosY()
     {
-        return posY;
+        return tileY;
     }
 
     public void setPosY(int posY)
     {
-    	this.posY = posY;
+    	this.tileY = posY;
     }
 
     public void setPosition(int x, int y)

@@ -1,11 +1,9 @@
 package game.state;
 
 import game.config.GameRoundConfig;
-import game.input.InputManager;
-import game.menu.PauseMenu;
 import game.menu.Menu.Action;
-import game.model.OldBombermanMap;
-import game.model.Player;
+import game.menu.PauseMenu;
+import game.model.BombermanMap;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -26,21 +24,16 @@ public class GameRoundState extends BombermanGameState
     private Image 					map_buffer				= null;
     private final int 				xOffset 				= 160;
     
+	private BombermanMap  			map                 	= null;
     
-    
-	private OldBombermanMap            map                 	= null;
-    private Player                  player1             	= null;
-    private Player                  player2             	= null;
-
-
-    
-    public GameRoundState () {
+    public GameRoundState ()
+    {
         super (BombermanGameState.GAME_ROUND);   
     }
 
     @Override
-    public void init(GameContainer container, StateBasedGame game) throws SlickException {
-       	   	
+    public void init(GameContainer container, StateBasedGame game) throws SlickException
+    {
     	map_buffer 				= new Image(960, 960);
     	map_graphics 			= map_buffer.getGraphics();
 
@@ -52,47 +45,51 @@ public class GameRoundState extends BombermanGameState
     }
 
 	@Override
-    public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException {
-        
-    	if (!paused) {
+    public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException
+	{
+    	if (!this.paused)
+    	{
     		resetGraphics();
-            this.map.render(0,0,0,0,15,15,true);
-            this.player1.render(container, game, map_graphics);
-            
+
+    		this.map.render(container, game, this.map_graphics);
+    		
             graphics.drawImage(map_buffer, xOffset, 0);
             graphics.drawImage(playerStatsBackground, 0, 0);
-            graphics.drawImage(playerStatsBackground, xOffset + map.getWidth() * 64, 0);
-
+            graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
     	}
-    	else {
+    	else
+    	{
     		background.draw(0, 0);
     		menu.render(container, game, graphics);
     	}
     }
 
     @Override
-    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException
+    {
         Input input = container.getInput();
 
-        if (!paused) {
-        	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-            	paused = true;
+        if (!this.paused)
+        {
+        	this.map.update(container, game, delta);
+        	
+        	if (input.isKeyPressed(Input.KEY_ESCAPE))
+        	{
+            	this.paused = true;
             	input.clearKeyPressedRecord();
             }
-        	
-        	this.player1.update(container, game, delta);
-            
     	}
-    	else {
+    	else
+    	{
     		menu.update(container, game, delta);
     		
-    		if (menu.getActualAction() != Action.NO_ACTION) {
-    			
+    		if (menu.getActualAction() != Action.NO_ACTION)
+    		{
     			Action currentAction = menu.getActualAction();
     			menu.setActualAction(Action.NO_ACTION);
     			
-    			switch (currentAction) {
-    				
+    			switch (currentAction)
+    			{
 	    			case RESUME_GAME:
 	    				menu.reset();
 	    				paused = false;
@@ -105,43 +102,40 @@ public class GameRoundState extends BombermanGameState
 	    				break;
     			
 					default: break;
-    			
     			}
     		}
     	}
     }
     
-    private void resetGraphics() {
+    private void resetGraphics()
+    {
     	map_graphics.setBackground(Color.black);
     	map_graphics.clear();
     }
     
     @Override
-    public void enter(GameContainer container, StateBasedGame game) throws SlickException {
-    	
+    public void enter(GameContainer container, StateBasedGame game) throws SlickException
+    {
     	paused = false;
     	menu.reset();
-    	
 
-    	this.map = new OldBombermanMap(this.gameRoundConfig.getMapConfig().getPath());
-        // create players and define controls
-        InputManager    inputManager1   = new InputManager(container.getInput(), this.gameRoundConfig.getCurrentInputConfigs().get(0));
-        InputManager    inputManager2   = new InputManager(container.getInput(), this.gameRoundConfig.getCurrentInputConfigs().get(1));
-        this.player1                    = new Player(this.map.getPlayer1Shape(), this.map, 0, inputManager1, this.gameRoundConfig.getCurrentPlayerConfigs().get(0));
-        //this.player2                    = new Player(this.map.getPlayer2Shape(), this.map, 1, inputManager2, this.gameRoundConfig.getCurrentPlayerConfigs().get(1));
+    	this.map = new BombermanMap(this.gameRoundConfig, container);
     }
     
     @Override
-    public void leave(GameContainer container, StateBasedGame game) throws SlickException {
+    public void leave(GameContainer container, StateBasedGame game) throws SlickException
+    {
     	container.getInput().clearKeyPressedRecord();
     }
 	
-	private void restart(GameContainer container, StateBasedGame game) throws SlickException {
+	private void restart(GameContainer container, StateBasedGame game) throws SlickException
+	{
 		leave(container, game);
 		enter(container, game);
 	}
 
-	public void setGameRoundConfig(GameRoundConfig gameRoundConfig) {
+	public void setGameRoundConfig(GameRoundConfig gameRoundConfig) 
+	{
 		this.gameRoundConfig = gameRoundConfig;
 	}
 }
