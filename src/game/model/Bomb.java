@@ -3,7 +3,11 @@ package game.model;
 import game.config.GameSettings;
 import game.debug.Debugger;
 
-import org.newdawn.slick.*;
+import org.newdawn.slick.Animation;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -23,6 +27,7 @@ public class Bomb extends GameObject implements IDestroyable
     private Animation			animationBurn;
     private int					range;
     private int					timer;
+    private int					time;
     private boolean				isExploding			= false;
     private Player				player;
 
@@ -37,23 +42,28 @@ public class Bomb extends GameObject implements IDestroyable
         this.player = player;
         this.timer = bombTimer;
         this.range = bombRange;
-
+        this.time = 0;
+        
         loadImage();
     }
 
-    public int getRange() {
+    public int getRange()
+    {
         return range;
     }
 
-    public void setRange(int range) {
+    public void setRange(int range) 
+    {
         this.range = range;
     }
 
-    public int getTimer() {
+    public int getTimer() 
+    {
         return timer;
     }
 
-    public void setTimer(int timer) {
+    public void setTimer(int timer) 
+    {
         this.timer = timer;
     }
 
@@ -100,10 +110,11 @@ public class Bomb extends GameObject implements IDestroyable
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta)
     {
-    	Debugger.log("BombTimer: " + timer);
-        if(timer<=0)
-            destroy();
-        timer-=delta;
+    	if(time >= timer)
+    	{
+    		// TODO add explosion
+    		// remove bomb
+    	}
     }
 
     private void loadImage()

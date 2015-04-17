@@ -1,6 +1,7 @@
 package game.model;
 
 import game.config.GameRoundConfig;
+import game.config.GameSettings;
 import game.input.InputManager;
 
 import java.util.ArrayList;
@@ -41,9 +42,18 @@ public class BombermanMap implements IUpdateable, IRenderable
 	{
 		wrapper.render(container, game, g);
 
-		for (int i = 0; i < this.objects.size(); i++)
+		for (int i = 0; i < this.bombs.length; i++)
 		{
-			this.objects.get(i).render(container, game, g);
+			for (int j = 0; j < this.bombs[i].length; j++)
+			{
+				if(this.bombs[i][j] != null)
+					this.bombs[i][j].render(container, game, g);
+			}
+		}
+		
+		for (int i = 0; i < this.players.length; i++)
+		{
+			this.players[i].render(container, game, g);
 		}
 	}
 
@@ -52,9 +62,18 @@ public class BombermanMap implements IUpdateable, IRenderable
 	{
 		wrapper.update(container, game, delta);
 		
-		for (int i = 0; i < this.objects.size(); i++)
+		for (int i = 0; i < this.bombs.length; i++)
 		{
-			this.objects.get(i).update(container, game, delta);
+			for (int j = 0; j < this.bombs[i].length; j++)
+			{
+				if(this.bombs[i][j] != null)
+					this.bombs[i][j].update(container, game, delta);
+			}
+		}
+		
+		for (int i = 0; i < this.players.length; i++)
+		{
+			this.players[i].update(container, game, delta);
 		}
 	}
 	
