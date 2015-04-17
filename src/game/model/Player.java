@@ -512,4 +512,20 @@ public class Player extends GameObject implements IDestroyable
     		return false;
     	}
     }
+
+    public float getDrawPosX() {
+        return drawPosX;
+    }
+
+    public void setDrawPosX(float drawPosX) {
+        this.drawPosX = drawPosX;
+    }
+
+    public float getDrawPosY() {
+        return drawPosY;
+    }
+
+    public void setDrawPosY(float drawPosY) {
+        this.drawPosY = drawPosY;
+    }
 }

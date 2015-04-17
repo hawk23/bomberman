@@ -93,4 +93,9 @@ public abstract class GameObject implements IRenderable, IUpdateable
             // TODO
         }
     }
+
+    public Image getImage()
+    {
+        return this.image;
+    }
 }

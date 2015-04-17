@@ -5,6 +5,7 @@ import game.config.GameSettings;
 import game.input.InputManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -42,19 +43,12 @@ public class BombermanMap implements IUpdateable, IRenderable
 	{
 		wrapper.render(container, game, g);
 
-		for (int i = 0; i < this.bombs.length; i++)
-		{
-			for (int j = 0; j < this.bombs[i].length; j++)
-			{
-				if(this.bombs[i][j] != null)
-					this.bombs[i][j].render(container, game, g);
-			}
-		}
-		
-		for (int i = 0; i < this.players.length; i++)
-		{
-			this.players[i].render(container, game, g);
-		}
+        Collections.sort(this.objects, new GameObjectsYPosSorter());
+
+        for (GameObject gameObject : this.objects)
+        {
+            gameObject.render(container, game, g);
+        }
 	}
 
 	@Override
