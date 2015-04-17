@@ -483,9 +483,12 @@ public class Player extends GameObject implements IDestroyable
         this.bombRange = bombRange;
     }
 
-    public void removeBomb() {
+    public void reduceBombCounter()
+    {
         bombCount--;
-        if (bombCount < 0) bombCount = 0;
+        
+        if (bombCount < 0)
+        	bombCount = 0;
     }
 
     public void addBomb()
