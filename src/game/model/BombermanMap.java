@@ -1,5 +1,6 @@
 package game.model;
 
-public class BombermanMap {
+public class BombermanMap 
+{
 
 }

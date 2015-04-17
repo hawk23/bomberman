@@ -27,8 +27,6 @@ public class OldBombermanMap extends TiledMap implements IRenderable, IUpdateabl
     /**
      *  Used only for rendering the RenderQue till we get our head arround the IRenderable Interface (currently parameters like container, graphics etc. are used
      *  TODO: remove when IRenderable is changed
-     *
-     *
      */
     private GameContainer container;
     private StateBasedGame stateBasedGame;
