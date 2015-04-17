@@ -116,7 +116,7 @@ public class BombermanGame extends StateBasedGame {
         } catch (RuntimeException e) {
         	player1.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
-        player1.setName("Hans");
+        player1.setName("Fred");
         player1.setInitialBombLimit(1);
         player1.setInitialSpeed(100);
 
@@ -128,7 +128,7 @@ public class BombermanGame extends StateBasedGame {
         } catch (RuntimeException e) {
         	player2.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
-        player2.setName("Hubert");
+        player2.setName("Fred2");
         player2.setInitialBombLimit(1);
         player2.setInitialSpeed(100);
 

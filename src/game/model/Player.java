@@ -487,23 +487,25 @@ public class Player extends GameObject implements IDestroyable
         if (bombCount < 0) bombCount = 0;
     }
 
-    public void addBomb() {
-//        if (bombCount < bombLimit) {
+    public void addBomb()
+    {
+//        if (bombCount < bombLimit)
+//        {
 //            Point tilePos = map.pixelsToTile(posX, posY);
 //            map.addBomb(tilePos.x, tilePos.y, this);
 //            bombCount++;
 //        }
     }
     
-    private boolean isBlocked(float x, float y) {
-//    	Point tilePos = map.pixelsToTile((int)x, (int)y);
-//    	if (map.isBlocked(tilePos.x, tilePos.y)) {
-//    		return true;
-//    	}
-//    	else {
-//    		return false;
-//    	}
-    	
-    	return false;
+    private boolean isBlocked(float x, float y)
+    {
+    	if (map.isBlocked((int) x / map.getTileSize(), (int) y / map.getTileSize()))
+    	{
+    		return true;
+    	}
+    	else
+    	{
+    		return false;
+    	}
     }
 }
