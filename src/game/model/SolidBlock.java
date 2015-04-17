@@ -1,19 +1,25 @@
 package game.model;
 
-/**
- * Created by Roland Schreier on 03.04.2015.
- */
-public class SolidBlock extends Block {
-    public SolidBlock(int tileX, int tileY, int tileWidth, int tileHeight) {
-        super(tileX, tileY, tileWidth, tileHeight);
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
+
+public class SolidBlock extends Block
+{
+    public SolidBlock(int posX, int posY) 
+    {
+        super(posX, posY);
     }
 
-    public SolidBlock(int tileX, int tileY) {
-        super(tileX, tileY);
-    }
+	@Override
+	public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g)
+	{
+		// no operation here
+	}
 
-    @Override
-    public String toString() {
-        return "SolidBlock ("+getTileX()+","+getTileY()+")";
-    }
+	@Override
+	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta)
+	{
+		// TODO Auto-generated method stub
+	}
 }

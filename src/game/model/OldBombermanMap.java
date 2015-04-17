@@ -133,7 +133,7 @@ public class OldBombermanMap extends TiledMap implements IRenderable, IUpdateabl
             for (int row = 0; row < this.getHeight(); row++) {
                 if ((tileId=getTileId(column,row,layerBlocks))!=0){
                     if(getTileProperty(tileId,"destroyable","true").equalsIgnoreCase("true")) {
-                        gameObject = new DestroyableBlock(column, row, this);
+                        gameObject = new DestroyableBlock(column, row);
                         addToDestructionMatrix(column,row,(IDestroyable)gameObject);
                     }else{
                         gameObject = new SolidBlock(column, row);

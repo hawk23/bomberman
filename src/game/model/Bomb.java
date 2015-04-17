@@ -13,7 +13,8 @@ import org.newdawn.slick.state.StateBasedGame;
  * needs the BombermanMap to remove itself and calculate the explosion
  *
  */
-public class Bomb extends DestroyableBlock{
+public class Bomb extends GameObject implements IDestroyable
+{
 
     private static final String path="res/visuals/bomb/bomb.png";
     private static final int animationInteval=40;
@@ -35,10 +36,9 @@ public class Bomb extends DestroyableBlock{
             {0, 1, 0, -1}
     };
 
-
-
-    public Bomb(int tileX, int tileY, Player player) {
-        super(tileX, tileY, player.getMap());
+    public Bomb(int tileX, int tileY, Player player)
+    {
+        super(tileX, tileY);
         this.player=player;
         setTimer(player.getBombTimer());
         setRange(player.getBombRange());
@@ -73,22 +73,22 @@ public class Bomb extends DestroyableBlock{
     /**
      * Calculates the explosion.
      * spreads in each blastDirection for its range
-     */
+//     */
     private void explode(){
-        isExploding=true;
-        for(int direction=0;direction<blastDirection[0].length;direction++){
-            for(int r=1;r<=range;r++){
-                //Debugger.log("(" + getTileX() + blastDirection[0][direction] * r + "," + getTileY() + blastDirection[1][direction] * r + ")");
-                /*If we hit a collision blast won't spread any longer in this direction*/
-                if(oldBombermanMap.isBlocked(getTileX() + blastDirection[0][direction] * r, getTileY() + blastDirection[1][direction] * r)) {
-                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY() +blastDirection[1][direction]*r);
-                    break;
-                }else
-                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
-            }
-        }
-        player.removeBomb();
-        oldBombermanMap.removeGameObject(getTileX(), getTileY(), this);
+//        isExploding=true;
+//        for(int direction=0;direction<blastDirection[0].length;direction++){
+//            for(int r=1;r<=range;r++){
+//                //Debugger.log("(" + getTileX() + blastDirection[0][direction] * r + "," + getTileY() + blastDirection[1][direction] * r + ")");
+//                /*If we hit a collision blast won't spread any longer in this direction*/
+//                if(oldBombermanMap.isBlocked(getTileX() + blastDirection[0][direction] * r, getTileY() + blastDirection[1][direction] * r)) {
+//                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY() +blastDirection[1][direction]*r);
+//                    break;
+//                }else
+//                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
+//            }
+//        }
+//        player.removeBomb();
+//        oldBombermanMap.removeGameObject(getTileX(), getTileY(), this);
     }
 
     @Override
@@ -112,10 +112,5 @@ public class Bomb extends DestroyableBlock{
         }catch (SlickException e) {
             //TODO
         }
-    }
-
-    @Override
-    public String toString() {
-        return "Bomb ("+getTileX()+","+getTileY()+"): Timer:"+getTimer()+", Range:"+getRange();
     }
 }

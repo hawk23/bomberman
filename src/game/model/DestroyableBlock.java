@@ -1,36 +1,40 @@
 package game.model;
 
-/**
- * Created by Roland Schreier on 03.04.2015.
- *
- * Needs to know the parent BombermanMap to remove itself of the map
- *
- */
-public class DestroyableBlock extends Block implements IDestroyable {
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.state.StateBasedGame;
 
-    protected OldBombermanMap oldBombermanMap;
-
-    public DestroyableBlock(int tileX, int tileY, int tileWidth, int tileHeight, OldBombermanMap oldBombermanMap) {
-        super(tileX, tileY, tileWidth, tileHeight);
-        setBombermanMap(oldBombermanMap);
+public class DestroyableBlock extends Block implements IDestroyable
+{
+	private boolean destroyed;
+	
+    public DestroyableBlock(int posX, int posY)
+    {
+        super(posX, posY);
+        
+        this.destroyed = false;
     }
 
-    public DestroyableBlock(int tileX, int tileY, OldBombermanMap oldBombermanMap) {
-        super(tileX, tileY);
-        setBombermanMap(oldBombermanMap);
-    }
+	@Override
+	public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g)
+	{
+		// no operation here
+	}
 
-    @Override
-    public boolean destroy() {
-        return oldBombermanMap.removeBlock(getTileX(), getTileY(), this);
-    }
+	@Override
+	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta)
+	{
+		// TODO Auto-generated method stub
+	}
 
-    private void setBombermanMap(OldBombermanMap oldBombermanMap) {
-        this.oldBombermanMap = oldBombermanMap;
-    }
-
-    @Override
-    public String toString() {
-        return "DestroyableBlock ("+getTileX()+","+getTileY()+")";
-    }
+	@Override
+	public boolean destroy()
+	{
+		return this.destroyed = true;
+	}
+	
+	public boolean getDestroy()
+	{
+		return this.destroyed;
+	}
 }
