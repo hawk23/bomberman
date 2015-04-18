@@ -3,6 +3,8 @@ package game.model;
 import game.config.GameSettings;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.StateBasedGame;
 import slick.extension.TiledMapWrapper;
 
@@ -11,12 +13,15 @@ import java.util.ArrayList;
 
 public class Explosion extends GameObject implements IUpdateable, IRenderable
 {
+    private static final String explosionSoundPath = "res/sounds/bomb/explosion.ogg";
+
 	private int                 range           = 1;
 	private int                 timer; // in mili secs
     private int                 time            = 0;
     private boolean             finished        = false;
 	private TiledMapWrapper     wrapper;
     private ArrayList<Point>    flamePositions  = null;
+    private Sound               explosionSound;
 
 	public Explosion(int posX, int posY, int range, TiledMapWrapper wrapper)
 	{
@@ -27,6 +32,9 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         this.wrapper    = wrapper;
 
         this.flamePositions = this.calculateFlamePosition();
+
+        loadSound();
+        playSound();
 	}
 
     private ArrayList<Point> calculateFlamePosition ()
@@ -113,4 +121,23 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
     public boolean isFinished() {
         return finished;
     }
+
+    private void loadSound ()
+    {
+        try
+        {
+            this.explosionSound = new Sound(explosionSoundPath);
+        }
+
+        catch (SlickException e)
+        {
+            //TODO
+        }
+    }
+
+    private void playSound ()
+    {
+        explosionSound.play();
+    }
+
 }
