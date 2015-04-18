@@ -31,7 +31,6 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Sound ultraKillSound;
     private Sound deathSound;
 
-    
     private int 		posX;
     private int 		posY;
     private int 		targetX;
@@ -113,6 +112,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.movementInterpolation 	= 0.0f;
 
         loadVisuals(this.playerConfig.getPath());
+        loadSound();
 
         originalX = targetX =  posX = (int) spawnPoint.getX();
         originalY = targetY =  posY = (int) spawnPoint.getY();
@@ -129,19 +129,23 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		SpriteSheet animDie 	= new SpriteSheet(spriteSheet.getSubImage(0, 512, 640, 128), 64, 128);
 		
 		this.animation_down 	= new Animation(animDown, animationInterval);
+		this.animation_down.setAutoUpdate(false);
 		this.animation_right	= new Animation(animRight, animationInterval);
+		this.animation_right.setAutoUpdate(false);
 		this.animation_up		= new Animation(animUp, animationInterval);
+		this.animation_up.setAutoUpdate(false);
 		this.animation_left		= new Animation(animLeft, animationInterval);
+		this.animation_left.setAutoUpdate(false);
 		this.animation_die		= new Animation(animDie, animationInterval);
+		this.animation_die.setAutoUpdate(false);
 		this.animation_actual	= new Animation();
 		
 		this.stopDown			= spriteSheet.getSubImage(0, 640, 64, 128);
 		this.stopRight			= spriteSheet.getSubImage(64, 640, 64, 128);
 		this.stopUp				= spriteSheet.getSubImage(128, 640, 64, 128);
-		this.stopLeft			= spriteSheet.getSubImage(384, 640, 64, 128);
+		this.stopLeft			= spriteSheet.getSubImage(192, 640, 64, 128);
 		
 		this.image				= this.stopDown;	
-        loadSound();
 	}
 
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
@@ -429,11 +433,16 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
 
     @Override
-    public boolean destroy() {
+    public boolean destroy()
+    {
         // TODO death animation
 
         // HACK: set after death animation.
         this.destroyed = true;
+        
+        // mark as dead
+        this.map.increaseNrDeadPlayer();
+
         playSound(deathSound);
 
         return true;
