@@ -465,19 +465,24 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     @Override
     public boolean destroy()
     {
-    	if (!shielded && !dying) {
-    		
-    		dying = true;
-    		playSound(deathSound);
-    		this.animation_actual = this.animation_die;
-    		this.animation_actual.restart();
-    		this.dyingTimer = this.animation_actual.getFrameCount() * dyingAnimationInterval;
+
+    	if (!destroyed) {
+        	
+    		if (!shielded && !dying) {
+        		
+        		dying = true;
+        		playSound(deathSound);
+        		this.animation_actual = this.animation_die;
+        		this.animation_actual.restart();
+        		this.dyingTimer = this.animation_actual.getFrameCount() * dyingAnimationInterval;
+        	}
+        	
+        	if (dead) {
+    		     this.map.increaseNrDeadPlayer();
+    		     return this.destroyed = true;
+    		}
     	}
-    	
-    	if (dead) {
-		     this.map.increaseNrDeadPlayer();
-		     return this.destroyed = true;
-		}
+
     	
     	return this.destroyed;
     }
