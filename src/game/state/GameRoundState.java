@@ -5,16 +5,14 @@ import game.menu.Menu.Action;
 import game.menu.PauseMenu;
 import game.model.BombermanMap;
 
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
+
 
 public class GameRoundState extends BombermanGameState
 {
+	private static final String		gameStartSoundPath		= "res/sounds/round/startround.ogg";
+
 	private GameRoundConfig 		gameRoundConfig			= null;
 	private boolean 				paused					= false;
 	private PauseMenu				menu					= null;
@@ -26,7 +24,9 @@ public class GameRoundState extends BombermanGameState
     
 	private BombermanMap  			map                 	= null;
 	private	int						startTime;
-	private	int						timer;				
+	private	int						timer;
+
+	private Sound					gameStartSound;
     
     public GameRoundState ()
     {
@@ -34,6 +34,8 @@ public class GameRoundState extends BombermanGameState
         
         startTime	= 0;
         timer		= 5000;
+
+		loadSound();
     }
 
     @Override
@@ -136,6 +138,8 @@ public class GameRoundState extends BombermanGameState
     	menu.reset();
 
     	this.map = new BombermanMap(this.gameRoundConfig, container);
+
+		playSound(gameStartSound);
     }
     
     @Override
@@ -153,5 +157,23 @@ public class GameRoundState extends BombermanGameState
 	public void setGameRoundConfig(GameRoundConfig gameRoundConfig) 
 	{
 		this.gameRoundConfig = gameRoundConfig;
+	}
+
+	private void loadSound ()
+	{
+		try
+		{
+			this.gameStartSound = new Sound(gameStartSoundPath);
+		}
+
+		catch (SlickException e)
+		{
+			//TODO
+		}
+	}
+
+	private void playSound (Sound sound)
+	{
+		sound.play();
 	}
 }

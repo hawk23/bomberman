@@ -34,7 +34,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         this.flamePositions = this.calculateFlamePosition();
 
         loadSound();
-        playSound();
+        playSound(explosionSound);
 	}
 
     private ArrayList<Point> calculateFlamePosition ()
@@ -135,9 +135,9 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         }
     }
 
-    private void playSound ()
+    private void playSound (Sound sound)
     {
-        explosionSound.play();
+        sound.play();
     }
 
 }
