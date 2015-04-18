@@ -5,6 +5,7 @@ import game.config.GameSettings;
 import game.event.ExplosionEvent;
 import game.input.InputManager;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -56,8 +57,6 @@ public class BombermanMap implements IUpdateable, IRenderable
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 	{
-		wrapper.update(container, game, delta);
-
         /**
          * Manage bombs
          */
@@ -106,13 +105,27 @@ public class BombermanMap implements IUpdateable, IRenderable
                         this.explosions[i][j] = null;
                         this.objects.remove(explosion);
                     }
+                    else
+                    {
+                        // check if anything is destroyed by current explosions
+                        for (Point p : explosion.getFlamePositions())
+                        {
+                            // check if block is destroyed
+                            if (this.wrapper.isDestroyable(p.x, p.y))
+                            {
+                                ((DestroyableBlock) this.wrapper.getBlockMatrix()[p.x][p.y]).destroy();
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        // check if anything is destroyed by current explosions
-        // TODO
 
+        /**
+         * Manage wrapper
+         */
+        this.wrapper.update(container, game, delta);
 
         /**
          * Manage players
