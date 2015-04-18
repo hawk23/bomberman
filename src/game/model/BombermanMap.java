@@ -18,6 +18,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import slick.extension.ExplosionSystem;
 import slick.extension.TiledMapWrapper;
 
 public class BombermanMap implements IUpdateable, IRenderable
@@ -28,6 +29,7 @@ public class BombermanMap implements IUpdateable, IRenderable
 	Explosion[][]	        explosions;
     PowerUpItem[][]         powerups;
 	ArrayList<GameObject>	objects;
+    ExplosionSystem         explosionSystem;
 	
 	int						deadPlayers;
 	
@@ -39,6 +41,7 @@ public class BombermanMap implements IUpdateable, IRenderable
 		this.explosions		= new Explosion[wrapper.getHeight()][wrapper.getWidth()];
         this.powerups   	= new PowerUpItem[wrapper.getHeight()][wrapper.getWidth()];
 		this.objects		= new ArrayList<GameObject>();
+        this.explosionSystem= new ExplosionSystem();
 
 		this.deadPlayers	= 0;
         Controller[]    controllers     = ControllerEnvironment.getDefaultEnvironment().getControllers();
@@ -84,6 +87,8 @@ public class BombermanMap implements IUpdateable, IRenderable
         {
             gameObject.render(container, game, g);
         }
+
+        explosionSystem.render(container, game, g);
 	}
 
 	@Override
@@ -104,6 +109,9 @@ public class BombermanMap implements IUpdateable, IRenderable
                         Explosion explosion = new Explosion(bombs[i][j].getTileX(), bombs[i][j].getTileY(), bombs[i][j].getRange(), this.wrapper);
                         this.objects.add(explosion);
                         this.explosions[explosion.getTileX()][explosion.getTileY()] = explosion;
+
+                        // add explosionSystem Particles
+                        explosionSystem.addExplosion(explosion);
 
                         // remove bomb
                         this.objects.remove(this.bombs[i][j]);
@@ -213,6 +221,11 @@ public class BombermanMap implements IUpdateable, IRenderable
                 this.players[i].update(container, game, delta);
             }
 		}
+
+        /**
+         * Calculate Particles of the ExplosionSystem
+         */
+        explosionSystem.update(container,game,delta);
 	}
 
     private void consumePowerUp (PowerUpItem item, Player player)
