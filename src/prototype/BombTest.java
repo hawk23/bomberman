@@ -9,8 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by Roland Schreier on 31.03.2015.
- */
+* Created by Roland Schreier on 31.03.2015.
+*/
 public class BombTest extends BasicGame {
 
     public static final int GAME_WIDTH = 1280;
