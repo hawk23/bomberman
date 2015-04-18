@@ -147,25 +147,67 @@ public class BombermanGame extends StateBasedGame {
         MapConfig mapConfig1 = new MapConfig();
         mapConfig1.setId(0);
         mapConfig1.setPath("res/levels/0/map.tmx");
-        try {
+        
+        try
+        {
         	mapConfig1.setImage(new Image("res/levels/0/thumbnail.png"));
-        } catch (RuntimeException e) {
+        }
+        catch (RuntimeException e)
+        {
         	mapConfig1.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
+        
         mapConfig1.setName("Map 1");
 
         MapConfig mapConfig2 = new MapConfig();
         mapConfig2.setId(1);
         mapConfig2.setPath("res/levels/1/map.tmx");
-        try {
+        
+        try
+        {
         	mapConfig2.setImage(new Image("res/levels/1/thumbnail.png"));
-        } catch (RuntimeException e) {
+        }
+        catch (RuntimeException e)
+        {
         	mapConfig2.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
+        
         mapConfig2.setName("Map 2");
-
+        
+        MapConfig mapConfig3 = new MapConfig();
+        mapConfig3.setId(2);
+        mapConfig3.setPath("res/levels/2/map.tmx");
+        
+        try
+        {
+        	mapConfig3.setImage(new Image("res/levels/2/thumbnail.png"));
+        }
+        catch (RuntimeException e)
+        {
+        	mapConfig3.setImage(new Image("res/visuals/default_thumbnail.png"));
+        }
+        
+        mapConfig3.setName("Map 3");
+        
+        MapConfig mapConfig4 = new MapConfig();
+        mapConfig4.setId(3);
+        mapConfig4.setPath("res/levels/3/map.tmx");
+        
+        try
+        {
+        	mapConfig4.setImage(new Image("res/levels/3/thumbnail.png"));
+        }
+        catch (RuntimeException e)
+        {
+        	mapConfig4.setImage(new Image("res/visuals/default_thumbnail.png"));
+        }
+        
+        mapConfig4.setName("Map 4");
+        
         this.mapConfigs.add(mapConfig1);
         this.mapConfigs.add(mapConfig2);
+        this.mapConfigs.add(mapConfig3);
+        this.mapConfigs.add(mapConfig4);
     }
 
     private void createInputConfig () throws SlickException
