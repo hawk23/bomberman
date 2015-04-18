@@ -26,7 +26,6 @@ public class Bomb extends GameObject implements IDestroyable
     private boolean				            exploded;
     private EventListenerList               listeners           = new EventListenerList();
     
-
     public Bomb(int tileX, int tileY, int bombRange, int bombTimer)
     {
         super(tileX, tileY);
