@@ -15,7 +15,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.TiledMapWrapper;
 
-public class BombermanMap implements IUpdateable, IRenderable, ExplosionListener
+public class BombermanMap implements IUpdateable, IRenderable
 {
 	TiledMapWrapper			wrapper;
 	Player[]				players;
@@ -64,13 +64,18 @@ public class BombermanMap implements IUpdateable, IRenderable, ExplosionListener
 			{
 				if(this.bombs[i][j] != null)
 				{
-					this.bombs[i][j].update(container, game, delta);
-					
-					if(this.bombs[i][j].isExploded())
-					{
-						this.explosions[i][j] = new Explosion(this.bombs[i][j].getBombRange());
-						// TODO remove bomb from game objects and bombs
-					}
+                    if (this.bombs[i][j].isExploded())
+                    {
+                        // remove bomb and add explosion.
+                        this.objects.remove(this.bombs[i][j]);
+                        this.bombs[i][j] = null;
+
+                        // TODO: add explosion
+                    }
+                    else
+                    {
+                        this.bombs[i][j].update(container, game, delta);
+                    }
 				}
 				
 			}
@@ -110,19 +115,7 @@ public class BombermanMap implements IUpdateable, IRenderable, ExplosionListener
 
 	public void addBomb(Bomb bomb)
 	{
-        bomb.addListener(this);
 		this.bombs[bomb.tileX][bomb.tileY] = bomb;
 		this.objects.add(bomb);
 	}
-    private void removeBomb(Bomb bomb)
-    {
-        //bomb.removeListener(this);
-        this.bombs[bomb.tileX][bomb.tileY] = null;
-        this.objects.remove(bomb);
-    }
-
-    @Override
-    public void exploded(ExplosionEvent e) {
-        this.removeBomb(e.getBomb());
-    }
 }
