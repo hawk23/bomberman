@@ -432,7 +432,6 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         return value;
     }
 
-
     @Override
     public boolean destroy()
     {

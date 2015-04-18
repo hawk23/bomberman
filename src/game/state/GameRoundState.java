@@ -2,6 +2,7 @@ package game.state;
 
 import game.config.GameRoundConfig;
 import game.menu.Menu.Action;
+import game.menu.EndMenu;
 import game.menu.PauseMenu;
 import game.model.BombermanMap;
 
@@ -15,7 +16,9 @@ public class GameRoundState extends BombermanGameState
 
 	private GameRoundConfig 		gameRoundConfig			= null;
 	private boolean 				paused					= false;
+	private boolean 				gameRoundEnd			= false;
 	private PauseMenu				menu					= null;
+	private EndMenu					endMenu					= null;
 	private Image 					background				= null;
 	private Image					playerStatsBackground	= null;
     private Graphics 				map_graphics			= null;
@@ -25,15 +28,13 @@ public class GameRoundState extends BombermanGameState
 	private BombermanMap  			map                 	= null;
 	private	int						startTime;
 	private	int						timer;
-
+    
 	private Sound					gameStartSound;
     
     public GameRoundState ()
     {
         super (BombermanGameState.GAME_ROUND);
         
-        startTime	= 0;
-        timer		= 5000;
 
 		loadSound();
     }
@@ -46,6 +47,8 @@ public class GameRoundState extends BombermanGameState
 
     	menu = new PauseMenu();
     	menu.init();
+    	endMenu = new EndMenu();
+    	endMenu.init();
     	
     	background 				= new Image("res/visuals/backgrounds/menuBackground.png");
     	playerStatsBackground 	= new Image("res/visuals/backgrounds/playerStats_background.png");	
@@ -54,21 +57,29 @@ public class GameRoundState extends BombermanGameState
 	@Override
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException
 	{
-    	if (!this.paused)
-    	{
-    		resetGraphics();
+		if (gameRoundEnd) {
+			background.draw(0, 0);
+			endMenu.render(container, game, graphics);
+			
+		}
+		else {
+	    	if (!this.paused)
+	    	{
+	    		resetGraphics();
 
-    		this.map.render(container, game, this.map_graphics);
-    		
-            graphics.drawImage(map_buffer, xOffset, 0);
-            graphics.drawImage(playerStatsBackground, 0, 0);
-            graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
-    	}
-    	else
-    	{
-    		background.draw(0, 0);
-    		menu.render(container, game, graphics);
-    	}
+	    		this.map.render(container, game, this.map_graphics);
+	    		
+	            graphics.drawImage(map_buffer, xOffset, 0);
+	            graphics.drawImage(playerStatsBackground, 0, 0);
+	            graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
+	    	}
+	    	else
+	    	{
+	    		background.draw(0, 0);
+	    		menu.render(container, game, graphics);
+	    	}
+		}
+
     }
 
     @Override
@@ -76,42 +87,28 @@ public class GameRoundState extends BombermanGameState
     {
         Input input = container.getInput();
 
-        if (!this.paused)
-        {
-        	this.map.update(container, game, delta);
+        if (this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1) {
         	
-        	if (input.isKeyPressed(Input.KEY_ESCAPE))
-        	{
-            	this.paused = true;
-            	input.clearKeyPressedRecord();
-            }
         	
-        	// GAME_END - only one player left
-        	if(this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1)
+        	if(startTime >= timer || input.isKeyPressed(Input.KEY_ESCAPE))
         	{
-            	if(startTime >= timer)
-            	{
-            		game.enterState(MAIN_MENU);
-            	}
-            	
-            	startTime += delta;
+        		this.gameRoundEnd = true;
         	}
-    	}
-    	else
-    	{
-    		menu.update(container, game, delta);
-    		
-    		if (menu.getActualAction() != Action.NO_ACTION)
+        	
+        	startTime += delta;
+        	
+        }
+        
+        if (gameRoundEnd) {
+        	endMenu.update(container, game, delta);
+        	
+        	if (endMenu.getActualAction() != Action.NO_ACTION)
     		{
-    			Action currentAction = menu.getActualAction();
-    			menu.setActualAction(Action.NO_ACTION);
+    			Action currentAction = endMenu.getActualAction();
+    			endMenu.setActualAction(Action.NO_ACTION);
     			
     			switch (currentAction)
     			{
-	    			case RESUME_GAME:
-	    				menu.reset();
-	    				paused = false;
-	    				break;
 	    			case RESTART_GAME: 
 	    				restart(container, game);
 	    				break;
@@ -122,7 +119,47 @@ public class GameRoundState extends BombermanGameState
 					default: break;
     			}
     		}
-    	}
+        }
+        else {
+            if (!this.paused)
+            {
+            	this.map.update(container, game, delta);
+            	
+            	if (input.isKeyPressed(Input.KEY_ESCAPE))
+            	{
+                	this.paused = true;
+                	input.clearKeyPressedRecord();
+                }
+            	
+        	}
+        	else
+        	{
+        		menu.update(container, game, delta);
+        		
+        		if (menu.getActualAction() != Action.NO_ACTION)
+        		{
+        			Action currentAction = menu.getActualAction();
+        			menu.setActualAction(Action.NO_ACTION);
+        			
+        			switch (currentAction)
+        			{
+    	    			case RESUME_GAME:
+    	    				menu.reset();
+    	    				paused = false;
+    	    				break;
+    	    			case RESTART_GAME: 
+    	    				restart(container, game);
+    	    				break;
+    	    			case LEAVE_GAME: 
+    	    				game.enterState(MAIN_MENU);
+    	    				break;
+        			
+    					default: break;
+        			}
+        		}
+        	}
+        }
+        
     }
     
     private void resetGraphics()
@@ -135,8 +172,11 @@ public class GameRoundState extends BombermanGameState
     public void enter(GameContainer container, StateBasedGame game) throws SlickException
     {
     	paused = false;
+    	gameRoundEnd = false;
     	menu.reset();
-
+    	endMenu.reset();
+        startTime	= 0;
+        timer		= 5000;
     	this.map = new BombermanMap(this.gameRoundConfig, container);
 
 		playSound(gameStartSound);

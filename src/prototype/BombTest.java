@@ -58,6 +58,6 @@ public class BombTest extends BasicGame {
     @Override
     public void mousePressed(int button, int posX, int posY){
         Debugger.log("Added Explosion ("+posX+","+posY+")");
-        explosionSystem.addExplosion(posX,posY);
+        //explosionSystem.addExplosion(posX,posY);
     }
 }

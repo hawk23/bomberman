@@ -7,8 +7,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
 
-public abstract class Menu {
-
+public abstract class Menu
+{
 	protected AngelCodeFont font 			= BombermanGame.STEAMWRECK_FONT;
 	protected AngelCodeFont fontOutline 	= BombermanGame.STEAMWRECK_FONT_OL;
 	protected AngelCodeFont fontOutline2 	= BombermanGame.JAMES_FONT_OL;
@@ -17,7 +17,9 @@ public abstract class Menu {
 	protected int CanvasHeight;
 	
 	protected Layer actualLayer;
-	public static enum Layer {
+	
+	public static enum Layer
+	{
 		MAIN_LAYER,
 		EXIT_LAYER,
 		CONTROLS_LAYER,
@@ -26,7 +28,9 @@ public abstract class Menu {
 	}
 	
 	protected Action actualAction;
-	public static enum Action {
+	
+	public static enum Action
+	{
 		EXIT_GAME,
 		START_GAME_ROUND,
 		NO_ACTION,
