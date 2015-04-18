@@ -10,12 +10,13 @@ import game.model.BombermanMap;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 
 public class GameRoundState extends BombermanGameState
 {
-	private static final String		gameStartSoundPath		= "res/sounds/round/startround.ogg";
+	private static final String 	gameStartMusicPath = "res/sounds/round/startround.ogg";
 
     private ArrayList<PlayerStateScreen> stateScreens       = new ArrayList<PlayerStateScreen>();
 	private GameRoundConfig 		gameRoundConfig			= null;
@@ -33,14 +34,13 @@ public class GameRoundState extends BombermanGameState
 	private	int						startTime;
 	private	int						timer;
     
-	private Sound					gameStartSound;
+	private Music 					gameStartMusic;
     
     public GameRoundState ()
     {
         super (BombermanGameState.GAME_ROUND);
-        
 
-		loadSound();
+		loadMusic();
     }
 
     @Override
@@ -133,7 +133,10 @@ public class GameRoundState extends BombermanGameState
             if (!this.paused)
             {
             	this.map.update(container, game, delta);
-            	
+
+				if (!gameStartMusic.playing())
+				resumeMusic(gameStartMusic);
+
             	if (input.isKeyPressed(Input.KEY_ESCAPE))
             	{
                 	this.paused = true;
@@ -143,6 +146,7 @@ public class GameRoundState extends BombermanGameState
         	else
         	{
         		menu.update(container, game, delta);
+				pauseMusic(gameStartMusic);
         		
         		if (menu.getActualAction() != Action.NO_ACTION)
         		{
@@ -185,6 +189,7 @@ public class GameRoundState extends BombermanGameState
         startTime	= 0;
         timer		= 5000;
     	this.map = new BombermanMap(this.gameRoundConfig, container);
+		playMusic (gameStartMusic);
 
         // create player state screens
         for (int i = 0; i < this.map.getPlayers().length; i++)
@@ -196,7 +201,6 @@ public class GameRoundState extends BombermanGameState
             this.stateScreens.add(screen);
         }
 
-		playSound(gameStartSound);
     }
     
     @Override
@@ -216,11 +220,11 @@ public class GameRoundState extends BombermanGameState
 		this.gameRoundConfig = gameRoundConfig;
 	}
 
-	private void loadSound ()
+	private void loadMusic()
 	{
 		try
 		{
-			this.gameStartSound = new Sound(gameStartSoundPath);
+			this.gameStartMusic = new Music(gameStartMusicPath);
 		}
 
 		catch (SlickException e)
@@ -229,8 +233,18 @@ public class GameRoundState extends BombermanGameState
 		}
 	}
 	
-	private void playSound (Sound sound)
+	private void playMusic (Music music)
 	{
-		sound.play();
+		music.play();
+	}
+
+	private void pauseMusic (Music music)
+	{
+		music.pause();
+	}
+
+	private void resumeMusic (Music music)
+	{
+		music.resume();
 	}
 }
