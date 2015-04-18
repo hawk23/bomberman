@@ -21,7 +21,7 @@ import slick.extension.AppGameContainerFSCustom;
 /**
  * Created by Albert on 30.03.2015.
  */
-public class Player extends GameObject implements IDestroyable
+public class Player extends GameObject implements IDestroyable, ExplosionListener
 {
     private BombermanMap map;
     private InputManager inputManager;
@@ -493,7 +493,9 @@ public class Player extends GameObject implements IDestroyable
         {
         	if(!(this.map.isBlocked(tileX, tileY)))
         	{
-        		Bomb bomb = new Bomb(tileX, tileY, bombRange, bombTimer, this);
+        		Bomb bomb = new Bomb(tileX, tileY, bombRange, bombTimer);
+                bomb.addExplosionListener(this);
+
         		this.map.addBomb(bomb);
         		this.bombCount++;
         	}
@@ -537,5 +539,11 @@ public class Player extends GameObject implements IDestroyable
 
     public void setDrawPosY(float drawPosY) {
         this.drawPosY = drawPosY;
+    }
+
+    @Override
+    public void exploded(Bomb bomb)
+    {
+        this.reduceBombCounter();
     }
 }

@@ -3,6 +3,7 @@ package game.model;
 import game.config.GameSettings;
 import game.debug.Debugger;
 
+import javafx.beans.Observable;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -10,32 +11,35 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Bomb extends GameObject implements IDestroyable
 {
-    private static final String path 				= "res/visuals/bomb/bomb.png";
-    private static final int	animationInteval	= 40;
+    private static final String             path 				= "res/visuals/bomb/bomb.png";
+    private static final int	            animationInteval	= 40;
 
-    private SpriteSheet			bombSheet;
-    private Animation			animationBurn;
-    private int					range;
-    private int					timer;
-    private int					time;
-    private Player				player;
-    private boolean				exploded;
+    private SpriteSheet			            bombSheet;
+    private Animation			            animationBurn;
+    private int					            range;
+    private int					            timer;
+    private int					            time;
+    private boolean				            exploded;
+    private ArrayList<ExplosionListener>     explosionListeners;
     
     /**
      * Directions for the calculation of the blast, UP,LEFT,DOWN,RIGHT
      */
     private int blastDirection[][] = {{1, 0, -1, 0}, {0, 1, 0, -1}};
 
-    public Bomb(int tileX, int tileY, int bombRange, int bombTimer, Player player)
+    public Bomb(int tileX, int tileY, int bombRange, int bombTimer)
     {
         super(tileX, tileY);
-        this.player		= player;
-        this.timer		= bombTimer;
-        this.range		= bombRange;
-        this.time		= 0;
-        this.exploded	= false;
+        this.timer		            = bombTimer;
+        this.range		            = bombRange;
+        this.time		            = 0;
+        this.exploded	            = false;
+        this.explosionListeners     = new ArrayList<ExplosionListener>();
         loadImage();
     }
 
@@ -101,7 +105,7 @@ public class Bomb extends GameObject implements IDestroyable
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta)
     {
-    	if(time >= timer)
+    	if(time >= timer && !this.exploded)
     	{
     		this.setExploded();
     	}
@@ -112,7 +116,11 @@ public class Bomb extends GameObject implements IDestroyable
     public void setExploded()
     {
     	this.exploded = true;
-    	this.player.reduceBombCounter();
+
+        for (ExplosionListener listener : this.explosionListeners)
+        {
+            listener.exploded(this);
+        }
     }
     
     public boolean isExploded()
@@ -135,6 +143,23 @@ public class Bomb extends GameObject implements IDestroyable
         catch (SlickException e)
         {
             //TODO
+        }
+    }
+
+    public void addExplosionListener (ExplosionListener listener)
+    {
+        if (this.explosionListeners.indexOf(listener) == -1)
+        {
+            this.explosionListeners.add(listener);
+        }
+
+    }
+
+    public void removeExplosionListener (ExplosionListener listener)
+    {
+        if (this.explosionListeners.indexOf(listener) != -1)
+        {
+            this.explosionListeners.remove(listener);
         }
     }
 }
