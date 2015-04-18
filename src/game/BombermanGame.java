@@ -8,6 +8,8 @@ import game.state.GameRoundState;
 import game.state.IntroState;
 import game.state.MainMenuState;
 
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
@@ -176,13 +178,17 @@ public class BombermanGame extends StateBasedGame {
     	defaultGameRoundConfig = new GameRoundConfig();
     	
     	MapConfig defaultMap 								= getMapConfigs().get(0);
-    	PlayerConfig defaultPlayer1 						= getPlayerConfigs().get(0);
+
+        PlayerConfig defaultPlayer1 						= getPlayerConfigs().get(0);
     	PlayerConfig defaultPlayer2 						= getPlayerConfigs().get(1);
-    	ArrayList<PlayerConfig> defaultPlayerConfigs 		= new ArrayList<PlayerConfig>();
+
+        ArrayList<PlayerConfig> defaultPlayerConfigs 		= new ArrayList<PlayerConfig>();
     	defaultPlayerConfigs.add(defaultPlayer1);
     	defaultPlayerConfigs.add(defaultPlayer2);
-    	InputConfiguration defaultInput1 					= getInputConfigurations().get(0);
+
+        InputConfiguration defaultInput1 					= getInputConfigurations().get(0);
     	InputConfiguration defaultInput2 					= getInputConfigurations().get(1);
+
     	ArrayList<InputConfiguration> defaultInputConfigs 	= new ArrayList<InputConfiguration>();
     	defaultInputConfigs.add(defaultInput1);
     	defaultInputConfigs.add(defaultInput2);
