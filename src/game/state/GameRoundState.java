@@ -25,10 +25,15 @@ public class GameRoundState extends BombermanGameState
     private final int 				xOffset 				= 160;
     
 	private BombermanMap  			map                 	= null;
+	private	int						startTime;
+	private	int						timer;				
     
     public GameRoundState ()
     {
-        super (BombermanGameState.GAME_ROUND);   
+        super (BombermanGameState.GAME_ROUND);
+        
+        startTime	= 0;
+        timer		= 5000;
     }
 
     @Override
@@ -79,10 +84,15 @@ public class GameRoundState extends BombermanGameState
             	input.clearKeyPressedRecord();
             }
         	
-        	// GAME_END
-        	if(this.map.getNrDeadPlayer() < this.map.getNrPlayer())
+        	// GAME_END - only one player left
+        	if(this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1)
         	{
-        		//game.enterState(GAME_END);
+            	if(startTime >= timer)
+            	{
+            		game.enterState(MAIN_MENU);
+            	}
+            	
+            	startTime += delta;
         	}
     	}
     	else

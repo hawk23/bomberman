@@ -13,7 +13,6 @@ public abstract class BombermanGameState extends BasicGameState
     public static int INTRO             = 1;
     public static int MAIN_MENU         = 2;
     public static int GAME_ROUND        = 3;
-    //public static int GAME_END			= 4;
 
     protected int id;
 
