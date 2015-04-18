@@ -2,12 +2,12 @@ package game.model;
 
 public class FlameUp extends PowerUpItem
 {
-    private static final String flameUP = "res/visuals/bomb/flameUP.png";
-    int 						value 	= 1;
+    private static final String flameUPImagePath	= "res/visuals/powerups/PUrange.png";
+    int 						value 				= 1;
 
     public FlameUp(int posX, int posY)
     {
-        super(posX, posY);
+        super(posX, posY, flameUPImagePath);
     }
 
     public int getValue()
