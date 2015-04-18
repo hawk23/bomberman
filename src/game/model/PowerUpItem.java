@@ -6,7 +6,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class PowerUpItem extends GameObject
+public class PowerUpItem extends GameObject implements IDestroyable
 {
     public PowerUpItem(int posX, int posY)
     {
@@ -24,4 +24,9 @@ public class PowerUpItem extends GameObject
     {
 
     }
+
+	@Override
+	public boolean destroy() {
+		return true;
+	}
 }
