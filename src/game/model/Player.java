@@ -48,7 +48,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Image		stopUp;
     private Image		stopLeft;
 
-    private int 		animationInterval = 40;
+    private int 		animationInterval;
     
     private Animation 	animation_actual;
     private Animation 	animation_up;
@@ -110,7 +110,8 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.moving 				= false;
         this.movementDirection 		= Direction.DOWN;
         this.movementInterpolation 	= 0.0f;
-
+        
+        adjustAnimationSpeed();
         loadVisuals(this.playerConfig.getPath());
         loadSound();
 
@@ -533,6 +534,16 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
     public boolean isDestroyed() {
         return destroyed;
+    }
+    
+    private void adjustAnimationSpeed() {
+    	float perc = this.speed / 2;
+    	this.animationInterval = (int) (50 / perc);
+    }
+    
+    public void adjustSpeed (float value) {
+    	
+    	adjustAnimationSpeed();
     }
 
     public void adjustBombRange (int value)
