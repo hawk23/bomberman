@@ -2,6 +2,7 @@ package game.model;
 
 import game.config.GameRoundConfig;
 import game.config.GameSettings;
+import game.config.InputConfiguration;
 import game.input.GamePadInputManager;
 import game.input.InputManager;
 
@@ -40,31 +41,35 @@ public class BombermanMap implements IUpdateable, IRenderable
 		this.objects		= new ArrayList<GameObject>();
 
 		this.deadPlayers	= 0;
-        Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
+        Controller[]    controllers     = ControllerEnvironment.getDefaultEnvironment().getControllers();
+        int             keyboardsUsed   = 0;
+        int             gamepadsUsed    = 0;
 
     	// create players and define controls
 		for (int i = 0; i < this.players.length; i++)
 		{
             InputManager inputManager = null;
 
-            // Use Keyboard controls for player 1+2
-            if (i < 2) {
-                inputManager    = new KeyboardInputManager(container.getInput(), config.getCurrentInputConfigs().get(i));
+            if (config.getCurrentInputConfigs().size() > keyboardsUsed)
+            {
+                // Use Keyboard controls if possible
+                inputManager    = new KeyboardInputManager(container.getInput(), config.getCurrentInputConfigs().get(keyboardsUsed));
+                keyboardsUsed++;
+            }
+            else if (controllers.length > gamepadsUsed+1)
+            {
+                // Use Gamepads for the rest if possible
+                inputManager    = new GamePadInputManager(container.getInput(),gamepadsUsed+1);
+                gamepadsUsed++;
             }
             else
             {
-                // Use Gamepads for the rest
-                if (controllers.length >= i+1)
-                {
-                    inputManager    = new GamePadInputManager(container.getInput(),i);
-                }
+                // Create empty input config if none of the above works
+                inputManager    = new KeyboardInputManager(container.getInput(), new InputConfiguration());
             }
 
-            if (inputManager != null)
-            {
-                this.players[i] = new Player(this, inputManager, config.getCurrentPlayerConfigs().get(i), this.wrapper.getSpawnPoint(i));
-                this.objects.add(this.players[i]);
-            }
+            this.players[i] = new Player(this, inputManager, config.getCurrentPlayerConfigs().get(i), this.wrapper.getSpawnPoint(i));
+            this.objects.add(this.players[i]);
 		}
 	}
 	
