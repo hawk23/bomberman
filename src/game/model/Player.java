@@ -144,7 +144,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		this.stopDown			= spriteSheet.getSubImage(0, 640, 64, 128);
 		this.stopRight			= spriteSheet.getSubImage(64, 640, 64, 128);
 		this.stopUp				= spriteSheet.getSubImage(128, 640, 64, 128);
-		this.stopLeft			= spriteSheet.getSubImage(384, 640, 64, 128);
+		this.stopLeft			= spriteSheet.getSubImage(192, 640, 64, 128);
 		
 		this.image				= this.stopDown;	
 	}
