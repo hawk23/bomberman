@@ -240,6 +240,16 @@ public class BombermanMap implements IUpdateable, IRenderable
             BombUp bombUp = (BombUp) item;
             player.adjustBombLimit(bombUp.getValue());
         }
+        if (item instanceof SpeedUp) 
+        {
+        	SpeedUp speedUp = (SpeedUp) item;
+        	player.adjustSpeed(speedUp.getValue());
+        }
+        if (item instanceof ShieldUp) 
+        {
+        	ShieldUp shieldUp = (ShieldUp) item;
+        	// ToDo set PLayer shielded	
+        }
     }
 
     private void handlePowerUp (int tileX, int tileY)
@@ -251,13 +261,21 @@ public class BombermanMap implements IUpdateable, IRenderable
             int             itemProb    = (int) (Math.random()*100 + 1);
             PowerUpItem     item        = null;
 
-            if (itemProb >= 1 && itemProb <=50)
+            if (itemProb >= 1 && itemProb <=25)
             {
                 item                    = new BombUp(tileX, tileY);
             }
-            else if (itemProb >= 51 && itemProb <=100)
+            else if (itemProb >= 26 && itemProb <= 50)
             {
                 item                    = new FlameUp(tileX, tileY);
+            }
+            else if (itemProb >= 51 && itemProb <= 75)
+            {
+            	item                    = new SpeedUp(tileX, tileY);
+            }
+            else if (itemProb >= 76 && itemProb <= 100)
+            {
+            	item                    = new ShieldUp(tileX, tileY);
             }
 
             this.objects.add(item);
