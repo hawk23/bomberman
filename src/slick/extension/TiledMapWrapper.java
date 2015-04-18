@@ -132,4 +132,24 @@ public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderabl
 			return true;
 		}
 	}
+
+    public boolean isDestroyable (int tileX, int tileY)
+    {
+        if (this.blockMatrix[tileX][tileY] instanceof DestroyableBlock)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isSolid (int tileX, int tileY)
+    {
+        if (this.blockMatrix[tileX][tileY] instanceof SolidBlock)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
