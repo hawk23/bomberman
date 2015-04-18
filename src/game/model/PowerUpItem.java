@@ -8,7 +8,7 @@ import org.newdawn.slick.state.StateBasedGame;
 /**
  * Created by Mario on 18.04.2015.
  */
-public class PowerUpItem extends GameObject
+public class PowerUpItem extends GameObject implements IDestroyable
 {
     public PowerUpItem(int posX, int posY) {
         super(posX, posY);
@@ -24,4 +24,9 @@ public class PowerUpItem extends GameObject
     public void update(GameContainer container, StateBasedGame game, int delta) {
 
     }
+
+	@Override
+	public boolean destroy() {
+		return true;
+	}
 }
