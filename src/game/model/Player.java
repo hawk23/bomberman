@@ -56,7 +56,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
      */
     private int bombTimer = 3000;
     private int bombRange = 1;
-    private int bombLimit = 100;
+    private int bombLimit = 2;
     private int bombCount = 0;
 
     /**

@@ -20,7 +20,7 @@ public class BombermanMap implements IUpdateable, IRenderable
 	TiledMapWrapper			wrapper;
 	Player[]				players;
 	Bomb[][]				bombs;
-	Explosion[][]			explosions;
+	Explosion[][]	        explosions;
 	ArrayList<GameObject>	objects;
 	
 	public BombermanMap(GameRoundConfig config, GameContainer container) throws SlickException
@@ -57,7 +57,10 @@ public class BombermanMap implements IUpdateable, IRenderable
 	public void update(GameContainer container, StateBasedGame game, int delta)
 	{
 		wrapper.update(container, game, delta);
-		
+
+        /**
+         * Manage bombs
+         */
 		for (int i = 0; i < this.bombs.length; i++)
 		{
 			for (int j = 0; j < this.bombs[i].length; j++)
@@ -66,11 +69,14 @@ public class BombermanMap implements IUpdateable, IRenderable
 				{
                     if (this.bombs[i][j].isExploded())
                     {
-                        // remove bomb and add explosion.
+                        // add explosion
+                        Explosion explosion = new Explosion(bombs[i][j].getPosX(), bombs[i][j].getPosY(), bombs[i][j].getRange(), this.wrapper);
+                        this.objects.add(explosion);
+                        this.explosions[explosion.getPosX()][explosion.getPosY()] = explosion;
+
+                        // remove bomb
                         this.objects.remove(this.bombs[i][j]);
                         this.bombs[i][j] = null;
-
-                        // TODO: add explosion
                     }
                     else
                     {
@@ -80,7 +86,37 @@ public class BombermanMap implements IUpdateable, IRenderable
 				
 			}
 		}
-		
+
+        /**
+         * Manage explosion
+         */
+        for (int i = 0; i < this.explosions.length; i++)
+        {
+            for (int j = 0; j < this.explosions[i].length; j++)
+            {
+                if (this.explosions[i][j] != null)
+                {
+                    Explosion explosion =  this.explosions[i][j];
+
+                    explosion.update(container, game, delta);
+
+                    if (explosion.isFinished())
+                    {
+                        // remove explosion
+                        this.explosions[i][j] = null;
+                        this.objects.remove(explosion);
+                    }
+                }
+            }
+        }
+
+        // check if anything is destroyed by current explosions
+        // TODO
+
+
+        /**
+         * Manage players
+         */
 		for (int i = 0; i < this.players.length; i++)
 		{
 			this.players[i].update(container, game, delta);
