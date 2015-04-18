@@ -42,20 +42,26 @@ public class BombermanMap implements IUpdateable, IRenderable
     	// create players and define controls
 		for (int i = 0; i < this.players.length; i++)
 		{
+            InputManager inputManager = null;
 
-            InputManager inputManager;
-
-            // Use Keyboard controls for players
-            inputManager    = new KeyboardInputManager(container.getInput(), config.getCurrentInputConfigs().get(i));
-
-            // Use Gamepads
-            if (controllers.length >= i+1)
+            // Use Keyboard controls for player 1+2
+            if (i < 2) {
+                inputManager    = new KeyboardInputManager(container.getInput(), config.getCurrentInputConfigs().get(i));
+            }
+            else
             {
-                inputManager    = new GamePadInputManager(container.getInput(),i);
+                // Use Gamepads for the rest
+                if (controllers.length >= i+1)
+                {
+                    inputManager    = new GamePadInputManager(container.getInput(),i);
+                }
             }
 
-            this.players[i] = new Player(this, inputManager, config.getCurrentPlayerConfigs().get(i), this.wrapper.getSpawnPoint(i));
-			this.objects.add(this.players[i]);
+            if (inputManager != null)
+            {
+                this.players[i] = new Player(this, inputManager, config.getCurrentPlayerConfigs().get(i), this.wrapper.getSpawnPoint(i));
+                this.objects.add(this.players[i]);
+            }
 		}
 	}
 	
