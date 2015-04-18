@@ -64,13 +64,14 @@ public class BombermanMap implements IUpdateable, IRenderable
 				if(this.bombs[i][j] != null)
 				{
 					this.bombs[i][j].update(container, game, delta);
-				}
 					
-				if(this.bombs[i][j].isExploded())
-				{
-					this.explosions[i][j] = new Explosion(this.bombs[i][j].getBombRange());
-					// TODO remove bomb from game objects and bombs
+					if(this.bombs[i][j].isExploded())
+					{
+						this.explosions[i][j] = new Explosion(this.bombs[i][j].getBombRange());
+						// TODO remove bomb from game objects and bombs
+					}
 				}
+				
 			}
 		}
 		

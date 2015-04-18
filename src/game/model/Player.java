@@ -1,5 +1,6 @@
 package game.model;
 
+import game.config.GameSettings;
 import game.config.PlayerConfig;
 import game.debug.Debugger;
 import game.input.Direction;
@@ -8,6 +9,7 @@ import game.input.InputManager;
 import java.awt.Point;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -15,7 +17,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
-import sun.misc.Timer;
 
 /**
  * Created by Albert on 30.03.2015.
@@ -25,21 +26,17 @@ public class Player extends GameObject implements IDestroyable
     private BombermanMap map;
     private InputManager inputManager;
 
-    private int posX;
-    private int posY;
-    
-    private float drawPosX;
-    private float drawPosY;
-    private float targetX;
-    private float targetY;
-    private float originalX;
-    private float originalY;
+    private int 	posX;
+    private int 	posY;
+    private int 	targetX;
+    private int 	targetY;
+    private int 	originalX;
+    private int 	originalY;
 
-    /**
-     * for render interpolation
-     */
-    private float lastDrawPosX;
-    private float lastDrawPosY;
+    private float 	drawPosX;
+    private float 	drawPosY;
+    private float 	lastDrawPosX;
+    private float 	lastDrawPosY;
 
     private Animation animation_actual;
     private Animation animation_up;
@@ -83,9 +80,6 @@ public class Player extends GameObject implements IDestroyable
 
     private PlayerConfig playerConfig;
 
-    // testing
-    private String bomb = "";
-
     /**
      * @param shape        - is the tile representation of the player
      * @param map
@@ -101,14 +95,11 @@ public class Player extends GameObject implements IDestroyable
         this.inputManager	= inputManager;
         this.playerConfig	= playerConfig;
         this.collides		= true;
-
-        originalX = targetX = drawPosX = lastDrawPosX = posX = (int) spawnPoint.getX();
-        originalY = targetY = drawPosY = lastDrawPosY = posY = (int) spawnPoint.getY();
         
-        speed = 1.7f;
-        moving = false;
-        movementDirection = Direction.DOWN;
-        movementInterpolation = 0.0f;
+        this.speed = 1.7f;
+        this.moving = false;
+        this.movementDirection = Direction.DOWN;
+        this.movementInterpolation = 0.0f;
 
         switch (playerConfig.getId())
         {
@@ -168,7 +159,7 @@ public class Player extends GameObject implements IDestroyable
                 animation_right = new Animation(right, duration, false);
 
                 animation_actual = new Animation();
-
+                
                 break;
             }
 
@@ -177,15 +168,23 @@ public class Player extends GameObject implements IDestroyable
         }
 
         image = animation_down.getImage(0);
+        originalX = targetX =  posX = (int) spawnPoint.getX();
+        originalY = targetY =  posY = (int) spawnPoint.getY();
+        this.calculateDrawPosition(posX, posY);
     }
 
     public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
         float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
+        image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY);
+        Color tmp = g.getColor();
+        g.setColor(Color.red);
+        g.drawRect(drawPosX, drawPosY, image.getWidth(), image.getHeight());
+        g.setColor(tmp);
+        g.drawString("posX: " + posX + " origX: " + originalX + " targetX: " + targetX, posX, posY);
+        g.drawString("posY: " + posY + " origY: " + originalY + " targetY: " + targetY, posX, posY +10);
+        g.drawString("drawX: " + drawPosX + " drawY: " + drawPosY, posX, posY+20);
         
-        g.drawString("posX: " + tileX, 0, 0);
-        g.drawString("posY: " + tileY, 0, 10);
-        image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY - 64 - 15);
     }
 
     public void update(GameContainer container, StateBasedGame game, int delta)
@@ -206,7 +205,7 @@ public class Player extends GameObject implements IDestroyable
 
                 case UP:
                 	originalY = posY;
-                	targetY = originalY - 64f;
+                	targetY = originalY - GameSettings.TILE_HEIGHT;
                 	targetX = originalX = posX;
                 	moving = true;
                 	movementDirection = Direction.UP;
@@ -216,7 +215,7 @@ public class Player extends GameObject implements IDestroyable
 
                 case DOWN:
                     originalY = posY;
-                    targetY = originalY + 64f;
+                    targetY = originalY + GameSettings.TILE_HEIGHT;
                     targetX = originalX = posX;
                     moving = true;
                     movementDirection = Direction.DOWN;
@@ -226,7 +225,7 @@ public class Player extends GameObject implements IDestroyable
 
                 case LEFT:
                     originalX = posX;
-                    targetX = originalX - 64f;
+                    targetX = originalX - GameSettings.TILE_WIDTH;
                     targetY = originalY = posY;
                     moving = true;
                     movementDirection = Direction.LEFT;
@@ -236,7 +235,7 @@ public class Player extends GameObject implements IDestroyable
 
                 case RIGHT:
                     originalX = posX;
-                    targetX = originalX + 64f;
+                    targetX = originalX + GameSettings.TILE_WIDTH;
                     targetY = originalY = posY;
                     moving = true;
                     movementDirection = Direction.RIGHT;
@@ -261,7 +260,7 @@ public class Player extends GameObject implements IDestroyable
 
             // move in opposite direction?
             if (checkOppositeMovement()) {
-                float tempX, tempY;
+                int tempX, tempY;
                 tempX = originalX;
                 originalX = targetX;
                 targetX = tempX;
@@ -309,26 +308,26 @@ public class Player extends GameObject implements IDestroyable
 
                         case UP:
                             originalY = targetY;
-                            targetY = originalY - 64f;
-                            targetX = originalX = drawPosX;
+                            targetY = originalY - GameSettings.TILE_HEIGHT;
+                            targetX = originalX;
                             break;
 
                         case DOWN:
                             originalY = targetY;
-                            targetY = originalY + 64f;
-                            targetX = originalX = drawPosX;
+                            targetY = originalY + GameSettings.TILE_HEIGHT;
+                            targetX = originalX;
                             break;
 
                         case LEFT:
                             originalX = targetX;
-                            targetX = originalX - 64f;
-                            targetY = originalY = drawPosY;
+                            targetX = originalX - GameSettings.TILE_WIDTH;
+                            targetY = originalY;
                             break;
 
                         case RIGHT:
                             originalX = targetX;
-                            targetX = originalX + 64f;
-                            targetY = originalY = drawPosY;
+                            targetX = originalX + GameSettings.TILE_WIDTH;
+                            targetY = originalY;
                             break;
 
                         default:
@@ -353,9 +352,7 @@ public class Player extends GameObject implements IDestroyable
             }
 
             // interpolate x and y coordinates
-            drawPosX = lerp(originalX, targetX, movementInterpolation);
-            drawPosY = lerp(originalY, targetY, movementInterpolation);
-
+            calculateDrawPosition(lerp(originalX, targetX, movementInterpolation), lerp(originalY, targetY, movementInterpolation));
         }
 
         if (moving) {
@@ -387,9 +384,8 @@ public class Player extends GameObject implements IDestroyable
 
         if (movementInterpolation >= 0.5f)
         {
-            posX = (int) targetX;
-            posY = (int) targetY;
-            
+            posX = targetX;
+            posY = targetY;
             tileX = posX / this.map.getTileSize();
             tileY = posY / this.map.getTileSize();
         }
@@ -514,6 +510,17 @@ public class Player extends GameObject implements IDestroyable
     	{
     		return false;
     	}
+    }
+    
+    private void calculateDrawPosition(float x, float y) {
+    	
+    	float xGab = (this.image.getWidth() - GameSettings.TILE_WIDTH) /2; 
+    	drawPosX = x - xGab;
+    	
+    	float ySpace = 10f;
+    	
+    	float yGab = this.image.getHeight() - GameSettings.TILE_HEIGHT;
+    	drawPosY = y - yGab - ySpace;
     }
 
     public float getDrawPosX() {

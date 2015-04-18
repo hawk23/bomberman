@@ -7,14 +7,7 @@ public abstract class GameObject implements IRenderable, IUpdateable
 {
     protected int       id;
     
-    /**
-     * tile based
-     */
     protected int       tileX;
-
-    /**
-     * tile based
-     */
     protected int       tileY;
     
     protected boolean   collides;
