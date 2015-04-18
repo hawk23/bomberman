@@ -134,7 +134,7 @@ public class BombermanGame extends StateBasedGame {
         }
         player2.setName("Hodenkobold");
         player2.setInitialBombLimit(1);
-        player2.setInitialSpeed(3);
+        player2.setInitialSpeed(2.5f);
         player2.setInitialBombTimer(2000);
         player2.setInitialBombRange(1);
 
