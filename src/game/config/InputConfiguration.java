@@ -1,11 +1,11 @@
 package game.config;
 
 public class InputConfiguration {
-    private int up;
-    private int down;
-    private int left;
-    private int right;
-    private int drop;
+    private int up      =   -1;
+    private int down    =   -1;
+    private int left    =   -1;
+    private int right   =   -1;
+    private int drop    =   -1;
 
     public InputConfiguration () {
 
