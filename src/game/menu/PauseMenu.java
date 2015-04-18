@@ -7,8 +7,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
 
-public class PauseMenu extends Menu {
-
+public class PauseMenu extends Menu
+{
 	// MainLayer
 	private int mainLayerIndex;
 	private int mainLayerSize = 3;
