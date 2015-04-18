@@ -1,8 +1,6 @@
 package game.model;
 
 import game.config.GameRoundConfig;
-import game.config.GameSettings;
-import game.event.ExplosionEvent;
 import game.input.InputManager;
 
 import java.awt.*;
@@ -115,6 +113,15 @@ public class BombermanMap implements IUpdateable, IRenderable
                             {
                                 ((DestroyableBlock) this.wrapper.getBlockMatrix()[p.x][p.y]).destroy();
                             }
+
+                            // check if objects are destroyed
+                            for (GameObject go : objects)
+                            {
+                                if (go instanceof IDestroyable && go.getPosX() == p.x && go.getPosY() == p.y)
+                                {
+                                    ((IDestroyable) go).destroy();
+                                }
+                            }
                         }
                     }
                 }
@@ -132,7 +139,14 @@ public class BombermanMap implements IUpdateable, IRenderable
          */
 		for (int i = 0; i < this.players.length; i++)
 		{
-			this.players[i].update(container, game, delta);
+            if (this.players[i].isDestroyed())
+            {
+                this.objects.remove(this.players[i]);
+            }
+            else
+            {
+                this.players[i].update(container, game, delta);
+            }
 		}
 	}
 	

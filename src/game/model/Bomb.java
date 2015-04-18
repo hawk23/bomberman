@@ -67,34 +67,9 @@ public class Bomb extends GameObject implements IDestroyable
     @Override
     public boolean destroy()
     {
-//        if(!isExploding)
-//        {
-//            explode();
-//            return true;
-//        }
-//        else
-            return false;
-    }
+        setExploded();
 
-    /**
-     * Calculates the explosion.
-     * spreads in each blastDirection for its range
-     */
-    private void explode()
-    {
-//        for(int direction=0;direction<blastDirection[0].length;direction++){
-//            for(int r=1;r<=range;r++){
-//                //Debugger.log("(" + getTileX() + blastDirection[0][direction] * r + "," + getTileY() + blastDirection[1][direction] * r + ")");
-//                /*If we hit a collision blast won't spread any longer in this direction*/
-//                if(oldBombermanMap.isBlocked(getTileX() + blastDirection[0][direction] * r, getTileY() + blastDirection[1][direction] * r)) {
-//                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY() +blastDirection[1][direction]*r);
-//                    break;
-//                }else
-//                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
-//            }
-//        }
-//        player.removeBomb();
-//        oldBombermanMap.removeGameObject(getTileX(), getTileY(), this);
+        return true;
     }
 
     @Override

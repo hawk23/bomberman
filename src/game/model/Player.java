@@ -45,6 +45,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Animation animation_left;
     private Animation animation_right;
 
+
     /**
      * speed of the player
      */
@@ -78,6 +79,8 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
      * does the player move between tiles?
      */
     private boolean moving;
+
+    private boolean destroyed;
 
     private PlayerConfig playerConfig;
 
@@ -460,8 +463,12 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
     @Override
     public boolean destroy() {
-        Debugger.log("die Bomberman, DIE!");
-        return false;
+        // TODO death animation
+
+        // HACK: set after death animation.
+        this.destroyed = true;
+
+        return true;
     }
 
     public int getBombTimer() {
@@ -546,5 +553,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     public void exploded(ExplosionEvent e)
     {
         this.reduceBombCounter();
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 }
