@@ -89,6 +89,7 @@ public class BombermanMap implements IUpdateable, IRenderable
         }
 
         explosionSystem.render(container, game, g);
+        
 	}
 
 	@Override

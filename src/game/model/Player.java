@@ -465,19 +465,24 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     @Override
     public boolean destroy()
     {
-    	if (!shielded && !dying) {
-    		
-    		dying = true;
-    		this.animation_actual = this.animation_die;
-    		this.animation_actual.restart();
-    		this.dyingTimer = this.animation_actual.getFrameCount() * dyingAnimationInterval;
+
+    	if (!destroyed) {
+        	
+    		if (!shielded && !dying) {
+        		
+        		dying = true;
+        		playSound(deathSound);
+        		this.animation_actual = this.animation_die;
+        		this.animation_actual.restart();
+        		this.dyingTimer = this.animation_actual.getFrameCount() * dyingAnimationInterval;
+        	}
+        	
+        	if (dead) {
+    		     this.map.increaseNrDeadPlayer();
+    		     return this.destroyed = true;
+    		}
     	}
-    	
-    	if (dead) {
-		     this.map.increaseNrDeadPlayer();
-		     playSound(deathSound);
-		     return this.destroyed = true;
-		}
+
     	
     	return this.destroyed;
     }
@@ -576,7 +581,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     }
     
     public void adjustSpeed (float value) {
-    	
+    	this.speed += value;
     	adjustAnimationSpeed();
     	playSound(powerUpSound);
     }
@@ -637,5 +642,13 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		return shielded;
 	}
 
+    public int getShieldTimerSeconds ()
+    {
+        return this.shieldTimer / 1000;
+    }
 
+    public float getSpeed()
+    {
+        return speed;
+    }
 }
