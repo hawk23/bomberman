@@ -20,18 +20,14 @@ import slick.extension.AppGameContainerFSCustom;
 public class Player extends GameObject implements IDestroyable, ExplosionListener
 {
     private static final String powerUpSoundPath    = "/res/sounds/player/powerup.ogg";
-    private static final String ultraKillSoundPath  = "/res/sounds/player/ultrakill.ogg";
     private static final String deathSoundPath      = "/res/sounds/player/death.ogg";
-    private static final String walkSoundPath       = "/res/sounds/player/walk1.ogg";
 
     private BombermanMap map;
     private InputManager inputManager;
     private PlayerConfig playerConfig;
     
     private Sound powerUpSound;
-    private Sound ultraKillSound;
     private Sound deathSound;
-    private Sound walkSound;
 
     private int 		posX;
     private int 		posY;
@@ -51,6 +47,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Image		stopLeft;
 
     private int 		animationInterval;
+    private int 		dyingAnimationInterval = 40;
     
     private Animation 	animation_actual;
     private Animation 	animation_up;
@@ -65,6 +62,13 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private int 		bombLimit;
     private int 		bombCount;
 
+    private boolean		shielded;
+    private int 		shieldTimer;
+    
+    private boolean		dead;
+    private boolean		dying;
+    private int			dyingTimer;
+    
     /**
      * interpolation value for the movement between two points
      */
@@ -110,6 +114,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.bombTimer 				= this.playerConfig.getInitialBombTimer();
         this.bombCount 				= 0;
         this.moving 				= false;
+        this.shielded				= false;
+        this.dying					= false;
+        this.dead					= false;
         this.movementDirection 		= Direction.DOWN;
         this.movementInterpolation 	= 0.0f;
         
@@ -139,7 +146,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		this.animation_up.setAutoUpdate(false);
 		this.animation_left		= new Animation(animLeft, animationInterval);
 		this.animation_left.setAutoUpdate(false);
-		this.animation_die		= new Animation(animDie, animationInterval);
+		this.animation_die		= new Animation(animDie, dyingAnimationInterval);
 		this.animation_die.setAutoUpdate(false);
 		this.animation_actual	= new Animation();
 		
@@ -154,15 +161,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
         float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
-        image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY);
-//        Color tmp = g.getColor();
-//        g.setColor(Color.red);
-//        g.drawRect(drawPosX, drawPosY, image.getWidth(), image.getHeight());
-//        g.setColor(tmp);
-//        g.drawString("posX: " + posX + " origX: " + originalX + " targetX: " + targetX, posX, posY);
-//        g.drawString("posY: " + posY + " origY: " + originalY + " targetY: " + targetY, posX, posY +10);
-//        g.drawString("drawX: " + drawPosX + " drawY: " + drawPosY, posX, posY+20);
-        
+        image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY);    
     }
 
     public void update(GameContainer container, StateBasedGame game, int delta)
@@ -171,106 +170,65 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         lastDrawPosX = drawPosX;
         lastDrawPosY = drawPosY;
 
-        this.inputManager.update();
-        direction = this.inputManager.getDirection();
-
-        if (moving && !walkSound.playing())
+        if (!dying) 
         {
-            playSound(walkSound);
-        }
+        	this.inputManager.update();
+            direction = this.inputManager.getDirection();
 
-        // stopped
-        if (!moving) {
-
-            movementInterpolation = 0.0f;
-
-            switch (direction) {
-
-                case UP:
-                	originalY = posY;
-                	targetY = originalY - GameSettings.TILE_HEIGHT;
-                	targetX = originalX = posX;
-                	moving = true;
-                	movementDirection = Direction.UP;
-                	animation_actual = animation_up;
-                	animation_actual.restart();
-                    break;
-
-                case DOWN:
-                    originalY = posY;
-                    targetY = originalY + GameSettings.TILE_HEIGHT;
-                    targetX = originalX = posX;
-                    moving = true;
-                    movementDirection = Direction.DOWN;
-                    animation_actual = animation_down;
-                    animation_actual.restart();
-                    break;
-
-                case LEFT:
-                    originalX = posX;
-                    targetX = originalX - GameSettings.TILE_WIDTH;
-                    targetY = originalY = posY;
-                    moving = true;
-                    movementDirection = Direction.LEFT;
-                    animation_actual = animation_left;
-                    animation_actual.restart();
-                    break;
-
-                case RIGHT:
-                    originalX = posX;
-                    targetX = originalX + GameSettings.TILE_WIDTH;
-                    targetY = originalY = posY;
-                    moving = true;
-                    movementDirection = Direction.RIGHT;
-                    animation_actual = animation_right;
-                    animation_actual.restart();
-                    break;
-
-                default:
-                    break;
+            if (shielded){
+            	
+            	if (shieldTimer <= 0) {
+            		shielded = false;
+            	}
+            	else {
+            		shieldTimer -= delta;
+            	}
             }
             
-            if (isBlocked(targetX, targetY)) {
-            	targetX = originalX;
-            	targetY = originalY;
-            	moving = false;
-            }
-        }
+            
+            // stopped
+            if (!moving) {
 
-        // currently moving between tiles?
-        if (moving) {
-            movementInterpolation += speed * deltaInSecs;
+                movementInterpolation = 0.0f;
 
-            // move in opposite direction?
-            if (checkOppositeMovement()) {
-                int tempX, tempY;
-                tempX = originalX;
-                originalX = targetX;
-                targetX = tempX;
-                tempY = originalY;
-                originalY = targetY;
-                targetY = tempY;
+                switch (direction) {
 
-                movementInterpolation = 1.0f - movementInterpolation;
-                movementDirection = direction;
-
-                switch (movementDirection) {
                     case UP:
-                        animation_actual = animation_up;
-                        animation_actual.restart();
+                    	originalY = posY;
+                    	targetY = originalY - GameSettings.TILE_HEIGHT;
+                    	targetX = originalX = posX;
+                    	moving = true;
+                    	movementDirection = Direction.UP;
+                    	animation_actual = animation_up;
+                    	animation_actual.restart();
                         break;
 
                     case DOWN:
+                        originalY = posY;
+                        targetY = originalY + GameSettings.TILE_HEIGHT;
+                        targetX = originalX = posX;
+                        moving = true;
+                        movementDirection = Direction.DOWN;
                         animation_actual = animation_down;
                         animation_actual.restart();
                         break;
 
                     case LEFT:
+                        originalX = posX;
+                        targetX = originalX - GameSettings.TILE_WIDTH;
+                        targetY = originalY = posY;
+                        moving = true;
+                        movementDirection = Direction.LEFT;
                         animation_actual = animation_left;
                         animation_actual.restart();
                         break;
 
                     case RIGHT:
+                        originalX = posX;
+                        targetX = originalX + GameSettings.TILE_WIDTH;
+                        targetY = originalY = posY;
+                        moving = true;
+                        movementDirection = Direction.RIGHT;
                         animation_actual = animation_right;
                         animation_actual.restart();
                         break;
@@ -278,104 +236,169 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
                     default:
                         break;
                 }
+                
+                if (isBlocked(targetX, targetY)) {
+                	targetX = originalX;
+                	targetY = originalY;
+                	moving = false;
+                }
             }
 
+            // currently moving between tiles?
+            if (moving) {
+                movementInterpolation += speed * deltaInSecs;
 
-            // target - tile reached?
-            if (movementInterpolation >= 1) {
+                // move in opposite direction?
+                if (checkOppositeMovement()) {
+                    int tempX, tempY;
+                    tempX = originalX;
+                    originalX = targetX;
+                    targetX = tempX;
+                    tempY = originalY;
+                    originalY = targetY;
+                    targetY = tempY;
 
-                // flawless movement?
-                if (movementDirection == direction) {
+                    movementInterpolation = 1.0f - movementInterpolation;
+                    movementDirection = direction;
 
-                    switch (direction) {
-
+                    switch (movementDirection) {
                         case UP:
-                            originalY = targetY;
-                            targetY = originalY - GameSettings.TILE_HEIGHT;
-                            targetX = originalX;
+                            animation_actual = animation_up;
+                            animation_actual.restart();
                             break;
 
                         case DOWN:
-                            originalY = targetY;
-                            targetY = originalY + GameSettings.TILE_HEIGHT;
-                            targetX = originalX;
+                            animation_actual = animation_down;
+                            animation_actual.restart();
                             break;
 
                         case LEFT:
-                            originalX = targetX;
-                            targetX = originalX - GameSettings.TILE_WIDTH;
-                            targetY = originalY;
+                            animation_actual = animation_left;
+                            animation_actual.restart();
                             break;
 
                         case RIGHT:
-                            originalX = targetX;
-                            targetX = originalX + GameSettings.TILE_WIDTH;
-                            targetY = originalY;
+                            animation_actual = animation_right;
+                            animation_actual.restart();
                             break;
 
                         default:
                             break;
                     }
-                    
-                    if (isBlocked(targetX, targetY)) {
-                    	targetX = originalX;
-                    	targetY = originalY;
-                    	movementInterpolation = 1.0f;
-                    	moving = false;
+                }
+
+
+                // target - tile reached?
+                if (movementInterpolation >= 1) {
+
+                    // flawless movement?
+                    if (movementDirection == direction) {
+
+                        switch (direction) {
+
+                            case UP:
+                                originalY = targetY;
+                                targetY = originalY - GameSettings.TILE_HEIGHT;
+                                targetX = originalX;
+                                break;
+
+                            case DOWN:
+                                originalY = targetY;
+                                targetY = originalY + GameSettings.TILE_HEIGHT;
+                                targetX = originalX;
+                                break;
+
+                            case LEFT:
+                                originalX = targetX;
+                                targetX = originalX - GameSettings.TILE_WIDTH;
+                                targetY = originalY;
+                                break;
+
+                            case RIGHT:
+                                originalX = targetX;
+                                targetX = originalX + GameSettings.TILE_WIDTH;
+                                targetY = originalY;
+                                break;
+
+                            default:
+                                break;
+                        }
+                        
+                        if (isBlocked(targetX, targetY)) {
+                        	targetX = originalX;
+                        	targetY = originalY;
+                        	movementInterpolation = 1.0f;
+                        	moving = false;
+                        }
+                        else {
+                        	movementInterpolation = movementInterpolation % 1.0f;
+                        }  
                     }
+                    // or stop?
                     else {
-                    	movementInterpolation = movementInterpolation % 1.0f;
-                    }  
+                        movementInterpolation = 1.0f;
+                        moving = false;
+                    }
                 }
-                // or stop?
-                else {
-                    movementInterpolation = 1.0f;
-                    moving = false;
+
+                // interpolate x and y coordinates
+                calculateDrawPosition(lerp(originalX, targetX, movementInterpolation), lerp(originalY, targetY, movementInterpolation));
+            }
+
+            if (moving) {
+                image = animation_actual.getCurrentFrame();
+                animation_actual.update(delta);
+            } else {
+                switch (movementDirection) {
+
+                    case UP:
+                        image = stopUp;
+                        break;
+
+                    case DOWN:
+                        image = stopDown;
+                        break;
+
+                    case LEFT:
+                        image = stopLeft;
+                        break;
+
+                    case RIGHT:
+                        image = stopRight;
+                        break;
+
+                    default:
+                        break;
                 }
             }
 
-            // interpolate x and y coordinates
-            calculateDrawPosition(lerp(originalX, targetX, movementInterpolation), lerp(originalY, targetY, movementInterpolation));
-        }
+            if (movementInterpolation >= 0.5f)
+            {
+                posX = targetX;
+                posY = targetY;
+                tileX = posX / this.map.getTileSize();
+                tileY = posY / this.map.getTileSize();
+            }
 
-        if (moving) {
-            image = animation_actual.getCurrentFrame();
-            animation_actual.update(delta);
-        } else {
-            switch (movementDirection) {
-
-                case UP:
-                    image = stopUp;
-                    break;
-
-                case DOWN:
-                    image = stopDown;
-                    break;
-
-                case LEFT:
-                    image = stopLeft;
-                    break;
-
-                case RIGHT:
-                    image = stopRight;
-                    break;
-
-                default:
-                    break;
+            if (inputManager.bombDrop()) {
+               addBomb();
             }
         }
-
-        if (movementInterpolation >= 0.5f)
+        // dying
+        else
         {
-            posX = targetX;
-            posY = targetY;
-            tileX = posX / this.map.getTileSize();
-            tileY = posY / this.map.getTileSize();
+        	if (dyingTimer <= 0) {
+        		dead = true;
+        		destroy();
+        	}
+        	else {
+        		dyingTimer -= delta;
+        		image = animation_actual.getCurrentFrame();
+        		animation_actual.update(delta);
+        	}
         }
-
-        if (inputManager.bombDrop()) {
-           addBomb();
-        }
+        
+        
     }
 
     /**
@@ -442,17 +465,21 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     @Override
     public boolean destroy()
     {
-        // TODO death animation
-
-        // HACK: set after death animation.
-        this.destroyed = true;
-        
-        // mark as dead
-        this.map.increaseNrDeadPlayer();
-
-        playSound(deathSound);
-
-        return true;
+    	if (!shielded && !dying) {
+    		
+    		dying = true;
+    		playSound(deathSound);
+    		this.animation_actual = this.animation_die;
+    		this.animation_actual.restart();
+    		this.dyingTimer = this.animation_actual.getFrameCount() * dyingAnimationInterval;
+    	}
+    	
+    	if (dead) {
+		     this.map.increaseNrDeadPlayer();
+		     return this.destroyed = true;
+		}
+    	
+    	return this.destroyed;
     }
 
     public int getBombTimer() {
@@ -540,7 +567,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     }
 
     public boolean isDestroyed() {
-        return destroyed;
+        return this.destroyed;
     }
     
     private void adjustAnimationSpeed() {
@@ -549,8 +576,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     }
     
     public void adjustSpeed (float value) {
-    	
+    	this.speed += value;
     	adjustAnimationSpeed();
+    	playSound(powerUpSound);
     }
 
     public void adjustBombRange (int value)
@@ -564,15 +592,19 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.bombLimit += value;
         playSound(powerUpSound);
     }
+    
+    public void setShielded(int timer) {
+    	this.shieldTimer = timer;
+    	this.shielded = true;
+    	playSound(powerUpSound);
+    }
 
     private void loadSound ()
     {
         try
         {
             this.powerUpSound       = new Sound(powerUpSoundPath);
-            this.ultraKillSound     = new Sound(ultraKillSoundPath);
             this.deathSound         = new Sound(deathSoundPath);
-            this.walkSound          = new Sound(walkSoundPath);
         }
 
         catch (SlickException e)
@@ -601,5 +633,17 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         return bombLimit;
     }
 
+	public boolean isShielded() {
+		return shielded;
+	}
 
+    public int getShieldTimerSeconds ()
+    {
+        return this.shieldTimer / 1000;
+    }
+
+    public float getSpeed()
+    {
+        return speed;
+    }
 }

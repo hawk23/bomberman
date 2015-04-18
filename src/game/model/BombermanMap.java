@@ -257,7 +257,7 @@ public class BombermanMap implements IUpdateable, IRenderable
         if (item instanceof ShieldUp) 
         {
         	ShieldUp shieldUp = (ShieldUp) item;
-        	// ToDo set PLayer shielded	
+        	player.setShielded(shieldUp.getTime());
         }
     }
 
