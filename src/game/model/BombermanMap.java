@@ -2,12 +2,16 @@ package game.model;
 
 import game.config.GameRoundConfig;
 import game.config.GameSettings;
+import game.input.GamePadInputManager;
 import game.input.InputManager;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import game.input.KeyboardInputManager;
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -32,12 +36,25 @@ public class BombermanMap implements IUpdateable, IRenderable
 		this.explosions	= new Explosion[wrapper.getHeight()][wrapper.getWidth()];
         this.powerups   = new PowerUpItem[wrapper.getHeight()][wrapper.getWidth()];
 		this.objects	= new ArrayList<GameObject>();
-		
+
+        Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
+
     	// create players and define controls
 		for (int i = 0; i < this.players.length; i++)
 		{
-	        InputManager inputManager = new InputManager(container.getInput(), config.getCurrentInputConfigs().get(i));
-			this.players[i] = new Player(this, inputManager, config.getCurrentPlayerConfigs().get(i), this.wrapper.getSpawnPoint(i));
+
+            InputManager inputManager;
+
+            // Use Keyboard controls for players
+            inputManager    = new KeyboardInputManager(container.getInput(), config.getCurrentInputConfigs().get(i));
+
+            // Use Gamepads
+            if (controllers.length >= i+1)
+            {
+                inputManager    = new GamePadInputManager(container.getInput(),i);
+            }
+
+            this.players[i] = new Player(this, inputManager, config.getCurrentPlayerConfigs().get(i), this.wrapper.getSpawnPoint(i));
 			this.objects.add(this.players[i]);
 		}
 	}

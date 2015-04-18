@@ -4,6 +4,8 @@ public class PlayerConfig extends GameObjectConfig
 {
     private int     initialBombLimit;
     private float   initialSpeed;
+    private int 	initialBombTimer;
+    private int 	initialBombRange;
 
     public PlayerConfig() {
         super();
@@ -24,4 +26,20 @@ public class PlayerConfig extends GameObjectConfig
     public void setInitialSpeed(float initialSpeed) {
         this.initialSpeed = initialSpeed;
     }
+
+	public int getInitialBombTimer() {
+		return initialBombTimer;
+	}
+
+	public void setInitialBombTimer(int initialBombTimer) {
+		this.initialBombTimer = initialBombTimer;
+	}
+
+	public int getInitialBombRange() {
+		return initialBombRange;
+	}
+
+	public void setInitialBombRange(int initialBombRange) {
+		this.initialBombRange = initialBombRange;
+	}
 }
