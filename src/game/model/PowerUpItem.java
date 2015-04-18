@@ -1,16 +1,15 @@
 package game.model;
 
 import game.config.GameSettings;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
 
-/**
- * Created by Mario on 18.04.2015.
- */
-public class PowerUpItem extends GameObject
+public class PowerUpItem extends GameObject implements IDestroyable
 {
-    public PowerUpItem(int posX, int posY) {
+    public PowerUpItem(int posX, int posY)
+    {
         super(posX, posY);
     }
 
@@ -21,7 +20,13 @@ public class PowerUpItem extends GameObject
     }
 
     @Override
-    public void update(GameContainer container, StateBasedGame game, int delta) {
+    public void update(GameContainer container, StateBasedGame game, int delta)
+    {
 
     }
+
+	@Override
+	public boolean destroy() {
+		return true;
+	}
 }

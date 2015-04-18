@@ -19,9 +19,10 @@ import slick.extension.AppGameContainerFSCustom;
  */
 public class Player extends GameObject implements IDestroyable, ExplosionListener
 {
-    private static final String powerUpSoundPath = "/res/sounds/player/powerup.ogg";
-    private static final String ultraKillSoundPath = "/res/sounds/player/ultrakill.ogg";
-    private static final String deathSoundPath = "/res/sounds/player/death.ogg";
+    private static final String powerUpSoundPath    = "/res/sounds/player/powerup.ogg";
+    private static final String ultraKillSoundPath  = "/res/sounds/player/ultrakill.ogg";
+    private static final String deathSoundPath      = "/res/sounds/player/death.ogg";
+    private static final String walkSoundPath       = "/res/sounds/player/walk1.ogg";
 
     private BombermanMap map;
     private InputManager inputManager;
@@ -30,6 +31,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Sound powerUpSound;
     private Sound ultraKillSound;
     private Sound deathSound;
+    private Sound walkSound;
 
     private int 		posX;
     private int 		posY;
@@ -171,6 +173,11 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
         this.inputManager.update();
         direction = this.inputManager.getDirection();
+
+        if (moving && !walkSound.playing())
+        {
+            playSound(walkSound);
+        }
 
         // stopped
         if (!moving) {
@@ -565,6 +572,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
             this.powerUpSound       = new Sound(powerUpSoundPath);
             this.ultraKillSound     = new Sound(ultraKillSoundPath);
             this.deathSound         = new Sound(deathSoundPath);
+            this.walkSound          = new Sound(walkSoundPath);
         }
 
         catch (SlickException e)

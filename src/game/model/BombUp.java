@@ -1,21 +1,24 @@
 package game.model;
 
-/**
- * Created by Mario on 18.04.2015.
- */
 public class BombUp extends PowerUpItem
 {
+    private static final String bombUP = "res/visuals/bomb/bombUp.png";
+
     int value = 1;
 
-    public BombUp(int posX, int posY) {
+    public BombUp(int posX, int posY)
+    {
         super(posX, posY);
+        setImage(bombUP);
     }
 
-    public int getValue() {
+    public int getValue()
+    {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(int value)
+    {
         this.value = value;
     }
 }
