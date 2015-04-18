@@ -6,15 +6,18 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.state.StateBasedGame;
 
+<<<<<<< HEAD
+/**
+ * Created by Mario on 18.04.2015.
+ */
 public class PowerUpItem extends GameObject implements IDestroyable
+=======
+public class PowerUpItem extends GameObject
+>>>>>>> f5d6da814fe5b4029a2ad72c7fc967d396fee663
 {
-    private boolean			destroyed			= false;
-    private int 			timer;
-    
-    public PowerUpItem(int posX, int posY, int flameTime)
+    public PowerUpItem(int posX, int posY)
     {
         super(posX, posY);
-        timer = flameTime;
     }
 
     @Override
@@ -26,23 +29,11 @@ public class PowerUpItem extends GameObject implements IDestroyable
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta)
     {
-    	if (timer > 0) {
-        	timer -= delta;
-    	}
+
     }
 
 	@Override
 	public boolean destroy() {
-		if (timer <= 0) {
-			return this.destroyed = true;
-		}
-		else {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean isDestroyed() {
-		return this.destroyed;
+		return true;
 	}
 }

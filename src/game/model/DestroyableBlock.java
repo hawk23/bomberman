@@ -32,9 +32,9 @@ public class DestroyableBlock extends Block implements IDestroyable
 	{
 		return this.destroyed = true;
 	}
-	
-	public boolean getDestroy()
-	{
+
+	@Override
+	public boolean isDestroyed() {
 		return this.destroyed;
 	}
 }

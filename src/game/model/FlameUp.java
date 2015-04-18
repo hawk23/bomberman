@@ -8,7 +8,7 @@ public class FlameUp extends PowerUpItem
     int value = 1;
 
     public FlameUp(int posX, int posY) {
-        super(posX, posY);
+        super(posX, posY, Explosion.timer);
     }
 
     public int getValue() {

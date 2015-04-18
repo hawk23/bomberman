@@ -5,7 +5,7 @@ public class SpeedUp extends PowerUpItem {
 	private float value = 0.2f;
 	
 	public SpeedUp(int posX, int posY) {
-		super(posX, posY);
+		super(posX, posY, Explosion.timer);
 		
 	}
 

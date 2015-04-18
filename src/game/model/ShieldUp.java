@@ -5,7 +5,7 @@ public class ShieldUp extends PowerUpItem {
 	int time = 10_000;
 	
 	public ShieldUp(int posX, int posY) {
-		super(posX, posY);
+		super(posX, posY, Explosion.timer);
 	}
 
 	public int getTime() {

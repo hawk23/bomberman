@@ -8,7 +8,7 @@ public class BombUp extends PowerUpItem
 
     public BombUp(int posX, int posY)
     {
-        super(posX, posY);
+        super(posX, posY, Explosion.timer);
         setImage(bombUP);
     }
 

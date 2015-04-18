@@ -25,6 +25,7 @@ public class Bomb extends GameObject implements IDestroyable
     private int					            time;
     private boolean				            exploded;
     private EventListenerList               listeners           = new EventListenerList();
+    private boolean							destroyed			= false;
     
     public Bomb(int tileX, int tileY, int bombRange, int bombTimer)
     {
@@ -84,6 +85,7 @@ public class Bomb extends GameObject implements IDestroyable
     public void setExploded()
     {
     	this.exploded = true;
+    	this.destroyed = true;
         this.notifyExploded();
     }
     
@@ -129,4 +131,9 @@ public class Bomb extends GameObject implements IDestroyable
             l.exploded(e);
         }
     }
+
+	@Override
+	public boolean isDestroyed() {
+		return this.destroyed;
+	}
 }
