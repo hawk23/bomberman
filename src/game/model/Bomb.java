@@ -1,10 +1,8 @@
 package game.model;
 
 import game.config.GameSettings;
-import game.debug.Debugger;
 
 import game.event.ExplosionEvent;
-import javafx.beans.Observable;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -13,8 +11,7 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
 import javax.swing.event.EventListenerList;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class Bomb extends GameObject implements IDestroyable
 {
@@ -29,10 +26,6 @@ public class Bomb extends GameObject implements IDestroyable
     private boolean				            exploded;
     private EventListenerList               listeners           = new EventListenerList();
     
-    /**
-     * Directions for the calculation of the blast, UP,LEFT,DOWN,RIGHT
-     */
-    private int blastDirection[][] = {{1, 0, -1, 0}, {0, 1, 0, -1}};
 
     public Bomb(int tileX, int tileY, int bombRange, int bombTimer)
     {
