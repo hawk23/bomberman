@@ -76,7 +76,15 @@ public class PlayerStateScreen implements IRenderable
 
         this.g.flush();
 
-        g.drawImage(this.image, this.posX, this.posY);
+        if (!this.player.isDestroyed())
+        {
+            g.drawImage(this.image, this.posX, this.posY);
+        }
+        else
+        {
+            g.drawImage(this.image, this.posX, this.posY, new Color(1, 1, 1, 0.5f));
+        }
+
     }
 
     private void resetGraphics ()
