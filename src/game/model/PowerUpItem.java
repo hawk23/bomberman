@@ -11,30 +11,23 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class PowerUpItem extends GameObject implements IDestroyable
 {
-    private static final int	animationInteval	= 40;
+    private static final int	animationInterval	= 40;
     private SpriteSheet			bombSheet;
     private Animation			animationBurn;
 
     private boolean			destroyed			= false;
     private int 			timer;
     
-    public PowerUpItem(int posX, int posY, int flameTime)
+    public PowerUpItem(int posX, int posY, int flameTime, String path)
     {
         super(posX, posY);
         timer = flameTime;
-        loadImage(null);
-    }
-    
-    public PowerUpItem(int posX, int posY, String path)
-    {
-        super(posX, posY);
         loadImage(path);
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
-        //g.drawImage(this.image, this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
         animationBurn.draw(tileX * GameSettings.TILE_HEIGHT, tileY * GameSettings.TILE_WIDTH);
     }
 
@@ -71,7 +64,7 @@ public class PowerUpItem extends GameObject implements IDestroyable
         try
         {
             bombSheet		= new SpriteSheet(path, 64, 64);
-            animationBurn	= new Animation(bombSheet, animationInteval);
+            animationBurn	= new Animation(bombSheet, animationInterval);
         }
         catch (SlickException e)
         {
