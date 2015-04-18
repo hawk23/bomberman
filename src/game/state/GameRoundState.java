@@ -78,6 +78,12 @@ public class GameRoundState extends BombermanGameState
             	this.paused = true;
             	input.clearKeyPressedRecord();
             }
+        	
+        	// GAME_END
+        	if(this.map.getNrDeadPlayer() < this.map.getNrPlayer())
+        	{
+        		//game.enterState(GAME_END);
+        	}
     	}
     	else
     	{

@@ -31,7 +31,6 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Sound ultraKillSound;
     private Sound deathSound;
 
-    
     private int 		posX;
     private int 		posY;
     private int 		targetX;
@@ -434,11 +433,16 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
 
     @Override
-    public boolean destroy() {
+    public boolean destroy()
+    {
         // TODO death animation
 
         // HACK: set after death animation.
         this.destroyed = true;
+        
+        // mark as dead
+        this.map.increaseNrDeadPlayer();
+
         playSound(deathSound);
 
         return true;

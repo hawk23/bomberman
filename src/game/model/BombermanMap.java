@@ -28,15 +28,18 @@ public class BombermanMap implements IUpdateable, IRenderable
     PowerUpItem[][]         powerups;
 	ArrayList<GameObject>	objects;
 	
+	int						deadPlayers;
+	
 	public BombermanMap(GameRoundConfig config, GameContainer container) throws SlickException
 	{
-		this.wrapper 	= new TiledMapWrapper(config.getMapConfig().getPath());
-		this.players 	= new Player[config.getCurrentPlayerConfigs().size()];
-		this.bombs	 	= new Bomb[wrapper.getHeight()][wrapper.getWidth()];
-		this.explosions	= new Explosion[wrapper.getHeight()][wrapper.getWidth()];
-        this.powerups   = new PowerUpItem[wrapper.getHeight()][wrapper.getWidth()];
-		this.objects	= new ArrayList<GameObject>();
+		this.wrapper 		= new TiledMapWrapper(config.getMapConfig().getPath());
+		this.players 		= new Player[config.getCurrentPlayerConfigs().size()];
+		this.bombs	 		= new Bomb[wrapper.getHeight()][wrapper.getWidth()];
+		this.explosions		= new Explosion[wrapper.getHeight()][wrapper.getWidth()];
+        this.powerups   	= new PowerUpItem[wrapper.getHeight()][wrapper.getWidth()];
+		this.objects		= new ArrayList<GameObject>();
 
+		this.deadPlayers	= 0;
         Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
 
     	// create players and define controls
@@ -243,7 +246,6 @@ public class BombermanMap implements IUpdateable, IRenderable
             this.powerups[tileX][tileY] = item;
         }
     }
-
 	
 	/**
 	 * isBlocked is true if a solid block or a bomb already exists at (x,y)
@@ -264,6 +266,21 @@ public class BombermanMap implements IUpdateable, IRenderable
 	public int getHeight() 
 	{
 		return this.wrapper.getHeight() * this.wrapper.getTileHeight();
+	}
+	
+	public int getNrDeadPlayer() 
+	{
+		return this.deadPlayers;
+	}
+	
+	public void increaseNrDeadPlayer() 
+	{
+		this.deadPlayers++;
+	}
+
+	public int getNrPlayer() 
+	{
+		return this.players.length;
 	}
 	
 	public int getTileSize()
