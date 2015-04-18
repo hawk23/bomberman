@@ -87,19 +87,18 @@ public class GameRoundState extends BombermanGameState
     {
         Input input = container.getInput();
 
-        if (this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1) {
-        	
-        	
+        if (this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1)
+        {
         	if(startTime >= timer || input.isKeyPressed(Input.KEY_ESCAPE))
         	{
         		this.gameRoundEnd = true;
         	}
         	
         	startTime += delta;
-        	
         }
         
-        if (gameRoundEnd) {
+        if (gameRoundEnd)
+        {
         	endMenu.update(container, game, delta);
         	
         	if (endMenu.getActualAction() != Action.NO_ACTION)
@@ -120,7 +119,8 @@ public class GameRoundState extends BombermanGameState
     			}
     		}
         }
-        else {
+        else
+        {
             if (!this.paused)
             {
             	this.map.update(container, game, delta);
@@ -130,7 +130,6 @@ public class GameRoundState extends BombermanGameState
                 	this.paused = true;
                 	input.clearKeyPressedRecord();
                 }
-            	
         	}
         	else
         	{
@@ -159,7 +158,6 @@ public class GameRoundState extends BombermanGameState
         		}
         	}
         }
-        
     }
     
     private void resetGraphics()
@@ -211,7 +209,7 @@ public class GameRoundState extends BombermanGameState
 			//TODO
 		}
 	}
-
+	
 	private void playSound (Sound sound)
 	{
 		sound.play();
