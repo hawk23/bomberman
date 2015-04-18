@@ -15,7 +15,7 @@ import javax.swing.event.EventListenerList;
 
 public class Bomb extends GameObject implements IDestroyable
 {
-    private static final String             path 				= "res/visuals/bomb/bomb.png";
+    private static final String             bombImagePath = "res/visuals/bomb/bomb.png";
     private static final int	            animationInteval	= 40;
 
     private SpriteSheet			            bombSheet;
@@ -102,7 +102,7 @@ public class Bomb extends GameObject implements IDestroyable
     {
         try
         {
-            bombSheet		= new SpriteSheet(path, 64, 64);
+            bombSheet		= new SpriteSheet(bombImagePath, 64, 64);
             animationBurn	= new Animation(bombSheet, animationInteval);
         }
         catch (SlickException e)

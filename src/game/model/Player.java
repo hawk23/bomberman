@@ -2,19 +2,13 @@ package game.model;
 
 import game.config.GameSettings;
 import game.config.PlayerConfig;
-import game.debug.Debugger;
 import game.event.ExplosionEvent;
 import game.input.Direction;
 import game.input.InputManager;
 
 import java.awt.Point;
 
-import org.newdawn.slick.Animation;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
@@ -24,8 +18,16 @@ import slick.extension.AppGameContainerFSCustom;
  */
 public class Player extends GameObject implements IDestroyable, ExplosionListener
 {
+    private static final String powerUpSoundPath = "/res/sounds/player/powerup.ogg";
+    private static final String ultraKillSoundPath = "/res/sounds/player/ultrakill.ogg";
+    private static final String deathSoundPath = "/res/sounds/player/death.ogg";
+
     private BombermanMap map;
     private InputManager inputManager;
+    private Sound powerUpSound;
+    private Sound ultraKillSound;
+    private Sound deathSound;
+
 
     private int 	posX;
     private int 	posY;
@@ -175,6 +177,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         originalX = targetX =  posX = (int) spawnPoint.getX();
         originalY = targetY =  posY = (int) spawnPoint.getY();
         this.calculateDrawPosition(posX, posY);
+        loadSound();
     }
 
     public void render(GameContainer container, StateBasedGame game, Graphics g)
@@ -467,6 +470,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
         // HACK: set after death animation.
         this.destroyed = true;
+        playSound(deathSound);
 
         return true;
     }
@@ -562,10 +566,32 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     public void adjustBombRange (int value)
     {
         this.bombRange += value;
+        playSound(powerUpSound);
     }
 
     public void adjustBombLimit(int value)
     {
         this.bombLimit += value;
+        playSound(powerUpSound);
+    }
+
+    private void loadSound ()
+    {
+        try
+        {
+            this.powerUpSound       = new Sound(powerUpSoundPath);
+            this.ultraKillSound     = new Sound(ultraKillSoundPath);
+            this.deathSound         = new Sound(deathSoundPath);
+        }
+
+        catch (SlickException e)
+        {
+            //TODO
+        }
+    }
+
+    private void playSound(Sound sound)
+    {
+        sound.play();
     }
 }
