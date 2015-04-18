@@ -1,9 +1,7 @@
 package slick.extension;
 
 import game.config.GameSettings;
-import game.model.Explosion;
-import game.model.IRenderable;
-import game.model.IUpdateable;
+import game.model.*;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.particles.ConfigurableEmitter;
@@ -24,6 +22,8 @@ public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpd
 
     private static final String particlePath=    "res/visuals/particles/explosion.png";
     private static final String particleConfig=  "res/visuals/particles/explosion.xml";
+
+    private static final float directionSpread =20;
 
     private ParticleEmitter explosionEmitter;
 
@@ -51,8 +51,12 @@ public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpd
     }
 
     public void addExplosion(Explosion explosion){
-         for(Point p:explosion.getFlamePositions()) {
+         for(FlamePoint flamePoint:explosion.getFlamePositions()) {
              ConfigurableEmitter e = ((ConfigurableEmitter)explosionEmitter).duplicate(); // copy initial emitter
+
+             int offsetX=0, offsetY=0, emitterWidth=0, emitterHeight=0;
+             float spread=0;
+             float angle=0;
 
              //Use the timer of the explosion for the particle life
              int timer = explosion.getTimer();
@@ -62,9 +66,57 @@ public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpd
              e.initialLife.setMax((float) timer + range);
              e.initialLife.setEnabled(true);
 
-             e.reset();
+             switch(flamePoint.getDirection()){
+                 case DOWN:
+                     spread=directionSpread;
+                     angle=180F;
+                     offsetX= GameSettings.TILE_WIDTH/2;
+                     break;
 
-             e.setPosition(p.x * GameSettings.TILE_WIDTH +GameSettings.TILE_WIDTH/2,p.y * GameSettings.TILE_HEIGHT + GameSettings.TILE_HEIGHT/2,false);
+                 case RIGHT:
+                     offsetY= GameSettings.TILE_HEIGHT/2;
+                     emitterHeight= GameSettings.TILE_HEIGHT/2;
+                     spread=directionSpread;
+                     angle=90F;
+                     break;
+
+                 case UP:
+                     emitterWidth= GameSettings.TILE_WIDTH/2;
+                     offsetY= GameSettings.TILE_HEIGHT;
+                     offsetX= GameSettings.TILE_WIDTH/2;
+                     angle=0;
+                     break;
+
+                 case LEFT:
+                     emitterHeight= GameSettings.TILE_HEIGHT/2;
+                     spread=directionSpread;
+                     offsetY= GameSettings.TILE_HEIGHT/2;
+                     offsetX=GameSettings.TILE_WIDTH;
+                     angle=-90F;
+                     break;
+
+                 case CENTER:
+                     emitterWidth= GameSettings.TILE_WIDTH/2;
+                     emitterHeight= GameSettings.TILE_HEIGHT/2;
+                     spread=360F;
+                     angle=0;
+                     offsetX= GameSettings.TILE_WIDTH/2;
+                     offsetY= GameSettings.TILE_HEIGHT/2;
+                     break;
+
+                 default:
+                     break;
+
+             }
+
+             e.yOffset.setMin(-emitterHeight/2);
+             e.yOffset.setMax(emitterHeight / 2);
+             e.xOffset.setMin(-emitterWidth / 2);
+             e.xOffset.setMax(emitterWidth / 2);
+             e.spread.setValue(spread);
+             e.angularOffset.setValue(angle);
+
+             e.setPosition(flamePoint.x * GameSettings.TILE_WIDTH + offsetX, flamePoint.y * GameSettings.TILE_HEIGHT + offsetY, false);
              this.addEmitter(e); // add to particle system for rendering and updating
              e.setEnabled(true); // let the explosion begin
          }

@@ -19,7 +19,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
     private int                 time            = 0;
     private boolean             finished        = false;
 	private TiledMapWrapper     wrapper;
-    private ArrayList<Point>    flamePositions  = null;
+    private ArrayList<FlamePoint>    flamePositions  = null;
     private Sound               explosionSound;
 
 	public Explosion(int posX, int posY, int range, TiledMapWrapper wrapper)
@@ -35,12 +35,12 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         playSound(explosionSound);
 	}
 
-    private ArrayList<Point> calculateFlamePosition ()
+    private ArrayList<FlamePoint> calculateFlamePosition ()
     {
-        ArrayList<Point> explodedTiles = new ArrayList<Point>();
+        ArrayList<FlamePoint> explodedTiles = new ArrayList<FlamePoint>();
 
         // add center position of explosion
-        explodedTiles.add(new Point(this.getTileX(), this.getTileY()));
+        explodedTiles.add(new FlamePoint(this.getTileX(), this.getTileY(),FlameDirection.CENTER));
 
         boolean blockedLeft     = false;
         boolean blockedTop      = false;
@@ -50,10 +50,10 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         for (int i = 1; i <= this.range; i++)
         {
             // add four rays.
-            Point rayLeft       = new Point(this.getTileX() - i, this.getTileY());
-            Point rayTop        = new Point(this.getTileX(), this.getTileY() - i);
-            Point rayRight      = new Point(this.getTileX() + i, this.getTileY());
-            Point rayBottom     = new Point(this.getTileX(), this.getTileY() + i);
+            FlamePoint rayLeft       = new FlamePoint(this.getTileX() - i, this.getTileY(), FlameDirection.LEFT);
+            FlamePoint rayTop        = new FlamePoint(this.getTileX(), this.getTileY() - i, FlameDirection.UP);
+            FlamePoint rayRight      = new FlamePoint(this.getTileX() + i, this.getTileY(), FlameDirection.RIGHT);
+            FlamePoint rayBottom     = new FlamePoint(this.getTileX(), this.getTileY() + i, FlameDirection.DOWN);
 
             blockedLeft         = this.handleFlamePosition(blockedLeft,   rayLeft,    explodedTiles);
             blockedTop          = this.handleFlamePosition(blockedTop,    rayTop,     explodedTiles);
@@ -67,7 +67,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
     /**
      * returns an booelean indication wheter the direction is blocked for further flames or not.
      */
-    private boolean handleFlamePosition (boolean blocked, Point p, ArrayList<Point> explodedTiles)
+    private boolean handleFlamePosition (boolean blocked, FlamePoint p, ArrayList<FlamePoint> explodedTiles)
     {
         if (!blocked)
         {
@@ -93,7 +93,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
         //Rendering in ExplosionSystem in BombermanMap
-        /*for (Point p : this.flamePositions)
+        /*for (FlamePoint p : this.flamePositions)
         {
             g.drawRect(p.x * GameSettings.TILE_WIDTH, p.y * GameSettings.TILE_HEIGHT, GameSettings.TILE_WIDTH, GameSettings.TILE_HEIGHT);
         }*/
@@ -113,7 +113,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         }
     }
 
-    public ArrayList<Point> getFlamePositions() {
+    public ArrayList<FlamePoint> getFlamePositions() {
         return flamePositions;
     }
 
