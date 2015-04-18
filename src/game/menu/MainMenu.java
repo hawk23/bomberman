@@ -15,8 +15,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
 
-public class MainMenu extends Menu{
-	
+public class MainMenu extends Menu
+{
 	private GameRoundConfig gameRoundConfig 			= new GameRoundConfig();
 	private ArrayList<MapConfig> mapConfigs 			= new ArrayList<MapConfig>();
 	private ArrayList<PlayerConfig> playerConfigs 		= new ArrayList<PlayerConfig>();
