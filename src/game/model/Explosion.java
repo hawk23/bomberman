@@ -94,10 +94,11 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
-        for (Point p : this.flamePositions)
+        //Rendering in ExplosionSystem in BombermanMap
+        /*for (Point p : this.flamePositions)
         {
             g.drawRect(p.x * GameSettings.TILE_WIDTH, p.y * GameSettings.TILE_HEIGHT, GameSettings.TILE_WIDTH, GameSettings.TILE_HEIGHT);
-        }
+        }*/
 	}
 
 	@Override

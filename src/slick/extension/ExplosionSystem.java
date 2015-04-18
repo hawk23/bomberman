@@ -64,7 +64,7 @@ public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpd
              }
 
              e.setEnabled(true);
-             e.setPosition(p.x* GameSettings.TILE_WIDTH,p.y * GameSettings.TILE_HEIGHT);
+             e.setPosition(p.x * GameSettings.TILE_WIDTH +GameSettings.TILE_WIDTH/2,p.y * GameSettings.TILE_HEIGHT + GameSettings.TILE_HEIGHT/2);
              this.addEmitter(e); // add to particle system for rendering and updating
          }
     }
