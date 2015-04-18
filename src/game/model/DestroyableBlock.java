@@ -16,13 +16,13 @@ public class DestroyableBlock extends Block implements IDestroyable
     }
 
 	@Override
-	public void render(GameContainer container, StateBasedGame stateBasedGame, Graphics g)
+	public void render(GameContainer container, StateBasedGame game, Graphics g)
 	{
 		// no operation here
 	}
 
 	@Override
-	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta)
+	public void update(GameContainer container, StateBasedGame game, int delta)
 	{
 		// TODO Auto-generated method stub
 	}

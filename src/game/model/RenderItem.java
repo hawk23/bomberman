@@ -1,7 +1,5 @@
 package game.model;
 
-import org.newdawn.slick.Game;
-
 /**
  * Created by Roland Schreier on 03.04.2015.
  *
@@ -39,9 +37,9 @@ public class RenderItem implements Comparable<RenderItem>{
 
     @Override
     public int compareTo(RenderItem item) {
-        if(this.getGameObject().getPosY() == item.getGameObject().getPosY())
+        if(this.getGameObject().getTileY() == item.getGameObject().getTileY())
             return this.getzBuffer()-item.getzBuffer();
         else
-            return this.getGameObject().getPosY() - item.getGameObject().getPosY();
+            return this.getGameObject().getTileY() - item.getGameObject().getTileY();
     }
 }
