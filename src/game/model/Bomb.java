@@ -143,12 +143,12 @@ public class Bomb extends GameObject implements IDestroyable
         }
     }
 
-    public void addAdListener(ExplosionListener listener)
+    public void addListener(ExplosionListener listener)
     {
         listeners.add(ExplosionListener.class, listener);
     }
 
-    public void removeAdListener(ExplosionListener listener)
+    public void removeListener(ExplosionListener listener)
     {
         listeners.remove(ExplosionListener.class, listener);
     }

@@ -1,6 +1,5 @@
 package game.model;
 
-import com.sun.scenario.Settings;
 import game.config.GameSettings;
 
 import java.util.Comparator;
@@ -17,10 +16,10 @@ public class GameObjectsYPosSorter implements Comparator<GameObject>
         int o2yPos  = (o2.getPosY() * GameSettings.TILE_HEIGHT) + GameSettings.TILE_HEIGHT / 2;
 
         if (o1 instanceof Player) {
-            o1yPos = (int) ((Player) o1).getDrawPosY() + o1.getImage().getHeight() - 100;
+            o1yPos = (int) ((Player) o1).getDrawPosY() + o1.getImage().getHeight() - GameSettings.TILE_HEIGHT / 2;
         }
         if (o2 instanceof Player) {
-            o2yPos = (int) ((Player) o2).getDrawPosY() + o2.getImage().getHeight() - 100;
+            o2yPos = (int) ((Player) o2).getDrawPosY() + o2.getImage().getHeight() - GameSettings.TILE_HEIGHT / 2;
         }
 
         if (o1yPos < o2yPos) {

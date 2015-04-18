@@ -65,15 +65,16 @@ public class BombermanMap implements IUpdateable, IRenderable, ExplosionListener
 				if(this.bombs[i][j] != null)
 				{
 					this.bombs[i][j].update(container, game, delta);
-
-                    if(this.bombs[i][j].isExploded())
-                    {
-                        this.explosions[i][j] = new Explosion(this.bombs[i][j].getBombRange());
-                        // TODO remove bomb from game objects and bombs
-                    }
+					
+					if(this.bombs[i][j].isExploded())
+					{
+						this.explosions[i][j] = new Explosion(this.bombs[i][j].getBombRange());
+						// TODO remove bomb from game objects and bombs
+					}
 				}
-		    }
-        }
+				
+			}
+		}
 		
 		for (int i = 0; i < this.players.length; i++)
 		{
@@ -109,11 +110,10 @@ public class BombermanMap implements IUpdateable, IRenderable, ExplosionListener
 
 	public void addBomb(Bomb bomb)
 	{
-        bomb.addAdListener(this);
+        bomb.addListener(this);
 		this.bombs[bomb.tileX][bomb.tileY] = bomb;
 		this.objects.add(bomb);
 	}
-
     private void removeBomb(Bomb bomb)
     {
         //bomb.removeListener(this);
