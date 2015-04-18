@@ -577,4 +577,21 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     {
         sound.play();
     }
+
+    public PlayerConfig getPlayerConfig()
+    {
+        return playerConfig;
+    }
+
+    public int getBombCount()
+    {
+        return bombCount;
+    }
+
+    public int getBombLimit()
+    {
+        return bombLimit;
+    }
+
+
 }
