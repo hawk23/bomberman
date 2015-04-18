@@ -637,5 +637,13 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		return shielded;
 	}
 
+    public int getShieldTimerSeconds ()
+    {
+        return this.shieldTimer / 1000;
+    }
 
+    public float getSpeed()
+    {
+        return speed;
+    }
 }
