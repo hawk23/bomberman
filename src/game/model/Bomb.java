@@ -12,14 +12,13 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import javax.swing.event.EventListenerList;
 
-
 public class Bomb extends GameObject implements IDestroyable
 {
     private static final String             bombImagePath 		= "res/visuals/bomb/bomb.png";
     private static final int	            animationInteval	= 40;
-
     private SpriteSheet			            bombSheet;
     private Animation			            animationBurn;
+    
     private int					            range;
     private int					            timer;
     private int					            time;

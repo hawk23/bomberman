@@ -1,21 +1,21 @@
 package game.model;
 
-/**
- * Created by Mario on 18.04.2015.
- */
 public class FlameUp extends PowerUpItem
 {
-    int value = 1;
+    private static final String flameUPImagePath	= "res/visuals/powerups/PUrange.png";
+    int 						value 				= 1;
 
-    public FlameUp(int posX, int posY) {
-        super(posX, posY, Explosion.timer);
+    public FlameUp(int posX, int posY)
+        super(posX, posY, Explosion.timer, flameUPImagePath);
     }
 
-    public int getValue() {
+    public int getValue()
+    {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(int value)
+    {
         this.value = value;
     }
 }

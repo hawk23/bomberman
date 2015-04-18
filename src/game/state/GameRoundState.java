@@ -1,5 +1,6 @@
 package game.state;
 
+import game.PlayerStateScreen;
 import game.config.GameRoundConfig;
 import game.menu.Menu.Action;
 import game.menu.EndMenu;
@@ -9,11 +10,14 @@ import game.model.BombermanMap;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.util.ArrayList;
+
 
 public class GameRoundState extends BombermanGameState
 {
 	private static final String		gameStartSoundPath		= "res/sounds/round/startround.ogg";
 
+    private ArrayList<PlayerStateScreen> stateScreens       = new ArrayList<PlayerStateScreen>();
 	private GameRoundConfig 		gameRoundConfig			= null;
 	private boolean 				paused					= false;
 	private boolean 				gameRoundEnd			= false;
@@ -68,11 +72,16 @@ public class GameRoundState extends BombermanGameState
 	    		resetGraphics();
 
 	    		this.map.render(container, game, this.map_graphics);
-	    		
-	            graphics.drawImage(map_buffer, xOffset, 0);
-	            graphics.drawImage(playerStatsBackground, 0, 0);
-	            graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
-	    	}
+                graphics.drawImage(map_buffer, xOffset, 0);
+
+                graphics.drawImage(playerStatsBackground, 0, 0);
+                graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
+
+                for (PlayerStateScreen screen : this.stateScreens)
+                {
+                    screen.render(container, game, graphics);
+                }
+            }
 	    	else
 	    	{
 	    		background.draw(0, 0);
@@ -176,6 +185,16 @@ public class GameRoundState extends BombermanGameState
         startTime	= 0;
         timer		= 5000;
     	this.map = new BombermanMap(this.gameRoundConfig, container);
+
+        // create player state screens
+        for (int i = 0; i < this.map.getPlayers().length; i++)
+        {
+            int                     posX        = (i % 2) * 1120;
+            int                     posY        = (i / 2) * 480;
+
+            PlayerStateScreen       screen      = new PlayerStateScreen(this.map.getPlayers()[i], posX, posY);
+            this.stateScreens.add(screen);
+        }
 
 		playSound(gameStartSound);
     }
