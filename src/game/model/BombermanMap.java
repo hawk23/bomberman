@@ -329,4 +329,8 @@ public class BombermanMap implements IUpdateable, IRenderable
 		this.bombs[bomb.tileX][bomb.tileY] = bomb;
 		this.objects.add(bomb);
 	}
+
+    public Player[] getPlayers() {
+        return players;
+    }
 }
