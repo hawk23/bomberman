@@ -174,7 +174,7 @@ public class OldBombermanMap extends TiledMap implements IRenderable, IUpdateabl
         super.renderedLine(visualY, mapY, layer);
         while (renderQueY<=mapY && renderQueIndex<renderQue.size()) {
             RenderItem item = renderQue.get(renderQueIndex++);
-            renderQueY=(item.getGameObject().getPosY())/this.tileHeight;
+            renderQueY=(item.getGameObject().getTileY())/this.tileHeight;
             if(renderQueY==mapY){
                 // TODO
                  item.getGameObject().render(container,stateBasedGame,g);

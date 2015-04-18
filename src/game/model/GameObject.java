@@ -35,30 +35,30 @@ public abstract class GameObject implements IRenderable, IUpdateable
         this.id = id;
     }
 
-    public int getPosX()
+    public int getTileX()
     {
         return tileX;
     }
 
-    public void setPosX(int posX)
+    public void setTileX(int tileX)
     {
-        this.tileX = posX;
+        this.tileX = tileX;
     }
 
-    public int getPosY()
+    public int getTileY()
     {
         return tileY;
     }
 
-    public void setPosY(int posY)
+    public void setTileY(int tileY)
     {
-    	this.tileY = posY;
+    	this.tileY = tileY;
     }
 
     public void setPosition(int x, int y)
     {
-    	setPosX(x);
-    	setPosY(y);
+    	setTileX(x);
+    	setTileY(y);
     }
 
     public boolean isCollides()
@@ -71,7 +71,7 @@ public abstract class GameObject implements IRenderable, IUpdateable
         this.collides = collides;
     }
 
-    private void setImage(String path)
+    protected void setImage(String path)
     {
         if(path == null)
         {
@@ -87,7 +87,7 @@ public abstract class GameObject implements IRenderable, IUpdateable
         }
     }
 
-    public Image getImage()
+    protected Image getImage()
     {
         return this.image;
     }

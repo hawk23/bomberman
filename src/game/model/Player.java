@@ -558,4 +558,14 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     public boolean isDestroyed() {
         return destroyed;
     }
+
+    public void adjustBombRange (int value)
+    {
+        this.bombRange += value;
+    }
+
+    public void adjustBombLimit(int value)
+    {
+        this.bombLimit += value;
+    }
 }
