@@ -54,18 +54,19 @@ public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpd
          for(Point p:explosion.getFlamePositions()) {
              ConfigurableEmitter e = ((ConfigurableEmitter)explosionEmitter).duplicate(); // copy initial emitter
 
-             File xmlFile = new File(particleConfig);
-             try {
-                 e = ParticleIO.loadEmitter(xmlFile);
-             } catch (Exception exception) {
-                 //TODO
-                 exception.printStackTrace();
-                 System.exit(-1);
-             }
+             //Use the timer of the explosion for the particle life
+             int timer = explosion.getTimer();
+             int range = timer/70;
 
-             e.setEnabled(true);
-             e.setPosition(p.x * GameSettings.TILE_WIDTH +GameSettings.TILE_WIDTH/2,p.y * GameSettings.TILE_HEIGHT + GameSettings.TILE_HEIGHT/2);
+             e.initialLife.setMin((float) timer - range);
+             e.initialLife.setMax((float) timer + range);
+             e.initialLife.setEnabled(true);
+
+             e.reset();
+
+             e.setPosition(p.x * GameSettings.TILE_WIDTH +GameSettings.TILE_WIDTH/2,p.y * GameSettings.TILE_HEIGHT + GameSettings.TILE_HEIGHT/2,false);
              this.addEmitter(e); // add to particle system for rendering and updating
+             e.setEnabled(true); // let the explosion begin
          }
     }
 }

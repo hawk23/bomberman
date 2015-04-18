@@ -141,4 +141,6 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         sound.play();
     }
 
+    public int getTimer(){ return timer;}
+
 }
