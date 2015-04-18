@@ -1,11 +1,13 @@
 package game.model;
 
-import javafx.beans.InvalidationListener;
+import game.event.ExplosionEvent;
+
+import java.util.EventListener;
 
 /**
  * Created by Mario on 18.04.2015.
  */
-public interface ExplosionListener
+public interface ExplosionListener extends EventListener
 {
-    void exploded(Bomb bomb);
+    void exploded(ExplosionEvent e);
 }

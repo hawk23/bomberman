@@ -2,6 +2,7 @@ package game.model;
 
 import game.config.GameRoundConfig;
 import game.config.GameSettings;
+import game.event.ExplosionEvent;
 import game.input.InputManager;
 
 import java.util.ArrayList;
@@ -108,14 +109,20 @@ public class BombermanMap implements IUpdateable, IRenderable, ExplosionListener
 
 	public void addBomb(Bomb bomb)
 	{
-        bomb.addExplosionListener(this);
+        bomb.addAdListener(this);
 		this.bombs[bomb.tileX][bomb.tileY] = bomb;
 		this.objects.add(bomb);
 	}
 
-    @Override
-    public void exploded(Bomb bomb)
+    private void removeBomb(Bomb bomb)
     {
-        // TODO
+        //bomb.removeListener(this);
+        this.bombs[bomb.tileX][bomb.tileY] = null;
+        this.objects.remove(bomb);
+    }
+
+    @Override
+    public void exploded(ExplosionEvent e) {
+        this.removeBomb(e.getBomb());
     }
 }

@@ -2,6 +2,7 @@ package game.model;
 
 import game.config.PlayerConfig;
 import game.debug.Debugger;
+import game.event.ExplosionEvent;
 import game.input.Direction;
 import game.input.InputManager;
 
@@ -56,7 +57,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
      * settings for the bomb
      * TODO move to PlayerConfig ?!
      */
-    private int bombTimer = 1000;
+    private int bombTimer = 3000;
     private int bombRange = 1;
     private int bombLimit = 100;
     private int bombCount = 0;
@@ -498,7 +499,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         	if(!(this.map.isBlocked(tileX, tileY)))
         	{
         		Bomb bomb = new Bomb(tileX, tileY, bombRange, bombTimer);
-                bomb.addExplosionListener(this);
+                bomb.addAdListener(this);
 
         		this.map.addBomb(bomb);
         		this.bombCount++;
@@ -535,7 +536,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     }
 
     @Override
-    public void exploded(Bomb bomb)
+    public void exploded(ExplosionEvent e)
     {
         this.reduceBombCounter();
     }

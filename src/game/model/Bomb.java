@@ -3,6 +3,7 @@ package game.model;
 import game.config.GameSettings;
 import game.debug.Debugger;
 
+import game.event.ExplosionEvent;
 import javafx.beans.Observable;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
@@ -11,6 +12,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
+import javax.swing.event.EventListenerList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class Bomb extends GameObject implements IDestroyable
     private int					            timer;
     private int					            time;
     private boolean				            exploded;
-    private ArrayList<ExplosionListener>     explosionListeners;
+    private EventListenerList               listeners           = new EventListenerList();
     
     /**
      * Directions for the calculation of the blast, UP,LEFT,DOWN,RIGHT
@@ -39,7 +41,6 @@ public class Bomb extends GameObject implements IDestroyable
         this.range		            = bombRange;
         this.time		            = 0;
         this.exploded	            = false;
-        this.explosionListeners     = new ArrayList<ExplosionListener>();
         loadImage();
     }
 
@@ -116,11 +117,7 @@ public class Bomb extends GameObject implements IDestroyable
     public void setExploded()
     {
     	this.exploded = true;
-
-        for (ExplosionListener listener : this.explosionListeners)
-        {
-            listener.exploded(this);
-        }
+        this.notifyExploded();
     }
     
     public boolean isExploded()
@@ -146,20 +143,23 @@ public class Bomb extends GameObject implements IDestroyable
         }
     }
 
-    public void addExplosionListener (ExplosionListener listener)
+    public void addAdListener(ExplosionListener listener)
     {
-        if (this.explosionListeners.indexOf(listener) == -1)
-        {
-            this.explosionListeners.add(listener);
-        }
-
+        listeners.add(ExplosionListener.class, listener);
     }
 
-    public void removeExplosionListener (ExplosionListener listener)
+    public void removeAdListener(ExplosionListener listener)
     {
-        if (this.explosionListeners.indexOf(listener) != -1)
+        listeners.remove(ExplosionListener.class, listener);
+    }
+
+    protected synchronized void notifyExploded ()
+    {
+        ExplosionEvent e = new ExplosionEvent(this, this);
+
+        for (ExplosionListener l : listeners.getListeners(ExplosionListener.class))
         {
-            this.explosionListeners.remove(listener);
+            l.exploded(e);
         }
     }
 }
