@@ -12,7 +12,6 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import javax.swing.event.EventListenerList;
 
-
 public class Bomb extends GameObject implements IDestroyable
 {
     private static final String             bombImagePath 		= "res/visuals/bomb/bomb.png";
