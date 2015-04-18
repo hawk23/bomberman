@@ -2,7 +2,6 @@ package game.model;
 
 import game.config.GameSettings;
 import game.config.PlayerConfig;
-import game.debug.Debugger;
 import game.event.ExplosionEvent;
 import game.input.Direction;
 import game.input.InputManager;
@@ -10,11 +9,11 @@ import game.input.InputManager;
 import java.awt.Point;
 
 import org.newdawn.slick.Animation;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
@@ -26,39 +25,39 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 {
     private BombermanMap map;
     private InputManager inputManager;
+    private PlayerConfig playerConfig;
+    
+    private int 		posX;
+    private int 		posY;
+    private int 		targetX;
+    private int 		targetY;
+    private int 		originalX;
+    private int 		originalY;
 
-    private int 	posX;
-    private int 	posY;
-    private int 	targetX;
-    private int 	targetY;
-    private int 	originalX;
-    private int 	originalY;
+    private float 		drawPosX;
+    private float 		drawPosY;
+    private float 		lastDrawPosX;
+    private float 		lastDrawPosY;
+    
+    private Image		stopDown;
+    private Image		stopRight;
+    private Image		stopUp;
+    private Image		stopLeft;
 
-    private float 	drawPosX;
-    private float 	drawPosY;
-    private float 	lastDrawPosX;
-    private float 	lastDrawPosY;
+    private int 		animationInterval = 40;
+    
+    private Animation 	animation_actual;
+    private Animation 	animation_up;
+    private Animation 	animation_down;
+    private Animation 	animation_left;
+    private Animation 	animation_right;
+    private Animation	animation_die;
 
-    private Animation animation_actual;
-    private Animation animation_up;
-    private Animation animation_down;
-    private Animation animation_left;
-    private Animation animation_right;
-
-
-    /**
-     * speed of the player
-     */
-    private float speed;
-
-    /**
-     * settings for the bomb
-     * TODO move to PlayerConfig ?!
-     */
-    private int bombTimer = 3000;
-    private int bombRange = 1;
-    private int bombLimit = 2;
-    private int bombCount = 0;
+    private float 		speed;
+    private int 		bombTimer;
+    private int 		bombRange;
+    private int 		bombLimit;
+    private int 		bombCount;
 
     /**
      * interpolation value for the movement between two points
@@ -82,102 +81,64 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
     private boolean destroyed;
 
-    private PlayerConfig playerConfig;
-
     /**
-     * @param shape        - is the tile representation of the player
+     * 
      * @param map
-     * @param playerID
      * @param inputManager
+     * @param playerConfig
+     * @param spawnPoint
      * @throws SlickException
      */
     public Player(BombermanMap map, InputManager inputManager, PlayerConfig playerConfig, Point spawnPoint) throws SlickException
     {
         super((int) spawnPoint.getX() / map.getTileSize(), (int) spawnPoint.getY() / map.getTileSize());
 
-        this.map			= map;
-        this.inputManager	= inputManager;
-        this.playerConfig	= playerConfig;
-        this.collides		= true;
+        this.map					= map;
+        this.inputManager			= inputManager;
+        this.playerConfig			= playerConfig;
+        this.collides				= true;
         
-        this.speed = 1.7f;
-        this.moving = false;
-        this.movementDirection = Direction.DOWN;
-        this.movementInterpolation = 0.0f;
+        this.speed 					= this.playerConfig.getInitialSpeed();
+        this.bombLimit 				= this.playerConfig.getInitialBombLimit();
+        this.bombRange 				= this.playerConfig.getInitialBombRange();
+        this.bombTimer 				= this.playerConfig.getInitialBombTimer();
+        this.bombCount 				= 0;
+        this.moving 				= false;
+        this.movementDirection 		= Direction.DOWN;
+        this.movementInterpolation 	= 0.0f;
 
-        switch (playerConfig.getId())
-        {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-            	{
+        loadVisuals(this.playerConfig.getPath());
 
-                Image[] up = {
-                        new Image("res/visuals/classic/players/00/Bman_B_f00.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f01.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f02.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f03.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f04.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f05.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f06.png"),
-                        new Image("res/visuals/classic/players/00/Bman_B_f07.png"),
-                };
-                Image[] down = {
-                        new Image("res/visuals/classic/players/00/Bman_F_f00.png"),
-                        new Image("res/visuals/classic/players/00/Bman_F_f01.png"),
-                        new Image("res/visuals/classic/players/00/Bman_F_f02.png"),
-                        new Image("res/visuals/classic/players/00/Bman_F_f03.png"),
-                        new Image("res/visuals/classic/players/00/Bman_F_f04.png"),
-                        new Image("res/visuals/classic/players/00/Bman_F_f05.png"),
-                        new Image("res/visuals/classic/players/00/Bman_F_f06.png"),
-                        new Image("res/visuals/classic/players/00/Bman_F_f07.png"),
-                };
-                Image[] left = {
-                        new Image("res/visuals/classic/players/00/Bman_L_f00.png"),
-                        new Image("res/visuals/classic/players/00/Bman_L_f01.png"),
-                        new Image("res/visuals/classic/players/00/Bman_L_f02.png"),
-                        new Image("res/visuals/classic/players/00/Bman_L_f03.png"),
-                        new Image("res/visuals/classic/players/00/Bman_L_f04.png"),
-                        new Image("res/visuals/classic/players/00/Bman_L_f05.png"),
-                        new Image("res/visuals/classic/players/00/Bman_L_f06.png"),
-                        new Image("res/visuals/classic/players/00/Bman_L_f07.png"),
-                };
-                Image[] right = {
-                        new Image("res/visuals/classic/players/00/Bman_R_f00.png"),
-                        new Image("res/visuals/classic/players/00/Bman_R_f01.png"),
-                        new Image("res/visuals/classic/players/00/Bman_R_f02.png"),
-                        new Image("res/visuals/classic/players/00/Bman_R_f03.png"),
-                        new Image("res/visuals/classic/players/00/Bman_R_f04.png"),
-                        new Image("res/visuals/classic/players/00/Bman_R_f05.png"),
-                        new Image("res/visuals/classic/players/00/Bman_R_f06.png"),
-                        new Image("res/visuals/classic/players/00/Bman_R_f07.png"),
-                };
-
-
-                int[] duration = {40, 40, 40, 40, 40, 40, 40, 40};
-
-                animation_up = new Animation(up, duration, moving);
-                animation_down = new Animation(down, duration, false);
-                animation_left = new Animation(left, duration, false);
-                animation_right = new Animation(right, duration, false);
-
-                animation_actual = new Animation();
-                
-                break;
-            }
-
-            default:
-                break;
-        }
-
-        image = animation_down.getImage(0);
         originalX = targetX =  posX = (int) spawnPoint.getX();
         originalY = targetY =  posY = (int) spawnPoint.getY();
         this.calculateDrawPosition(posX, posY);
     }
 
-    public void render(GameContainer container, StateBasedGame game, Graphics g)
+    private void loadVisuals(String path) throws SlickException {
+		Image spriteSheet 		= new Image(path);
+		
+		SpriteSheet animDown 	= new SpriteSheet(spriteSheet.getSubImage(0, 0, 640, 128), 64, 128);
+		SpriteSheet animRight 	= new SpriteSheet(spriteSheet.getSubImage(0, 128, 640, 128), 64, 128);
+		SpriteSheet animUp 		= new SpriteSheet(spriteSheet.getSubImage(0, 256, 640, 128), 64, 128);
+		SpriteSheet animLeft 	= new SpriteSheet(spriteSheet.getSubImage(0, 384, 640, 128), 64, 128);
+		SpriteSheet animDie 	= new SpriteSheet(spriteSheet.getSubImage(0, 512, 640, 128), 64, 128);
+		
+		this.animation_down 	= new Animation(animDown, animationInterval);
+		this.animation_right	= new Animation(animRight, animationInterval);
+		this.animation_up		= new Animation(animUp, animationInterval);
+		this.animation_left		= new Animation(animLeft, animationInterval);
+		this.animation_die		= new Animation(animDie, animationInterval);
+		this.animation_actual	= new Animation();
+		
+		this.stopDown			= spriteSheet.getSubImage(0, 640, 64, 128);
+		this.stopRight			= spriteSheet.getSubImage(64, 640, 64, 128);
+		this.stopUp				= spriteSheet.getSubImage(128, 640, 64, 128);
+		this.stopLeft			= spriteSheet.getSubImage(384, 640, 64, 128);
+		
+		this.image				= this.stopDown;	
+	}
+
+	public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
         float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
         image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY);
@@ -366,19 +327,19 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
             switch (movementDirection) {
 
                 case UP:
-                    image = animation_up.getImage(0);
+                    image = stopUp;
                     break;
 
                 case DOWN:
-                    image = animation_down.getImage(0);
+                    image = stopDown;
                     break;
 
                 case LEFT:
-                    image = animation_left.getImage(0);
+                    image = stopLeft;
                     break;
 
                 case RIGHT:
-                    image = animation_right.getImage(0);
+                    image = stopRight;
                     break;
 
                 default:
