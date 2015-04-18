@@ -14,9 +14,8 @@ import java.util.ArrayList;
 public class Explosion extends GameObject implements IUpdateable, IRenderable
 {
     private static final String explosionSoundPath = "res/sounds/bomb/explosion.ogg";
-
+    public static final	int 	timer			= 500;
 	private int                 range           = 1;
-	private int                 timer; // in mili secs
     private int                 time            = 0;
     private boolean             finished        = false;
 	private TiledMapWrapper     wrapper;
@@ -28,7 +27,6 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         super(posX, posY);
 
 		this.range      = range;
-		this.timer      = 500;
         this.wrapper    = wrapper;
 
         this.flamePositions = this.calculateFlamePosition();

@@ -180,21 +180,30 @@ public class BombermanMap implements IUpdateable, IRenderable
         {
             for (int j = 0; j < this.powerups[i].length; j++)
             {
+            	
                 if (this.powerups[i][j] != null)
                 {
                     PowerUpItem item = this.powerups[i][j];
-
-                    for (int k = 0; k < this.players.length; k++)
+                    item.update(container, game, delta);
+                    
+                    if (item.isDestroyed()) {
+                    	this.powerups[i][j] = null;
+                    	this.objects.remove(item);
+                    }
+                    else 
                     {
-                        if (item.getTileX() == this.players[k].getTileX() &&
-                            item.getTileY() == this.players[k].getTileY())
+                        for (int k = 0; k < this.players.length; k++)
                         {
-                            // consume power up
-                            this.consumePowerUp(item, this.players[k]);
+                            if (item.getTileX() == this.players[k].getTileX() &&
+                                item.getTileY() == this.players[k].getTileY())
+                            {
+                                // consume power up
+                                this.consumePowerUp(item, this.players[k]);
 
-                            // remove
-                            this.powerups[i][j] = null;
-                            this.objects.remove(item);
+                                // remove
+                                this.powerups[i][j] = null;
+                                this.objects.remove(item);
+                            }
                         }
                     }
                 }
@@ -329,4 +338,8 @@ public class BombermanMap implements IUpdateable, IRenderable
 		this.bombs[bomb.tileX][bomb.tileY] = bomb;
 		this.objects.add(bomb);
 	}
+
+    public Player[] getPlayers() {
+        return players;
+    }
 }

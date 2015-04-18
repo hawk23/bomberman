@@ -5,4 +5,5 @@ package game.model;
  */
 public interface IDestroyable {
     boolean destroy ();
+    boolean isDestroyed();
 }

@@ -12,19 +12,19 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import javax.swing.event.EventListenerList;
 
-
 public class Bomb extends GameObject implements IDestroyable
 {
     private static final String             bombImagePath 		= "res/visuals/bomb/bomb.png";
     private static final int	            animationInteval	= 40;
-
     private SpriteSheet			            bombSheet;
     private Animation			            animationBurn;
+    
     private int					            range;
     private int					            timer;
     private int					            time;
     private boolean				            exploded;
     private EventListenerList               listeners           = new EventListenerList();
+    private boolean							destroyed			= false;
     
     public Bomb(int tileX, int tileY, int bombRange, int bombTimer)
     {
@@ -84,6 +84,7 @@ public class Bomb extends GameObject implements IDestroyable
     public void setExploded()
     {
     	this.exploded = true;
+    	this.destroyed = true;
         this.notifyExploded();
     }
     
@@ -129,4 +130,9 @@ public class Bomb extends GameObject implements IDestroyable
             l.exploded(e);
         }
     }
+
+	@Override
+	public boolean isDestroyed() {
+		return this.destroyed;
+	}
 }
