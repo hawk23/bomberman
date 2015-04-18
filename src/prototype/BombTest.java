@@ -3,6 +3,7 @@ package prototype;
 import game.debug.Debugger;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
+import slick.extension.ExplosionSystem;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
