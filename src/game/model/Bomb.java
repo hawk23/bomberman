@@ -1,10 +1,8 @@
 package game.model;
 
 import game.config.GameSettings;
-import game.debug.Debugger;
 
 import game.event.ExplosionEvent;
-import javafx.beans.Observable;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -13,8 +11,7 @@ import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
 import javax.swing.event.EventListenerList;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class Bomb extends GameObject implements IDestroyable
 {
@@ -29,10 +26,6 @@ public class Bomb extends GameObject implements IDestroyable
     private boolean				            exploded;
     private EventListenerList               listeners           = new EventListenerList();
     
-    /**
-     * Directions for the calculation of the blast, UP,LEFT,DOWN,RIGHT
-     */
-    private int blastDirection[][] = {{1, 0, -1, 0}, {0, 1, 0, -1}};
 
     public Bomb(int tileX, int tileY, int bombRange, int bombTimer)
     {
@@ -67,34 +60,9 @@ public class Bomb extends GameObject implements IDestroyable
     @Override
     public boolean destroy()
     {
-//        if(!isExploding)
-//        {
-//            explode();
-//            return true;
-//        }
-//        else
-            return false;
-    }
+        setExploded();
 
-    /**
-     * Calculates the explosion.
-     * spreads in each blastDirection for its range
-     */
-    private void explode()
-    {
-//        for(int direction=0;direction<blastDirection[0].length;direction++){
-//            for(int r=1;r<=range;r++){
-//                //Debugger.log("(" + getTileX() + blastDirection[0][direction] * r + "," + getTileY() + blastDirection[1][direction] * r + ")");
-//                /*If we hit a collision blast won't spread any longer in this direction*/
-//                if(oldBombermanMap.isBlocked(getTileX() + blastDirection[0][direction] * r, getTileY() + blastDirection[1][direction] * r)) {
-//                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY() +blastDirection[1][direction]*r);
-//                    break;
-//                }else
-//                    oldBombermanMap.destroy(getTileX() + blastDirection[0][direction]*r,getTileY()+blastDirection[1][direction]*r);
-//            }
-//        }
-//        player.removeBomb();
-//        oldBombermanMap.removeGameObject(getTileX(), getTileY(), this);
+        return true;
     }
 
     @Override

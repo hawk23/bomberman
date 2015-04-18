@@ -2,7 +2,6 @@ package game.model;
 
 import game.config.GameRoundConfig;
 import game.config.GameSettings;
-import game.event.ExplosionEvent;
 import game.input.InputManager;
 
 import java.awt.*;
@@ -22,6 +21,7 @@ public class BombermanMap implements IUpdateable, IRenderable
 	Player[]				players;
 	Bomb[][]				bombs;
 	Explosion[][]	        explosions;
+    PowerUpItem[][]         powerups;
 	ArrayList<GameObject>	objects;
 	
 	public BombermanMap(GameRoundConfig config, GameContainer container) throws SlickException
@@ -30,6 +30,7 @@ public class BombermanMap implements IUpdateable, IRenderable
 		this.players 	= new Player[config.getCurrentPlayerConfigs().size()];
 		this.bombs	 	= new Bomb[wrapper.getHeight()][wrapper.getWidth()];
 		this.explosions	= new Explosion[wrapper.getHeight()][wrapper.getWidth()];
+        this.powerups   = new PowerUpItem[wrapper.getHeight()][wrapper.getWidth()];
 		this.objects	= new ArrayList<GameObject>();
 		
     	// create players and define controls
@@ -69,9 +70,9 @@ public class BombermanMap implements IUpdateable, IRenderable
                     if (this.bombs[i][j].isExploded())
                     {
                         // add explosion
-                        Explosion explosion = new Explosion(bombs[i][j].getPosX(), bombs[i][j].getPosY(), bombs[i][j].getRange(), this.wrapper);
+                        Explosion explosion = new Explosion(bombs[i][j].getTileX(), bombs[i][j].getTileY(), bombs[i][j].getRange(), this.wrapper);
                         this.objects.add(explosion);
-                        this.explosions[explosion.getPosX()][explosion.getPosY()] = explosion;
+                        this.explosions[explosion.getTileX()][explosion.getTileY()] = explosion;
 
                         // remove bomb
                         this.objects.remove(this.bombs[i][j]);
@@ -114,7 +115,47 @@ public class BombermanMap implements IUpdateable, IRenderable
                             if (this.wrapper.isDestroyable(p.x, p.y))
                             {
                                 ((DestroyableBlock) this.wrapper.getBlockMatrix()[p.x][p.y]).destroy();
+
+                                // drop powerup
+                                handlePowerUp(p.x, p.y);
                             }
+
+                            // check if objects are destroyed
+                            for (GameObject go : objects)
+                            {
+                                if (go instanceof IDestroyable && go.getTileX() == p.x && go.getTileY() == p.y)
+                                {
+                                    ((IDestroyable) go).destroy();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Manage power ups
+         */
+        for (int i = 0; i < this.powerups.length; i++)
+        {
+            for (int j = 0; j < this.powerups[i].length; j++)
+            {
+                if (this.powerups[i][j] != null)
+                {
+                    PowerUpItem item = this.powerups[i][j];
+
+                    for (int k = 0; k < this.players.length; k++)
+                    {
+                        if (item.getTileX() == this.players[k].getTileX() &&
+                            item.getTileY() == this.players[k].getTileY())
+                        {
+                            // consume power up
+                            this.consumePowerUp(item, this.players[k]);
+
+                            // remove
+                            this.powerups[i][j] = null;
+                            this.objects.remove(item);
                         }
                     }
                 }
@@ -132,9 +173,54 @@ public class BombermanMap implements IUpdateable, IRenderable
          */
 		for (int i = 0; i < this.players.length; i++)
 		{
-			this.players[i].update(container, game, delta);
+            if (this.players[i].isDestroyed())
+            {
+                this.objects.remove(this.players[i]);
+            }
+            else
+            {
+                this.players[i].update(container, game, delta);
+            }
 		}
 	}
+
+    private void consumePowerUp (PowerUpItem item, Player player)
+    {
+        if (item instanceof FlameUp)
+        {
+            FlameUp flameUp = (FlameUp) item;
+            player.adjustBombRange(flameUp.getValue());
+        }
+        if (item instanceof BombUp)
+        {
+            BombUp bombUp = (BombUp) item;
+            player.adjustBombLimit(bombUp.getValue());
+        }
+    }
+
+    private void handlePowerUp (int tileX, int tileY)
+    {
+        int dropProb        = (int) (Math.random()*100 + 1);
+
+        if (dropProb <= GameSettings.ITEM_PROBABILITY)
+        {
+            int             itemProb    = (int) (Math.random()*100 + 1);
+            PowerUpItem     item        = null;
+
+            if (itemProb >= 1 && itemProb <=50)
+            {
+                item                    = new BombUp(tileX, tileY);
+            }
+            else if (itemProb >= 51 && itemProb <=100)
+            {
+                item                    = new FlameUp(tileX, tileY);
+            }
+
+            this.objects.add(item);
+            this.powerups[tileX][tileY] = item;
+        }
+    }
+
 	
 	/**
 	 * isBlocked is true if a solid block or a bomb already exists at (x,y)

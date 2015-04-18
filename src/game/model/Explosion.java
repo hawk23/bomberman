@@ -23,7 +23,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         super(posX, posY);
 
 		this.range      = range;
-		this.timer      = 2000;
+		this.timer      = 500;
         this.wrapper    = wrapper;
 
         this.flamePositions = this.calculateFlamePosition();
@@ -34,7 +34,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         ArrayList<Point> explodedTiles = new ArrayList<Point>();
 
         // add center position of explosion
-        explodedTiles.add(new Point(this.getPosX(), this.getPosY()));
+        explodedTiles.add(new Point(this.getTileX(), this.getTileY()));
 
         boolean blockedLeft     = false;
         boolean blockedTop      = false;
@@ -44,40 +44,41 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         for (int i = 1; i <= this.range; i++)
         {
             // add four rays.
-            Point rayLeft       = new Point(this.getPosX() - i, this.getPosY());
-            Point rayTop        = new Point(this.getPosX(), this.getPosY() - i);
-            Point rayRight      = new Point(this.getPosX() + i, this.getPosY());
-            Point rayBottom     = new Point(this.getPosX(), this.getPosY() + i);
+            Point rayLeft       = new Point(this.getTileX() - i, this.getTileY());
+            Point rayTop        = new Point(this.getTileX(), this.getTileY() - i);
+            Point rayRight      = new Point(this.getTileX() + i, this.getTileY());
+            Point rayBottom     = new Point(this.getTileX(), this.getTileY() + i);
 
+            blockedLeft         = this.handleFlamePosition(blockedLeft,   rayLeft,    explodedTiles);
+            blockedTop          = this.handleFlamePosition(blockedTop,    rayTop,     explodedTiles);
+            blockedRight        = this.handleFlamePosition(blockedRight,  rayRight,   explodedTiles);
+            blockedBottom       = this.handleFlamePosition(blockedBottom, rayBottom,  explodedTiles);
+        }
 
+        return explodedTiles;
+    }
 
-            if (!this.wrapper.isSolid(rayLeft.x, rayLeft.y) && !blockedLeft) {
-                explodedTiles.add(rayLeft);
-            } else {
-                blockedLeft = true;
+    /**
+     * returns an booelean indication wheter the direction is blocked for further flames or not.
+     */
+    private boolean handleFlamePosition (boolean blocked, Point p, ArrayList<Point> explodedTiles)
+    {
+        if (!blocked)
+        {
+            // check if point should be added
+            if (!this.wrapper.isSolid(p.x, p.y))
+            {
+                explodedTiles.add(p);
             }
 
-            if (!this.wrapper.isSolid(rayTop.x, rayTop.y) && !blockedTop) {
-                explodedTiles.add(rayTop);
-            } else {
-                blockedTop = true;
-            }
-
-            if (!this.wrapper.isSolid(rayRight.x, rayRight.y) && !blockedRight) {
-                explodedTiles.add(rayRight);
-            } else {
-                blockedRight = true;
-            }
-
-            if (!this.wrapper.isSolid(rayBottom.x, rayBottom.y) && !blockedBottom) {
-                explodedTiles.add(rayBottom);
-            } else {
-                blockedBottom = true;
+            // check if flame ray should be blocked in this direction.
+            if (this.wrapper.isSolid(p.x, p.y) || this.wrapper.isDestroyable(p.x, p.y))
+            {
+                blocked = true;
             }
         }
 
-
-        return explodedTiles;
+        return blocked;
     }
 
 	
