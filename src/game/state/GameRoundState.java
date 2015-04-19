@@ -18,13 +18,34 @@ import java.util.ArrayList;
 public class GameRoundState extends BombermanGameState
 {
 	
+	private static enum RoundState {
+		STARTING, PLAYING, PAUSED, ROUND_END
+	}
+	
+	private RoundState actualState;
+	
+	// Timer
+	private final int				STARTING_STATE_TIMER	= 3_000;
+	private int						STARTING_STATE_TIME;
+	private final int				END_TIMER				= 3_000;
+	private int						END_TIME;
+	private final int				SHOW_GO_TIMER			= 1_000;
+	private int						SHOW_GO_TIME;
+	
+	// Strings
+	private final String			infoGO					= "GoGoGo";
+	private String					startCounter;
+	
+	// Sounds
 	private static final String 	gameStartMusicPath 		= "res/sounds/round/startround.ogg";
-
+	private Music 					gameStartMusic;
+	
+	// for gameRoundState
+    private Image 					gameRoundStateBuffer  	= null;
+    private Graphics				gameRoundStateGraphics	= null;
     private ArrayList<PlayerStateScreen> stateScreens       = new ArrayList<PlayerStateScreen>();
+	 
 	private GameRoundConfig 		gameRoundConfig			= null;
-	private boolean 				paused					= false;
-	private boolean 				gameRoundEnd			= false;
-	private boolean					started					= false;
 	private PauseMenu				menu					= null;
 	private EndMenu					endMenu					= null;
 	private Image 					background				= null;
@@ -33,24 +54,11 @@ public class GameRoundState extends BombermanGameState
     private Image 					map_buffer				= null;
     private final int 				xOffset 				= 160;
 	private BombermanMap  			map                 	= null;
-	private	int						endScreenTime;
-	private	int						endScreenTimer;
-	private int						startingTime;
-	private int						startingTimer;
-	private int						startTextTimer;
-	private String					infoText;
 	
-	// for gameRoundState
-    private Image 					gameRoundStateBuffer  	= null;
-    private Graphics				gameRoundStateGraphics	= null;
-    
-	private Music 					gameStartMusic;
     
     public GameRoundState ()
     {
         super (BombermanGameState.GAME_ROUND);
-
-		loadMusic();
     }
 
     @Override
@@ -67,6 +75,8 @@ public class GameRoundState extends BombermanGameState
     	endMenu = new EndMenu();
     	endMenu.init();
     	
+    	loadMusic();
+    	
     	background 				= new Image("res/visuals/backgrounds/menuBackground.png");
     	playerStatsBackground 	= new Image("res/visuals/backgrounds/playerStats_background.png");	
     }
@@ -74,179 +84,188 @@ public class GameRoundState extends BombermanGameState
 	@Override
     public void render(GameContainer container, StateBasedGame game, Graphics graphics) throws SlickException
 	{
-		if (gameRoundEnd) {
-			background.draw(0, 0);
-			endMenu.render(container, game, graphics);
-			
-		}
-		else {
-	    	if (!this.paused)
-	    	{
-	    		resetGraphics();
-
-	    		this.map.render(container, game, this.map_graphics);
-                graphics.drawImage(map_buffer, xOffset, 0);
-
-                graphics.drawImage(playerStatsBackground, 0, 0);
-                graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
-
-                for (PlayerStateScreen screen : this.stateScreens)
-                {
-                    screen.render(container, game, graphics);
-                }
-               
-                BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(infoText)) /2 , 
-                		(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(infoText)) /2, 
-                		infoText);
-            }
-	    	else
-	    	{
-	    		background.draw(0, 0);
-	    		menu.render(container, game, graphics);
-	    	}
-		}
-
+        switch (actualState) {
+        
+	        case STARTING: 	render_STATE_STARTING(container, game, graphics); break;
+	        case PLAYING: 	render_STATE_PLAYING(container, game, graphics); break;
+	        case PAUSED: 	render_STATE_PAUSED(container, game, graphics); break;
+	        case ROUND_END: render_STATE_ROUND_END(container, game, graphics); break;
+	    
+	    }
     }
 
-    @Override
+    private void render_STATE_ROUND_END(GameContainer container, StateBasedGame game, Graphics graphics) {
+		background.draw(0, 0);
+		endMenu.render(container, game, graphics);	
+	}
+
+	private void render_STATE_PAUSED(GameContainer container, StateBasedGame game, Graphics graphics) {
+		background.draw(0, 0);
+		menu.render(container, game, graphics);
+	}
+
+	private void render_STATE_PLAYING(GameContainer container, StateBasedGame game, Graphics graphics) {
+		
+		resetGraphics();
+
+		this.map.render(container, game, this.map_graphics);
+        graphics.drawImage(map_buffer, xOffset, 0);
+
+        graphics.drawImage(playerStatsBackground, 0, 0);
+        graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
+
+        for (PlayerStateScreen screen : this.stateScreens) {
+            screen.render(container, game, graphics);
+        }
+        
+        if ((SHOW_GO_TIME < SHOW_GO_TIMER) && actualState == RoundState.PLAYING) {
+    		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(infoGO)) /2 , 
+    				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(infoGO)) /2, 
+    				infoGO);
+        }             
+	}
+
+	private void render_STATE_STARTING(GameContainer container, StateBasedGame game, Graphics graphics) {
+		
+		render_STATE_PLAYING(container, game, graphics);
+		
+		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(startCounter)) /2 , 
+		(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(startCounter)) /2, 
+		startCounter);
+	}
+
+	@Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException
-    {
-        Input input = container.getInput();
-
+    {       
+        switch (actualState) {
         
-        if (!started) {
-        	
-        	if (startingTime >= startingTimer) {
-        		started = true;
-        		container.getInput().clearKeyPressedRecord();
-        		infoText = "Go Go Go";
-        	}
-        	else {
-            	infoText = "" + (((int)((startingTimer - startingTime) / 1000)) + 1);	
-            	startingTime += delta;
-        	}
-        }
+	        case STARTING: 	update_STATE_STARTING(container, game, delta); break;
+	        case PLAYING: 	update_STATE_PLAYING(container, game, delta); break;
+	        case PAUSED: 	update_STATE_PAUSED(container, game, delta); break;
+	        case ROUND_END: update_STATE_ROUND_END(container, game, delta); break;
         
-        if (this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1)
-        {
-        	if(endScreenTime >= endScreenTimer || input.isKeyPressed(Input.KEY_ESCAPE))
-        	{
-        		gameRoundEnd = true;
-        	}
-        	
-        	endScreenTime += delta;
-        }
-        
-        if (started) {
-        	
-        	if (gameRoundEnd)
-            {
-            	endMenu.update(container, game, delta);
-            	
-            	if (endMenu.getActualAction() != Action.NO_ACTION)
-        		{
-        			Action currentAction = endMenu.getActualAction();
-        			endMenu.setActualAction(Action.NO_ACTION);
-        			
-        			switch (currentAction)
-        			{
-    	    			case RESTART_GAME: 
-    	    				restart(container, game);
-    	    				break;
-    	    			case LEAVE_GAME: 
-    	    				game.enterState(MAIN_MENU);
-    	    				break;
-        			
-    					default: break;
-        			}
-        		}
-            }
-            else
-            {
-                if (!this.paused)
-                {
-                	if (startTextTimer <= 0) {
-                		infoText = "";
-                	}
-                	else {
-                		startTextTimer -= delta;
-                	}
-                	
-                	this.map.update(container, game, delta);
-
-                	if (input.isKeyPressed(Input.KEY_ESCAPE))
-                	{
-                    	this.paused = true;
-                    	input.clearKeyPressedRecord();
-                    }
-            	}
-            	else
-            	{
-            		menu.update(container, game, delta);
-            		
-            		if (menu.getActualAction() != Action.NO_ACTION)
-            		{
-            			Action currentAction = menu.getActualAction();
-            			menu.setActualAction(Action.NO_ACTION);
-            			
-            			switch (currentAction)
-            			{
-        	    			case RESUME_GAME:
-        	    				menu.reset();
-        	    				paused = false;
-        	    				break;
-        	    			case RESTART_GAME: 
-        	    				restart(container, game);
-        	    				break;
-        	    			case LEAVE_GAME: 
-        	    				game.enterState(MAIN_MENU);
-        	    				break;
-            			
-        					default: break;
-            			}
-            		}
-            	}
-            }
-        }
-        
+        }               
     }
     
-    private void resetGraphics()
+    private void update_STATE_ROUND_END(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+
+    	endMenu.update(container, game, delta);
+        	
+    	if (endMenu.getActualAction() != Action.NO_ACTION) {
+	    	Action currentAction = endMenu.getActualAction();
+	    	endMenu.setActualAction(Action.NO_ACTION);
+    			
+	    	switch (currentAction) {
+	    		case RESTART_GAME: 
+		    		restart(container, game);
+		    		break;
+	    		case LEAVE_GAME: 
+		    		game.enterState(MAIN_MENU);
+		    		break;
+    			
+				default: break;
+    		}
+    	}
+	}
+
+	private void update_STATE_PAUSED(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+		
+		menu.update(container, game, delta);
+		
+		if (menu.getActualAction() != Action.NO_ACTION) {
+			Action currentAction = menu.getActualAction();
+			menu.setActualAction(Action.NO_ACTION);
+			
+			switch (currentAction) {
+			
+    			case RESUME_GAME:
+    				menu.reset();
+    				actualState = RoundState.PLAYING;
+    				break;
+    			case RESTART_GAME: 
+    				restart(container, game);
+    				break;
+    			case LEAVE_GAME: 
+    				game.enterState(MAIN_MENU);
+    				break;
+			
+				default: break;
+			}
+		}
+	}
+
+	private void update_STATE_PLAYING(GameContainer container, StateBasedGame game, int delta) {
+    	
+		if (!(SHOW_GO_TIME >= SHOW_GO_TIMER)) {
+			SHOW_GO_TIME += delta;
+		}
+
+		Input input = container.getInput();
+		
+		this.map.update(container, game, delta);
+
+    	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+        	actualState = RoundState.PAUSED;
+        	input.clearKeyPressedRecord();
+        }
+    	else if (this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1) {
+        	
+        	if(END_TIME >= END_TIMER || input.isKeyPressed(Input.KEY_ESCAPE)) {
+        		actualState = RoundState.ROUND_END;
+        		input.clearKeyPressedRecord();
+        	}
+        	else {
+        		END_TIME += delta;
+        	}
+    	}	
+	}
+
+	private void update_STATE_STARTING(GameContainer container, StateBasedGame game, int delta) {
+		
+		if (STARTING_STATE_TIME >= STARTING_STATE_TIMER) {
+			container.getInput().clearKeyPressedRecord();
+			actualState = RoundState.PLAYING;
+		}
+		else {
+			startCounter = "" + (((int)((STARTING_STATE_TIMER - STARTING_STATE_TIME) / 1_000)) + 1);
+			STARTING_STATE_TIME += delta;
+		}
+	}
+
+	private void resetGraphics()
     {
     	map_graphics.setBackground(Color.black);
     	map_graphics.clear();
     }
-    
-    
+      
     @Override
     public void enter(GameContainer container, StateBasedGame game) throws SlickException
     {
-    	paused = false;
-    	gameRoundEnd = false;
-    	started = false;
-    	infoText = "";
+    	this.map = new BombermanMap(this.gameRoundConfig, container);
+    	
+    	// create player state screens
+    	for (int i = 0; i < this.map.getPlayers().length; i++)
+    	{
+    		int                     posX        = (i % 2) * 1120;
+    		int                     posY        = (i / 2) * 480;
+	
+    		PlayerStateScreen       screen      = new PlayerStateScreen(this.map.getPlayers()[i], posX, posY, 
+    				this.gameRoundStateGraphics, this.gameRoundStateBuffer);
+    		this.stateScreens.add(screen);
+    	}
+    	
     	menu.reset();
     	endMenu.reset();
-        endScreenTime = 0;
-        endScreenTimer = 3000;
-        startingTime = 0;
-        startingTimer = 3000;
-        startTextTimer = 1000;
-        
-    	this.map = new BombermanMap(this.gameRoundConfig, container);
-
-        // create player state screens
-        for (int i = 0; i < this.map.getPlayers().length; i++)
-        {
-            int                     posX        = (i % 2) * 1120;
-            int                     posY        = (i / 2) * 480;
-
-            PlayerStateScreen       screen      = new PlayerStateScreen(this.map.getPlayers()[i], posX, posY, 
-            		this.gameRoundStateGraphics, this.gameRoundStateBuffer);
-            this.stateScreens.add(screen);
-        }
-        
-        playMusic (gameStartMusic);
+    	
+    	// reset Time
+    	STARTING_STATE_TIME = 0;
+    	END_TIME		= 0;
+    	SHOW_GO_TIME		= 0;
+    	
+    	startCounter = "";
+    	
+    	actualState = RoundState.STARTING;
+    	playMusic (gameStartMusic);
     }
     
     @Override
@@ -272,7 +291,6 @@ public class GameRoundState extends BombermanGameState
 		{
 			this.gameStartMusic = new Music(gameStartMusicPath);
 		}
-
 		catch (SlickException e)
 		{
 			//TODO
