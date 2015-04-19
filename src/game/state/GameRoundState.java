@@ -34,7 +34,9 @@ public class GameRoundState extends BombermanGameState
 	
 	// Strings
 	private final String			infoGO					= "GoGoGo";
+	private final String			allDead					= "No Winner";
 	private String					startCounter;
+	private String					winner;
 	
 	// Sounds
 	private static final String 	gameStartMusicPath 		= "res/sounds/round/startround.ogg";
@@ -122,7 +124,38 @@ public class GameRoundState extends BombermanGameState
     		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(infoGO)) /2 , 
     				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(infoGO)) /2, 
     				infoGO);
-        }             
+        } 
+        
+        if (END_TIME == 100) {
+        	for (int i = 0; i < this.map.getPlayers().length; i++) {
+        		if (!this.map.getPlayers()[i].isDying()) {
+        			this.map.getPlayers()[i].setShielded(10_000);
+        		}	
+        	}
+        }
+        
+        if (END_TIME >= 500) {
+
+        	if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDestroyed()) {	
+        		winner = "Player 1 wins!";
+        	}
+        	else if (this.map.getPlayers().length > 1 && !this.map.getPlayers()[1].isDestroyed()) {
+        		
+        		winner = "Player 2 wins!";
+        	}
+        	else if (this.map.getPlayers().length > 2 && !this.map.getPlayers()[2].isDestroyed()) {
+        		winner = "Player 3 wins!";
+        	}
+        	else if (this.map.getPlayers().length > 3 &&!this.map.getPlayers()[3].isDestroyed()) {
+        		winner = "Player 4 wins!";
+        	}
+        	else {
+        		winner = allDead;
+        	}
+        	BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(winner)) /2 , 
+    				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(winner)) /2, 
+    				winner);
+        }
 	}
 
 	private void render_STATE_STARTING(GameContainer container, StateBasedGame game, Graphics graphics) {
@@ -259,10 +292,11 @@ public class GameRoundState extends BombermanGameState
     	
     	// reset Time
     	STARTING_STATE_TIME = 0;
-    	END_TIME		= 0;
+    	END_TIME			= 0;
     	SHOW_GO_TIME		= 0;
     	
-    	startCounter = "";
+    	startCounter 	= "";
+    	winner 			= "";
     	
     	actualState = RoundState.STARTING;
     	playMusic (gameStartMusic);
