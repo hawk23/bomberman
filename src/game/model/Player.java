@@ -16,14 +16,12 @@ import slick.extension.AppGameContainerFSCustom;
 
 public class Player extends GameObject implements IDestroyable, ExplosionListener
 {
-    private static final String powerUpSoundPath    = "/res/sounds/player/powerup.ogg";
     private static final String deathSoundPath      = "/res/sounds/player/death.ogg";
 
     private BombermanMap map;
     private InputManager inputManager;
     private PlayerConfig playerConfig;
-    
-    private Sound 		powerUpSound;
+
     private Sound 		deathSound;
 
     private int 		posX;
@@ -578,32 +576,27 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     public void adjustSpeed (float value) {
     	this.speed += value;
     	adjustAnimationSpeed();
-    	playSound(powerUpSound);
     }
 
     public void adjustBombRange (int value)
     {
         this.bombRange += value;
-        playSound(powerUpSound);
     }
 
     public void adjustBombLimit(int value)
     {
         this.bombLimit += value;
-        playSound(powerUpSound);
     }
     
     public void setShielded(int timer) {
     	this.shieldTimer = timer;
     	this.shielded = true;
-    	playSound(powerUpSound);
     }
 
     private void loadSound ()
     {
         try
         {
-            this.powerUpSound       = new Sound(powerUpSoundPath);
             this.deathSound         = new Sound(deathSoundPath);
         }
 

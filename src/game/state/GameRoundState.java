@@ -27,6 +27,7 @@ public class GameRoundState extends BombermanGameState
 	// Timer
 	private final int				STARTING_STATE_TIMER	= 3_000;
 	private int						STARTING_STATE_TIME;
+	private final int				SHOW_WINNER_TIME		= 500;
 	private final int				END_TIMER				= 3_000;
 	private int						END_TIME;
 	private final int				SHOW_GO_TIMER			= 1_000;
@@ -126,15 +127,7 @@ public class GameRoundState extends BombermanGameState
     				infoGO);
         } 
         
-        if (END_TIME == 100) {
-        	for (int i = 0; i < this.map.getPlayers().length; i++) {
-        		if (!this.map.getPlayers()[i].isDying()) {
-        			this.map.getPlayers()[i].setShielded(10_000);
-        		}	
-        	}
-        }
-        
-        if (END_TIME >= 500) {
+        if (END_TIME >= SHOW_WINNER_TIME) {
 
         	if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDestroyed()) {	
         		winner = "Player 1 wins!";
@@ -228,14 +221,17 @@ public class GameRoundState extends BombermanGameState
 	}
 
 	private void update_STATE_PLAYING(GameContainer container, StateBasedGame game, int delta) {
-    	
+		
+		Input input = container.getInput();
+		
 		if (!(SHOW_GO_TIME >= SHOW_GO_TIMER)) {
 			SHOW_GO_TIME += delta;
 		}
 
-		Input input = container.getInput();
-		
-		this.map.update(container, game, delta);
+
+		if (!(END_TIME >= SHOW_WINNER_TIME )) {
+			this.map.update(container, game, delta);
+		}
 
     	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
         	actualState = RoundState.PAUSED;

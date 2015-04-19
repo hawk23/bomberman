@@ -20,6 +20,7 @@ import net.java.games.input.ControllerEnvironment;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.ExplosionSystem;
@@ -27,6 +28,9 @@ import slick.extension.TiledMapWrapper;
 
 public class BombermanMap implements IUpdateable, IRenderable
 {
+    private static final String powerUpSoundPath    = "/res/sounds/player/powerup.ogg";
+    private Sound 			powerUpSound;
+    
 	TiledMapWrapper			wrapper;
 	Player[]				players;
 	Bomb[][]				bombs;
@@ -51,6 +55,8 @@ public class BombermanMap implements IUpdateable, IRenderable
         Controller[]    controllers     = ControllerEnvironment.getDefaultEnvironment().getControllers();
         int             keyboardsUsed   = 0;
         int             gamepadsUsed    = 0;
+        
+        loadSound();
 
     	// create players and define controls
 		for (int i = 0; i < this.players.length; i++)
@@ -264,6 +270,7 @@ public class BombermanMap implements IUpdateable, IRenderable
         	ShieldUp shieldUp = (ShieldUp) item;
         	player.setShielded(shieldUp.getTime());
         }
+        playSound(powerUpSound);
     }
 
     private void handlePowerUp (int tileX, int tileY)
@@ -346,5 +353,23 @@ public class BombermanMap implements IUpdateable, IRenderable
 
     public Player[] getPlayers() {
         return players;
+    }
+    
+    private void loadSound ()
+    {
+        try
+        {
+            this.powerUpSound       = new Sound(powerUpSoundPath);
+        }
+
+        catch (SlickException e)
+        {
+            //TODO
+        }
+    }
+
+    private void playSound(Sound sound)
+    {
+        sound.play();
     }
 }
