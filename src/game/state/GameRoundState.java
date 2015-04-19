@@ -31,6 +31,10 @@ public class GameRoundState extends BombermanGameState
 	private BombermanMap  			map                 	= null;
 	private	int						startTime;
 	private	int						timer;
+	
+	// for gameRoundState
+    private Image 					gameRoundStateBuffer  	= null;
+    private Graphics				gameRoundStateGraphics	= null;
     
 	private Music 					gameStartMusic;
     
@@ -46,6 +50,9 @@ public class GameRoundState extends BombermanGameState
     {
     	map_buffer 				= new Image(960, 960);
     	map_graphics 			= map_buffer.getGraphics();
+    	
+    	gameRoundStateBuffer	= new Image(160,480);
+    	gameRoundStateGraphics	= gameRoundStateBuffer.getGraphics();
 
     	menu = new PauseMenu();
     	menu.init();
@@ -177,6 +184,7 @@ public class GameRoundState extends BombermanGameState
     	map_graphics.clear();
     }
     
+    
     @Override
     public void enter(GameContainer container, StateBasedGame game) throws SlickException
     {
@@ -195,7 +203,8 @@ public class GameRoundState extends BombermanGameState
             int                     posX        = (i % 2) * 1120;
             int                     posY        = (i / 2) * 480;
 
-            PlayerStateScreen       screen      = new PlayerStateScreen(this.map.getPlayers()[i], posX, posY);
+            PlayerStateScreen       screen      = new PlayerStateScreen(this.map.getPlayers()[i], posX, posY, 
+            		this.gameRoundStateGraphics, this.gameRoundStateBuffer);
             this.stateScreens.add(screen);
         }
 

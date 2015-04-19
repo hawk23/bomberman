@@ -15,8 +15,6 @@ public class PlayerStateScreen implements IRenderable
     private Image               image;
     private Graphics            g;
 
-    private int                 width       = 160;
-    private int                 heigth      = 480;
     private int                 posX;
     private int                 posY;
 
@@ -32,14 +30,14 @@ public class PlayerStateScreen implements IRenderable
     private DecimalFormat       decimalFormat = new DecimalFormat("0.00");
     private Image		        playerStatsBackground	= null;
 
-    public PlayerStateScreen (Player player, int posX, int posY) throws SlickException
+    public PlayerStateScreen (Player player, int posX, int posY, Graphics g, Image buffer) throws SlickException
     {
         this.player                 = player;
         this.posX                   = posX;
         this.posY                   = posY;
 
-        this.image                  = new Image(this.width, this.heigth);
-        this.g                      = image.getGraphics();
+        this.image                  = buffer;
+        this.g                      = g;
 
         this.playerStatsBackground 	= new Image("res/visuals/backgrounds/playerStats_background.png");
 
