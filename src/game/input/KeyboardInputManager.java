@@ -3,9 +3,6 @@ package game.input;
 import game.config.InputConfiguration;
 import org.newdawn.slick.Input;
 
-/**
- * Created by Mario on 18.04.2015.
- */
 public class KeyboardInputManager extends InputManager
 {
     private InputConfiguration  inputConfiguration  = null;

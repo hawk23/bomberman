@@ -5,18 +5,15 @@ import game.config.PlayerConfig;
 import game.event.ExplosionEvent;
 import game.input.Direction;
 import game.input.InputManager;
+import game.interfaces.IDestroyable;
 
 import java.awt.Point;
 
 import org.newdawn.slick.*;
-import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
 
-/**
- * Created by Albert on 30.03.2015.
- */
 public class Player extends GameObject implements IDestroyable, ExplosionListener
 {
     private static final String powerUpSoundPath    = "/res/sounds/player/powerup.ogg";
@@ -106,7 +103,6 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.map					= map;
         this.inputManager			= inputManager;
         this.playerConfig			= playerConfig;
-        this.collides				= true;
         
         this.speed 					= this.playerConfig.getInitialSpeed();
         this.bombLimit 				= this.playerConfig.getInitialBombLimit();

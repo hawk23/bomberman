@@ -1,11 +1,8 @@
 package game.input;
 
-import game.config.InputConfiguration;
 import org.newdawn.slick.Input;
 
 /**
- * 
- * @author Albert
  * InputManager for the player objects - has an InputConfiguration (Keys for moving and key for dropping a bomb)
  */
 public abstract class InputManager {

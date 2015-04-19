@@ -78,7 +78,6 @@ public class EndMenu extends Menu
 				case 1: 
 					actualAction = Action.LEAVE_GAME;
 					break;
-
 			}
 		}
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
@@ -97,7 +96,6 @@ public class EndMenu extends Menu
 			default: break;
 		}
 	}
-	
 	
 	private void renderMainLayer(GameContainer container, StateBasedGame game, Graphics graphics)
 	{

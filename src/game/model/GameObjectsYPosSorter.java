@@ -4,9 +4,6 @@ import game.config.GameSettings;
 
 import java.util.Comparator;
 
-/**
- * Created by Mario on 18.04.2015.
- */
 public class GameObjectsYPosSorter implements Comparator<GameObject>
 {
     @Override

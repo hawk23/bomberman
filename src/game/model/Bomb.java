@@ -1,8 +1,9 @@
 package game.model;
 
 import game.config.GameSettings;
-
 import game.event.ExplosionEvent;
+import game.interfaces.IDestroyable;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -15,7 +16,7 @@ import javax.swing.event.EventListenerList;
 public class Bomb extends GameObject implements IDestroyable
 {
     private static final String             bombImagePath 		= "res/visuals/bomb/bomb.png";
-    private static final int	            animationInteval	= 40;
+    private static final int	            animationInterval	= 40;
     private SpriteSheet			            bombSheet;
     private Animation			            animationBurn;
     
@@ -23,8 +24,9 @@ public class Bomb extends GameObject implements IDestroyable
     private int					            timer;
     private int					            time;
     private boolean				            exploded;
+    private boolean							destroyed;
     private EventListenerList               listeners           = new EventListenerList();
-    private boolean							destroyed			= false;
+
     
     public Bomb(int tileX, int tileY, int bombRange, int bombTimer)
     {
@@ -33,7 +35,8 @@ public class Bomb extends GameObject implements IDestroyable
         this.range		            = bombRange;
         this.time		            = 0;
         this.exploded	            = false;
-        loadImage();
+        this.destroyed				= false;
+        loadAnimation();
     }
 
     public int getRange()
@@ -60,7 +63,6 @@ public class Bomb extends GameObject implements IDestroyable
     public boolean destroy()
     {
         setExploded();
-
         return true;
     }
 
@@ -98,12 +100,12 @@ public class Bomb extends GameObject implements IDestroyable
     	return this.range;
     }
     
-    private void loadImage()
+    private void loadAnimation()
     {
         try
         {
             bombSheet		= new SpriteSheet(bombImagePath, 64, 64);
-            animationBurn	= new Animation(bombSheet, animationInteval);
+            animationBurn	= new Animation(bombSheet, animationInterval);
         }
         catch (SlickException e)
         {

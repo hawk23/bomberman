@@ -1,10 +1,10 @@
 package slick.extension;
 
+import game.interfaces.IRenderable;
+import game.interfaces.IUpdateable;
 import game.model.Block;
 import game.model.DestroyableBlock;
 import game.model.GameObject;
-import game.model.IRenderable;
-import game.model.IUpdateable;
 import game.model.SolidBlock;
 
 import java.awt.Point;
@@ -17,15 +17,8 @@ import org.newdawn.slick.tiled.TiledMap;
 
 public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderable
 {
-    /**
-     *  The TileMaps contain 3 Layer to seperate the Map for Rendering:
-     *      Background: always behind players and items
-     *      Blocks: - this is the same layer as the player and therefore has to be ordered by y-axis on rendering
-     *              - can be divided into SolidBlocks and DestroyableBlocks (IDestroyable)
-     *      Foreground: always on top of layers and items
-     */
+
     private int layerBackground, layerForeground, layerBlocks;
-    
     private Block[][] blockMatrix;
 	
 	public TiledMapWrapper(String ref) throws SlickException

@@ -8,8 +8,6 @@ import game.state.GameRoundState;
 import game.state.IntroState;
 import game.state.MainMenuState;
 
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;

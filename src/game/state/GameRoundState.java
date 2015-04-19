@@ -10,7 +10,6 @@ import game.model.BombermanMap;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 
@@ -29,7 +28,6 @@ public class GameRoundState extends BombermanGameState
     private Graphics 				map_graphics			= null;
     private Image 					map_buffer				= null;
     private final int 				xOffset 				= 160;
-    
 	private BombermanMap  			map                 	= null;
 	private	int						startTime;
 	private	int						timer;

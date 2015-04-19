@@ -1,6 +1,7 @@
 package game.model;
 
 import game.config.GameSettings;
+import game.interfaces.IDestroyable;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
@@ -22,7 +23,7 @@ public class PowerUpItem extends GameObject implements IDestroyable
     {
         super(posX, posY);
         timer = flameTime;
-        loadImage(path);
+        loadAnimation(path);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class PowerUpItem extends GameObject implements IDestroyable
 		return this.destroyed;
 	}
 	
-    private void loadImage(String path)
+    private void loadAnimation(String path)
     {
     	if(path == null)
     	{

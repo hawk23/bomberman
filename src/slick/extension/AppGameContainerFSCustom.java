@@ -1,6 +1,5 @@
 package slick.extension;
 
-
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.Dimension;
 import org.newdawn.slick.AppGameContainer;
@@ -14,13 +13,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 
-
-/**
- * 
- * @author Albert
- * 
- * fullscreen AppGameContainer
- */
 public class AppGameContainerFSCustom extends AppGameContainer {
 
 	public static final int UPDATES_PER_SECOND          = 40;
@@ -220,6 +212,7 @@ public class AppGameContainerFSCustom extends AppGameContainer {
 					break;
 			}
 			buffer_native_graphics = buffer_native.getGraphics();
+			buffer_native.setFilter(Image.FILTER_NEAREST);
 
 			// this will be the back buffer image we draw our game onto
 			buffer              = new Image(GAME_CANVAS_WIDTH, GAME_CANVAS_HEIGHT);

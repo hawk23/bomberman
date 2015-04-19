@@ -5,9 +5,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-/**
- * Created by Mario and Albert
- */
 public abstract class BombermanGameState extends BasicGameState
 {
     public static int INTRO             = 1;

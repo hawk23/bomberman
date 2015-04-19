@@ -1,18 +1,18 @@
 package slick.extension;
 
 import game.config.GameSettings;
+import game.interfaces.IRenderable;
+import game.interfaces.IUpdateable;
 import game.model.*;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.state.StateBasedGame;
-
-import org.newdawn.slick.Image;
 import org.newdawn.slick.particles.ParticleEmitter;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.particles.ParticleIO;
 
-import java.awt.*;
 import java.io.File;
 
 /**

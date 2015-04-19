@@ -1,5 +1,8 @@
 package game.model;
 
+import game.interfaces.IRenderable;
+import game.interfaces.IUpdateable;
+
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -59,16 +62,6 @@ public abstract class GameObject implements IRenderable, IUpdateable
     {
     	setTileX(x);
     	setTileY(y);
-    }
-
-    public boolean isCollides()
-    {
-        return collides;
-    }
-
-    public void setCollides(boolean collides)
-    {
-        this.collides = collides;
     }
 
     protected void setImage(String path)

@@ -11,8 +11,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import game.input.KeyboardInputManager;
+import game.interfaces.IDestroyable;
+import game.interfaces.IRenderable;
+import game.interfaces.IUpdateable;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;

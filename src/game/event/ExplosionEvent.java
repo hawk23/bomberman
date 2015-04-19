@@ -4,9 +4,6 @@ import game.model.Bomb;
 
 import java.util.EventObject;
 
-/**
- * Created by Mario on 18.04.2015.
- */
 public class ExplosionEvent extends EventObject
 {
     private Bomb bomb;

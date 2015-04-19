@@ -1,14 +1,16 @@
 package game.model;
 
-import game.config.GameSettings;
+import game.interfaces.IRenderable;
+import game.interfaces.IUpdateable;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.StateBasedGame;
+
 import slick.extension.TiledMapWrapper;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Explosion extends GameObject implements IUpdateable, IRenderable

@@ -1,17 +1,14 @@
 package game;
 
 import game.config.GameSettings;
-import game.model.IRenderable;
-import game.model.IUpdateable;
+import game.interfaces.IRenderable;
 import game.model.Player;
+
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.text.DecimalFormat;
 
-/**
- * Created by Mario on 18.04.2015.
- */
 public class PlayerStateScreen implements IRenderable
 {
     private Player              player;
@@ -74,7 +71,7 @@ public class PlayerStateScreen implements IRenderable
         this.font.drawString(160, 560, this.decimalFormat.format(this.player.getSpeed()));
         this.font.drawString(160, 680, Integer.toString(this.player.getShieldTimerSeconds()));
 
-        this.g.flush();
+        this.g.resetTransform();
 
         if (!this.player.isDestroyed())
         {
