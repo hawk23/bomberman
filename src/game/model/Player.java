@@ -115,6 +115,8 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         originalX = targetX =  posX = (int) spawnPoint.getX();
         originalY = targetY =  posY = (int) spawnPoint.getY();
         this.calculateDrawPosition(posX, posY);
+        lastDrawPosX = drawPosX;
+        lastDrawPosY = drawPosY;
     }
 
     private void loadVisuals(String path) throws SlickException {
@@ -149,7 +151,14 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
         float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
-        image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY);    
+        
+        if (drawPosX == lastDrawPosX && drawPosY == lastDrawPosY) {
+        	image.draw(drawPosX, drawPosY);
+        }
+        else {
+        	image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY);
+        }
+            
     }
 
     public void update(GameContainer container, StateBasedGame game, int delta)
