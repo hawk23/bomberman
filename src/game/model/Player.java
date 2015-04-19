@@ -23,8 +23,8 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private InputManager inputManager;
     private PlayerConfig playerConfig;
     
-    private Sound powerUpSound;
-    private Sound deathSound;
+    private Sound 		powerUpSound;
+    private Sound 		deathSound;
 
     private int 		posX;
     private int 		posY;
@@ -44,7 +44,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Image		stopLeft;
 
     private int 		animationInterval;
-    private int 		dyingAnimationInterval = 40;
+    private int 		dyingAnimationInterval = 50;
     
     private Animation 	animation_actual;
     private Animation 	animation_up;
@@ -62,6 +62,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private boolean		shielded;
     private int 		shieldTimer;
     
+    private boolean 	destroyed;
     private boolean		dead;
     private boolean		dying;
     private int			dyingTimer;
@@ -86,16 +87,6 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
      */
     private boolean moving;
 
-    private boolean destroyed;
-
-    /**
-     * 
-     * @param map
-     * @param inputManager
-     * @param playerConfig
-     * @param spawnPoint
-     * @throws SlickException
-     */
     public Player(BombermanMap map, InputManager inputManager, PlayerConfig playerConfig, Point spawnPoint) throws SlickException
     {
         super((int) spawnPoint.getX() / map.getTileSize(), (int) spawnPoint.getY() / map.getTileSize());
@@ -113,6 +104,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.shielded				= false;
         this.dying					= false;
         this.dead					= false;
+        this.destroyed				= false;
         this.movementDirection 		= Direction.DOWN;
         this.movementInterpolation 	= 0.0f;
         
@@ -166,7 +158,20 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         lastDrawPosX = drawPosX;
         lastDrawPosY = drawPosY;
 
-        if (!dying) 
+        
+        if (dying) 
+        {
+        	if (dyingTimer <= 0) {
+        		dead = true;
+        		destroy();
+        	}
+        	else {
+        		dyingTimer -= delta;
+        		image = animation_actual.getCurrentFrame();
+        		animation_actual.update(delta);
+        	}
+        }
+        else // alive!
         {
         	this.inputManager.update();
             direction = this.inputManager.getDirection();
@@ -245,7 +250,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
                 movementInterpolation += speed * deltaInSecs;
 
                 // move in opposite direction?
-                if (checkOppositeMovement()) {
+                if (checkOppositeMovement() && !isBlocked(originalX, originalY)) {
                     int tempX, tempY;
                     tempX = originalX;
                     originalX = targetX;
@@ -379,22 +384,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
             if (inputManager.bombDrop()) {
                addBomb();
             }
-        }
-        // dying
-        else
-        {
-        	if (dyingTimer <= 0) {
-        		dead = true;
-        		destroy();
-        	}
-        	else {
-        		dyingTimer -= delta;
-        		image = animation_actual.getCurrentFrame();
-        		animation_actual.update(delta);
-        	}
-        }
-        
-        
+        }      
     }
 
     /**
@@ -647,4 +637,8 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     {
         return speed;
     }
+
+	public boolean isDying() {
+		return dying;
+	}
 }

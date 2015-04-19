@@ -71,7 +71,7 @@ public class PlayerStateScreen implements IRenderable
 
         this.g.resetTransform();
 
-        if (!this.player.isDestroyed())
+        if (!this.player.isDying())
         {
             g.drawImage(this.image, this.posX, this.posY);
         }
