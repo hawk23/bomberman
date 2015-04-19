@@ -95,8 +95,8 @@ public class GameRoundState extends BombermanGameState
                     screen.render(container, game, graphics);
                 }
                
-                BombermanGame.STEAMWRECK_FONT_OL.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT.getWidth(infoText)) /2 , 
-                		(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT.getHeight(infoText)) /2, 
+                BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(infoText)) /2 , 
+                		(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(infoText)) /2, 
                 		infoText);
             }
 	    	else

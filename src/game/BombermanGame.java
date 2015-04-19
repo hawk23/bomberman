@@ -35,6 +35,8 @@ public class BombermanGame extends StateBasedGame {
 	public static AngelCodeFont STEAMWRECK_FONT;
 	public static AngelCodeFont STEAMWRECK_FONT_OL;
 	
+	public static AngelCodeFont STEAMWRECK_FONT_RED;
+	
 	public static AngelCodeFont OCR_FONT_BIG;
 	public static AngelCodeFont OCR_FONT_OL_BIG;
 	public static AngelCodeFont OCR_FONT_MED;
@@ -88,6 +90,7 @@ public class BombermanGame extends StateBasedGame {
 		
 		STEAMWRECK_FONT = new AngelCodeFont("res/fonts/steamwreck.fnt", new Image("res/fonts/steamwreck.png"));
 		STEAMWRECK_FONT_OL = new AngelCodeFont("res/fonts/steamwreck_ol.fnt", new Image("res/fonts/steamwreck_ol.png"));
+		STEAMWRECK_FONT_RED = new AngelCodeFont("res/fonts/steamwreck_red.fnt", new Image("res/fonts/steamwreck_red.png"));
 		
 		OCR_FONT_BIG = new AngelCodeFont("res/fonts/OCR_80.fnt", new Image("res/fonts/OCR_80.png"));
 		OCR_FONT_OL_BIG = new AngelCodeFont("res/fonts/OCR_ol_80.fnt", new Image("res/fonts/OCR_ol_80.png"));
