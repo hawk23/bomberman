@@ -229,9 +229,14 @@ public class GameRoundState extends BombermanGameState
 		}
 
 
-		if (!(END_TIME >= SHOW_WINNER_TIME )) {
-			this.map.update(container, game, delta);
+		if (END_TIME >= SHOW_WINNER_TIME - 300) {
+			for (int i = 0; i < this.map.getPlayers().length; i++)
+				if (!this.map.getPlayers()[i].isDying()) {
+					this.map.getPlayers()[i].setIndestructable();
+				}	
 		}
+		
+		this.map.update(container, game, delta);
 
     	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
         	actualState = RoundState.PAUSED;

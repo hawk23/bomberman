@@ -59,7 +59,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
     private boolean		shielded;
     private int 		shieldTimer;
-    
+    private boolean		indestructable;
     private boolean 	destroyed;
     private boolean		dead;
     private boolean		dying;
@@ -103,6 +103,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.dying					= false;
         this.dead					= false;
         this.destroyed				= false;
+        this.indestructable			= false;
         this.movementDirection 		= Direction.DOWN;
         this.movementInterpolation 	= 0.0f;
         
@@ -458,25 +459,25 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     @Override
     public boolean destroy()
     {
-
-    	if (!destroyed) {
-        	
-    		if (!shielded && !dying) {
-        		
-        		dying = true;
-        		playSound(deathSound);
-        		this.animation_actual = this.animation_die;
-        		this.animation_actual.restart();
-        		this.dyingTimer = this.animation_actual.getFrameCount() * dyingAnimationInterval;
+    	if(!indestructable) {
+    		
+    		if (!destroyed) {
+            	
+        		if (!shielded && !dying) {
+            		
+            		dying = true;
+            		playSound(deathSound);
+            		this.animation_actual = this.animation_die;
+            		this.animation_actual.restart();
+            		this.dyingTimer = this.animation_actual.getFrameCount() * dyingAnimationInterval;
+            	}
+            	
+            	if (dead) {
+        		     this.map.increaseNrDeadPlayer();
+        		     return this.destroyed = true;
+        		}
         	}
-        	
-        	if (dead) {
-    		     this.map.increaseNrDeadPlayer();
-    		     return this.destroyed = true;
-    		}
     	}
-
-    	
     	return this.destroyed;
     }
 
@@ -642,5 +643,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
 	public boolean isDying() {
 		return dying;
+	}
+
+	public void setIndestructable() {
+		this.indestructable = true;
 	}
 }
