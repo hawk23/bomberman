@@ -110,17 +110,18 @@ public class GameRoundState extends BombermanGameState
 	private void render_STATE_PLAYING(GameContainer container, StateBasedGame game, Graphics graphics) {
 		
 		resetGraphics();
-
+		
 		this.map.render(container, game, this.map_graphics);
-        graphics.drawImage(map_buffer, xOffset, 0);
 
         graphics.drawImage(playerStatsBackground, 0, 0);
         graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
-
+        
         for (PlayerStateScreen screen : this.stateScreens) {
             screen.render(container, game, graphics);
         }
         
+        graphics.drawImage(map_buffer, xOffset, 0);
+
         if ((SHOW_GO_TIME < SHOW_GO_TIMER) && actualState == RoundState.PLAYING) {
     		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(infoGO)) /2 , 
     				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(infoGO)) /2, 
@@ -129,22 +130,6 @@ public class GameRoundState extends BombermanGameState
         
         if (END_TIME >= SHOW_WINNER_TIME) {
 
-        	if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDestroyed()) {	
-        		winner = "Player 1 wins!";
-        	}
-        	else if (this.map.getPlayers().length > 1 && !this.map.getPlayers()[1].isDestroyed()) {
-        		
-        		winner = "Player 2 wins!";
-        	}
-        	else if (this.map.getPlayers().length > 2 && !this.map.getPlayers()[2].isDestroyed()) {
-        		winner = "Player 3 wins!";
-        	}
-        	else if (this.map.getPlayers().length > 3 &&!this.map.getPlayers()[3].isDestroyed()) {
-        		winner = "Player 4 wins!";
-        	}
-        	else {
-        		winner = allDead;
-        	}
         	BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(winner)) /2 , 
     				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(winner)) /2, 
     				winner);
@@ -229,11 +214,30 @@ public class GameRoundState extends BombermanGameState
 		}
 
 
-		if (END_TIME >= SHOW_WINNER_TIME - 300) {
+		int doOnce = 1;
+		if (doOnce == 1 && END_TIME >= SHOW_WINNER_TIME) {
 			for (int i = 0; i < this.map.getPlayers().length; i++)
 				if (!this.map.getPlayers()[i].isDying()) {
 					this.map.getPlayers()[i].setIndestructable();
-				}	
+				}
+			
+			if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDestroyed()) {	
+        		winner = "Player 1 wins!";
+        	}
+        	else if (this.map.getPlayers().length > 1 && !this.map.getPlayers()[1].isDestroyed()) {
+        		winner = "Player 2 wins!";
+        	}
+        	else if (this.map.getPlayers().length > 2 && !this.map.getPlayers()[2].isDestroyed()) {
+        		winner = "Player 3 wins!";
+        	}
+        	else if (this.map.getPlayers().length > 3 &&!this.map.getPlayers()[3].isDestroyed()) {
+        		winner = "Player 4 wins!";
+        	}
+        	else {
+        		winner = allDead;
+        	}
+			
+			doOnce = 0;
 		}
 		
 		this.map.update(container, game, delta);
