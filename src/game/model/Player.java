@@ -17,7 +17,8 @@ import slick.extension.AppGameContainerFSCustom;
 public class Player extends GameObject implements IDestroyable, ExplosionListener
 {
     private static final String deathSoundPath      = "/res/sounds/player/death.ogg";
-
+    private static final String shieldImagePath 	= "res/visuals/shield/shieldmap.png";
+    
     private BombermanMap map;
     private InputManager inputManager;
     private PlayerConfig playerConfig;
@@ -43,6 +44,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
     private int 		animationInterval;
     private int 		dyingAnimationInterval = 50;
+    private int			shieldAnimationInterval = 50;
     
     private Animation 	animation_actual;
     private Animation 	animation_up;
@@ -50,6 +52,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Animation 	animation_left;
     private Animation 	animation_right;
     private Animation	animation_die;
+    private Animation	animation_shielded;
 
     private float 		speed;
     private int 		bombTimer;
@@ -139,6 +142,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		this.animation_die.setAutoUpdate(false);
 		this.animation_actual	= new Animation();
 		
+        SpriteSheet shield		= new SpriteSheet(shieldImagePath, 64, 128);
+        this.animation_shielded	= new Animation(shield, shieldAnimationInterval);
+		
 		this.stopDown			= spriteSheet.getSubImage(0, 640, 64, 128);
 		this.stopRight			= spriteSheet.getSubImage(64, 640, 64, 128);
 		this.stopUp				= spriteSheet.getSubImage(128, 640, 64, 128);
@@ -151,12 +157,15 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     {
         float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
         
-        if (drawPosX == lastDrawPosX && drawPosY == lastDrawPosY) {
-        	image.draw(drawPosX, drawPosY);
+        float x = (drawPosX - lastDrawPosX) * interpolate + lastDrawPosX;
+        float y = (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY;
+        
+        image.draw(x, y);
+        
+        if (shielded) {
+        	animation_shielded.draw(x, y);
         }
-        else {
-        	image.draw((drawPosX - lastDrawPosX) * interpolate + lastDrawPosX, (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY);
-        }
+
             
     }
 

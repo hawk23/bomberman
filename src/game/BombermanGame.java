@@ -122,7 +122,7 @@ public class BombermanGame extends StateBasedGame {
         player1.setName("Fred");
         player1.setInitialBombLimit(2);
         player1.setInitialSpeed(2);
-        player1.setInitialBombTimer(2000);
+        player1.setInitialBombTimer(2200);
         player1.setInitialBombRange(1);
 
         PlayerConfig player2 = new PlayerConfig();
@@ -136,7 +136,7 @@ public class BombermanGame extends StateBasedGame {
         player2.setName("Hodenkobold");
         player2.setInitialBombLimit(1);
         player2.setInitialSpeed(2.4f);
-        player2.setInitialBombTimer(2000);
+        player2.setInitialBombTimer(2200);
         player2.setInitialBombRange(1);
 
         this.playerConfigs.add(player1);
