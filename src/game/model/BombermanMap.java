@@ -54,7 +54,7 @@ public class BombermanMap implements IUpdateable, IRenderable
         this.spikes			= new Spike[wrapper.getHeight()][wrapper.getWidth()];
         this.objects		= new ArrayList<GameObject>();
         this.explosionSystem= new ExplosionSystem();
-        this.spikeGenerator	= new SpikeGenerator(this, GameRoundState.SUDDEN_DEATH_TIME);
+        this.spikeGenerator	= new SpikeGenerator(this, GameRoundState.SUDDEN_DEATH_TIME, wrapper.getHeight(), wrapper.getWidth());
         this.suddenDeath	= false;
 		this.deadPlayers	= 0;
         Controller[]    controllers     = ControllerEnvironment.getDefaultEnvironment().getControllers();
@@ -120,15 +120,28 @@ public class BombermanMap implements IUpdateable, IRenderable
 			{
 				for (int j = 0; j < this.spikes[i].length; j++)
 				{
-					if (spikes[i][j] != null) {
-						spikes[i][j].update(container, game, delta);
+					if (this.spikes[i][j] != null) {
+						this.spikes[i][j].update(container, game, delta);
+						
+						if (this.wrapper.getBlockMatrix()[i][j] != null) {
+							this.wrapper.removeBlock(i, j);
+						}
+						
+						if (this.spikes[i][j].isDeadly()) {
+							for (GameObject go : objects)
+                            {
+                                if (go instanceof IDestroyable && go.getTileX() == i && go.getTileY() == j)
+                                {
+                                    ((IDestroyable) go).destroy();
+                                }
+                            }
+						}
 					}
 				}
 			}
 			
 		}
-		
-		
+
         /**
          * Manage bombs
          */

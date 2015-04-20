@@ -21,7 +21,7 @@ public class Spike extends GameObject {
 	public Spike(int tileX, int tileY) {
 		super(tileX, tileY);
 		this.deadly = false;
-		loadAnimation();
+		//loadAnimation();
 	}
 	
 	@Override

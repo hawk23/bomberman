@@ -99,12 +99,16 @@ public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderabl
 				{
 					if(((DestroyableBlock) this.blockMatrix[i][j]).isDestroyed())
 					{
-						this.setTileId(i, j, this.layerBlocks, 0);
-						this.blockMatrix[i][j] = null;
+						removeBlock(i, j);
 					}
 				}
 			}
 		}
+	}
+	
+	public void removeBlock(int i, int j) {
+		this.setTileId(i, j, this.layerBlocks, 0);
+		this.blockMatrix[i][j] = null;
 	}
 
 	@Override

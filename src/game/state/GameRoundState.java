@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class GameRoundState extends BombermanGameState
 {
+	public static final int			SUDDEN_DEATH_TIME		= 50_000;
 	
 	private static enum RoundState {
 		STARTING, PLAYING, PAUSED, ROUND_END
@@ -40,7 +41,6 @@ public class GameRoundState extends BombermanGameState
 	private boolean					showHurryUP;
 	private boolean					timeLimitReached;
 	private boolean					showCountdown;
-	public static final int			SUDDEN_DEATH_TIME		= 30_000;
 	private boolean					setIndestructable;
 	private boolean					startSuddenDeath;
 	
