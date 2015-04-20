@@ -34,3 +34,5 @@ proguard/
 *.iml
 
 *.orig
+*.jar
+*.MF
