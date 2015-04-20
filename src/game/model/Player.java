@@ -16,7 +16,7 @@ import slick.extension.AppGameContainerFSCustom;
 
 public class Player extends GameObject implements IDestroyable, ExplosionListener
 {
-    private static final String deathSoundPath      = "/res/sounds/player/death.ogg";
+    private static final String deathSoundPath      = "res/sounds/player/death.ogg";
     private static final String shieldImagePath 	= "res/visuals/shield/shieldmap.png";
     
     private BombermanMap map;

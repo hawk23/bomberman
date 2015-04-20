@@ -29,7 +29,7 @@ import slick.extension.TiledMapWrapper;
 
 public class BombermanMap implements IUpdateable, IRenderable
 {
-    private static final String powerUpSoundPath    = "/res/sounds/player/powerup.ogg";
+    private static final String powerUpSoundPath    = "res/sounds/player/powerup.ogg";
     private Sound 			powerUpSound;
     
 	TiledMapWrapper			wrapper;
