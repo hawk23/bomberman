@@ -28,16 +28,27 @@ public class GameRoundState extends BombermanGameState
 	private final int				STARTING_STATE_TIMER	= 3_000;
 	private int						STARTING_STATE_TIME;
 	private final int				SHOW_WINNER_TIME		= 500;
-	private final int				END_TIMER				= 3_000;
+	private final int				END_TIMER				= 5_000;
 	private int						END_TIME;
 	private final int				SHOW_GO_TIMER			= 1_000;
 	private int						SHOW_GO_TIME;
+	private int						ROUND_TIME;
+	private int						ROUND_TIME_LIMIT;
+	private final int				SHOW_HURRY_TIMER		= 4_000;
+	private int						SHOW_HURRY_TIME;
+	private boolean					timeLimit;
+	private boolean					showHurryUP;
+	private boolean					timeLimitReached;
+	private boolean					showCountdown;
+	private final int				SUDDEN_DEATH_TIME		= 30_000;
 	
 	// Strings
-	private final String			infoGO					= "GoGoGo";
+	private final String			infoGO					= "BOMB !!!!";
 	private final String			allDead					= "No Winner";
+	private final String			hurryUP					= "HURRY UP !!!!";
 	private String					startCounter;
 	private String					winner;
+	private String					countdown;
 	
 	// Sounds
 	private static final String 	gameStartMusicPath 		= "res/sounds/round/startround.ogg";
@@ -123,17 +134,30 @@ public class GameRoundState extends BombermanGameState
         graphics.drawImage(map_buffer, xOffset, 0);
 
         if ((SHOW_GO_TIME < SHOW_GO_TIMER) && actualState == RoundState.PLAYING) {
-    		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(infoGO)) /2 , 
-    				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(infoGO)) /2, 
+    		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(infoGO)) /2, 
+    				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(infoGO)) /2 - 20, 
     				infoGO);
         } 
         
         if (END_TIME >= SHOW_WINNER_TIME) {
-
-        	BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(winner)) /2 , 
-    				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(winner)) /2, 
+    		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(winner)) /2, 
+    				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(winner)) /2 - 20, 
     				winner);
         }
+        
+        if (showHurryUP) {
+    		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(hurryUP)) /2, 
+    				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(hurryUP)) /2 - 20, 
+    				hurryUP);
+        }
+        
+        if (showCountdown && !showHurryUP) {
+    		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(countdown)) /2, 
+    				(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(countdown)) /2 - 20, 
+    				countdown);
+        }
+        
+        
 	}
 
 	private void render_STATE_STARTING(GameContainer container, StateBasedGame game, Graphics graphics) {
@@ -141,7 +165,7 @@ public class GameRoundState extends BombermanGameState
 		render_STATE_PLAYING(container, game, graphics);
 		
 		BombermanGame.STEAMWRECK_FONT_RED.drawString((AppGameContainerFSCustom.GAME_CANVAS_WIDTH - BombermanGame.STEAMWRECK_FONT_RED.getWidth(startCounter)) /2 , 
-		(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(startCounter)) /2, 
+		(AppGameContainerFSCustom.GAME_CANVAS_HEIGHT - BombermanGame.STEAMWRECK_FONT_RED.getHeight(startCounter)) /2 - 20, 
 		startCounter);
 	}
 
@@ -206,22 +230,36 @@ public class GameRoundState extends BombermanGameState
 	}
 
 	private void update_STATE_PLAYING(GameContainer container, StateBasedGame game, int delta) {
-		
 		Input input = container.getInput();
 		
+		ROUND_TIME += delta;
+		
+		if (timeLimit && ROUND_TIME >= ROUND_TIME_LIMIT) {
+			timeLimitReached = true;
+		}
+		
+		if (showCountdown) {
+			countdown = "" + (((int)((ROUND_TIME_LIMIT - ROUND_TIME) / 1_000)) + 1);
+		}
+    	
 		if (!(SHOW_GO_TIME >= SHOW_GO_TIMER)) {
 			SHOW_GO_TIME += delta;
 		}
 
-
-		int doOnce = 1;
-		if (doOnce == 1 && END_TIME >= SHOW_WINNER_TIME) {
+		boolean doOnce = true;
+		if (doOnce && END_TIME >= SHOW_WINNER_TIME) {
+			
+			int alive = 0;
 			for (int i = 0; i < this.map.getPlayers().length; i++)
 				if (!this.map.getPlayers()[i].isDying()) {
 					this.map.getPlayers()[i].setIndestructable();
+					alive++;
 				}
 			
-			if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDestroyed()) {	
+			if (alive > 1) {
+				winner = "Time Limit reached";
+			}
+			else if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDestroyed()) {	
         		winner = "Player 1 wins!";
         	}
         	else if (this.map.getPlayers().length > 1 && !this.map.getPlayers()[1].isDestroyed()) {
@@ -237,25 +275,43 @@ public class GameRoundState extends BombermanGameState
         		winner = allDead;
         	}
 			
-			doOnce = 0;
+			doOnce = false;
 		}
 		
-		this.map.update(container, game, delta);
-
-    	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-        	actualState = RoundState.PAUSED;
-        	input.clearKeyPressedRecord();
-        }
-    	else if (this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1) {
+		if ((timeLimit && (ROUND_TIME >= (ROUND_TIME_LIMIT - SUDDEN_DEATH_TIME - SHOW_HURRY_TIMER))) && (SHOW_HURRY_TIME <= SHOW_HURRY_TIMER)) {
+			showHurryUP = true;
+			showCountdown = true;
+			SHOW_HURRY_TIME += delta;
+		}
+		else {
+			showHurryUP = false;
+		}
+		
+    	if (timeLimitReached || this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1) {
         	
-        	if(END_TIME >= END_TIMER || input.isKeyPressed(Input.KEY_ESCAPE)) {
+    		if (showHurryUP) {
+    			showHurryUP = false;
+    		}
+    		
+    		if (showCountdown) {
+    			showCountdown = false;
+    		}
+			
+        	if(END_TIME >= END_TIMER) {
         		actualState = RoundState.ROUND_END;
         		input.clearKeyPressedRecord();
         	}
         	else {
         		END_TIME += delta;
         	}
-    	}	
+    	}
+    	
+    	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+        	actualState = RoundState.PAUSED;
+        	input.clearKeyPressedRecord();
+        }
+    	
+    	this.map.update(container, game, delta);
 	}
 
 	private void update_STATE_STARTING(GameContainer container, StateBasedGame game, int delta) {
@@ -299,9 +355,23 @@ public class GameRoundState extends BombermanGameState
     	STARTING_STATE_TIME = 0;
     	END_TIME			= 0;
     	SHOW_GO_TIME		= 0;
+    	SHOW_HURRY_TIME		= 0;
+    	ROUND_TIME			= 0;
+    	ROUND_TIME_LIMIT	= this.gameRoundConfig.getTimeLimit() * 60 * 1_000;
+    	if (ROUND_TIME_LIMIT == 0) {
+    		timeLimit = false;
+    	}
+    	else {
+    		timeLimit = true;
+    	}
+    	
+    	showHurryUP 		= false;
+    	timeLimitReached 	= false;
+    	showCountdown 		= false;
     	
     	startCounter 	= "";
     	winner 			= "";
+    	countdown		= "";
     	
     	actualState = RoundState.STARTING;
     	playMusic (gameStartMusic);
