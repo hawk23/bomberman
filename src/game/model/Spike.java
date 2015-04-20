@@ -11,28 +11,41 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class Spike extends GameObject {
 
-    private static final String             spikeImagePath 		= "res/visuals/spike/spikeSheet.png";
-    private static final int	            animationInterval	= 40;
+	private static final String				soilImagePath			= "res/visuals/spike/soilSheet.png";
+    private static final String             spikeImagePath 			= "res/visuals/spike/spike.png";
+    private static final int	            soilAnimationInterval	= 100;
+    private static final int 				spikeAnimationInterval	= 40;
     private SpriteSheet			            spikeSheet;
-    private Animation			            animation;
+    private Animation			            spikeAnimation;
+    private SpriteSheet						soilSheet;
+    private Animation						soilAnimation;
     private float							notDeadlyTime = 1_000;
 	private boolean 						deadly;
 	
 	public Spike(int tileX, int tileY) {
 		super(tileX, tileY);
 		this.deadly = false;
-		//loadAnimation();
+		loadAnimation();
+		setImage(spikeImagePath);
 	}
 	
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) {
 		
-		if (animation == null) {
-			g.drawImage(image, this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
+		if (!deadly) {
+			if (soilAnimation != null) {
+				soilAnimation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
+			}
 		}
 		else {
-			animation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
+			if (spikeAnimation == null) {
+				g.drawImage(image, this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT - GameSettings.TILE_HEIGHT);
+			}
+			else {
+				spikeAnimation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
+			}
 		}
+		
 	}
 
 	@Override
@@ -49,8 +62,10 @@ public class Spike extends GameObject {
     {
         try
         {
-        	spikeSheet		= new SpriteSheet(spikeImagePath, 64, 64);
-            animation		= new Animation(spikeSheet, animationInterval);
+//        	spikeSheet		= new SpriteSheet(spikeImagePath, 64, 64);
+//          spikeAnimation	= new Animation(spikeSheet, spikeAnimationInterval);
+        	soilSheet		= new SpriteSheet(soilImagePath, 64, 64);
+        	soilAnimation	= new Animation(soilSheet, soilAnimationInterval);
         }
         catch (SlickException e)
         {
