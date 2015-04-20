@@ -40,7 +40,9 @@ public class GameRoundState extends BombermanGameState
 	private boolean					showHurryUP;
 	private boolean					timeLimitReached;
 	private boolean					showCountdown;
-	private final int				SUDDEN_DEATH_TIME		= 30_000;
+	public static final int			SUDDEN_DEATH_TIME		= 30_000;
+	private boolean					setIndestructable;
+	private boolean					startSuddenDeath;
 	
 	// Strings
 	private final String			infoGO					= "BOMB !!!!";
@@ -246,8 +248,7 @@ public class GameRoundState extends BombermanGameState
 			SHOW_GO_TIME += delta;
 		}
 
-		boolean doOnce = true;
-		if (doOnce && END_TIME >= SHOW_WINNER_TIME) {
+		if (!setIndestructable && END_TIME >= SHOW_WINNER_TIME) {
 			
 			int alive = 0;
 			for (int i = 0; i < this.map.getPlayers().length; i++)
@@ -257,7 +258,7 @@ public class GameRoundState extends BombermanGameState
 				}
 			
 			if (alive > 1) {
-				winner = "Time Limit reached";
+				winner = "Time Limit Reached";
 			}
 			else if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDestroyed()) {	
         		winner = "Player 1 wins!";
@@ -275,7 +276,7 @@ public class GameRoundState extends BombermanGameState
         		winner = allDead;
         	}
 			
-			doOnce = false;
+			setIndestructable = true;
 		}
 		
 		if ((timeLimit && (ROUND_TIME >= (ROUND_TIME_LIMIT - SUDDEN_DEATH_TIME - SHOW_HURRY_TIMER))) && (SHOW_HURRY_TIME <= SHOW_HURRY_TIMER)) {
@@ -285,6 +286,12 @@ public class GameRoundState extends BombermanGameState
 		}
 		else {
 			showHurryUP = false;
+		}
+		
+		
+		if (timeLimit && !startSuddenDeath && (ROUND_TIME >= (ROUND_TIME_LIMIT - SUDDEN_DEATH_TIME))) {
+			this.map.startSuddenDeath();
+			startSuddenDeath = true;
 		}
 		
     	if (timeLimitReached || this.map.getNrDeadPlayer() >= this.map.getNrPlayer() - 1) {
@@ -368,6 +375,8 @@ public class GameRoundState extends BombermanGameState
     	showHurryUP 		= false;
     	timeLimitReached 	= false;
     	showCountdown 		= false;
+    	setIndestructable 	= false;
+    	startSuddenDeath	= false;
     	
     	startCounter 	= "";
     	winner 			= "";

@@ -14,6 +14,7 @@ import game.input.KeyboardInputManager;
 import game.interfaces.IDestroyable;
 import game.interfaces.IRenderable;
 import game.interfaces.IUpdateable;
+import game.state.GameRoundState;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
@@ -36,10 +37,12 @@ public class BombermanMap implements IUpdateable, IRenderable
 	Bomb[][]				bombs;
 	Explosion[][]	        explosions;
     PowerUpItem[][]         powerups;
+    Spike[][]				spikes;
 	ArrayList<GameObject>	objects;
     ExplosionSystem         explosionSystem;
-	
+	SpikeGenerator			spikeGenerator;
 	int						deadPlayers;
+	private boolean			suddenDeath;
 	
 	public BombermanMap(GameRoundConfig config, GameContainer container) throws SlickException
 	{
@@ -48,9 +51,11 @@ public class BombermanMap implements IUpdateable, IRenderable
 		this.bombs	 		= new Bomb[wrapper.getHeight()][wrapper.getWidth()];
 		this.explosions		= new Explosion[wrapper.getHeight()][wrapper.getWidth()];
         this.powerups   	= new PowerUpItem[wrapper.getHeight()][wrapper.getWidth()];
-		this.objects		= new ArrayList<GameObject>();
+        this.spikes			= new Spike[wrapper.getHeight()][wrapper.getWidth()];
+        this.objects		= new ArrayList<GameObject>();
         this.explosionSystem= new ExplosionSystem();
-
+        this.spikeGenerator	= new SpikeGenerator(this, GameRoundState.SUDDEN_DEATH_TIME);
+        this.suddenDeath	= false;
 		this.deadPlayers	= 0;
         Controller[]    controllers     = ControllerEnvironment.getDefaultEnvironment().getControllers();
         int             keyboardsUsed   = 0;
@@ -105,6 +110,25 @@ public class BombermanMap implements IUpdateable, IRenderable
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 	{
+		/**
+		 * Manage spikes
+		 */
+		if (suddenDeath) {
+			
+			spikeGenerator.update(container, game, delta);
+			for (int i = 0; i < this.spikes.length; i++)
+			{
+				for (int j = 0; j < this.spikes[i].length; j++)
+				{
+					if (spikes[i][j] != null) {
+						spikes[i][j].update(container, game, delta);
+					}
+				}
+			}
+			
+		}
+		
+		
         /**
          * Manage bombs
          */
@@ -347,8 +371,17 @@ public class BombermanMap implements IUpdateable, IRenderable
 
 	public void addBomb(Bomb bomb)
 	{
-		this.bombs[bomb.tileX][bomb.tileY] = bomb;
+		this.bombs[bomb.getTileX()][bomb.getTileY()] = bomb;
 		this.objects.add(bomb);
+	}
+	
+	public void addSpike(Spike spike) {
+		this.spikes[spike.getTileX()][spike.getTileY()] = spike;
+		this.objects.add(spike);
+	}
+	
+	public void startSuddenDeath() {
+		this.suddenDeath = true;
 	}
 
     public Player[] getPlayers() {
