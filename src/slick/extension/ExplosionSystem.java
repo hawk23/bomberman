@@ -12,8 +12,10 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.particles.ParticleEmitter;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.particles.ParticleIO;
+import org.newdawn.slick.util.ResourceLoader;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * Created by MrMeister on 17.04.2015.
@@ -30,7 +32,8 @@ public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpd
     public ExplosionSystem() {
         super(particlePath,1500);
 
-        File xmlFile = new File(particleConfig);
+        InputStream xmlFile = ResourceLoader.getResourceAsStream(particleConfig);
+
         try {
             explosionEmitter = ParticleIO.loadEmitter(xmlFile);
         }catch (Exception e){

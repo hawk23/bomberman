@@ -68,7 +68,7 @@ public abstract class GameObject implements IRenderable, IUpdateable
     {
         if(path == null)
         {
-        	path = "/res/visuals/default.png";
+        	path = "res/visuals/default.png";
         }
         try
         {

@@ -60,7 +60,7 @@ public class PowerUpItem extends GameObject implements IDestroyable
     {
     	if(path == null)
     	{
-    		path = "/res/visuals/default.png";
+    		path = "res/visuals/default.png";
     	}
         try
         {
