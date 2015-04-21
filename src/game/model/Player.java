@@ -51,7 +51,10 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Animation 	animation_down;
     private Animation 	animation_left;
     private Animation 	animation_right;
-    private Animation	animation_die;
+    private Animation	animation_die_down;
+    private Animation	animation_die_right;
+    private Animation	animation_die_up;
+    private Animation	animation_die_left;
     private Animation	animation_shielded;
 
     private float 		speed;
@@ -128,7 +131,10 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		SpriteSheet animRight 	= new SpriteSheet(spriteSheet.getSubImage(0, 128, 640, 128), 64, 128);
 		SpriteSheet animUp 		= new SpriteSheet(spriteSheet.getSubImage(0, 256, 640, 128), 64, 128);
 		SpriteSheet animLeft 	= new SpriteSheet(spriteSheet.getSubImage(0, 384, 640, 128), 64, 128);
-		SpriteSheet animDie 	= new SpriteSheet(spriteSheet.getSubImage(0, 512, 640, 128), 64, 128);
+		SpriteSheet animDieDown	= new SpriteSheet(spriteSheet.getSubImage(0, 512, 640, 128), 64, 128);
+        SpriteSheet animDieRight	= new SpriteSheet(spriteSheet.getSubImage(0, 640, 640, 128), 64, 128);
+        SpriteSheet animDieUp	= new SpriteSheet(spriteSheet.getSubImage(0, 768, 640, 128), 64, 128);
+        SpriteSheet animDieLeft	= new SpriteSheet(spriteSheet.getSubImage(0, 896, 640, 128), 64, 128);
 		
 		this.animation_down 	= new Animation(animDown, animationInterval);
 		this.animation_down.setAutoUpdate(false);
@@ -138,17 +144,23 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		this.animation_up.setAutoUpdate(false);
 		this.animation_left		= new Animation(animLeft, animationInterval);
 		this.animation_left.setAutoUpdate(false);
-		this.animation_die		= new Animation(animDie, dyingAnimationInterval);
-		this.animation_die.setAutoUpdate(false);
+		this.animation_die_down		= new Animation(animDieDown, dyingAnimationInterval);
+		this.animation_die_down.setAutoUpdate(false);
+        this.animation_die_right		= new Animation(animDieRight, dyingAnimationInterval);
+        this.animation_die_right.setAutoUpdate(false);
+        this.animation_die_up		= new Animation(animDieUp, dyingAnimationInterval);
+        this.animation_die_up.setAutoUpdate(false);
+        this.animation_die_left		= new Animation(animDieLeft, dyingAnimationInterval);
+        this.animation_die_left.setAutoUpdate(false);
 		this.animation_actual	= new Animation();
 		
         SpriteSheet shield		= new SpriteSheet(shieldImagePath, 64, 128);
         this.animation_shielded	= new Animation(shield, shieldAnimationInterval);
 		
-		this.stopDown			= spriteSheet.getSubImage(0, 640, 64, 128);
-		this.stopRight			= spriteSheet.getSubImage(64, 640, 64, 128);
-		this.stopUp				= spriteSheet.getSubImage(128, 640, 64, 128);
-		this.stopLeft			= spriteSheet.getSubImage(192, 640, 64, 128);
+		this.stopDown			= spriteSheet.getSubImage(192, 1024, 64, 128);
+		this.stopRight			= spriteSheet.getSubImage(256, 1024, 64, 128);
+		this.stopUp				= spriteSheet.getSubImage(320, 1024, 64, 128);
+		this.stopLeft			= spriteSheet.getSubImage(384, 1024, 64, 128);
 		
 		this.image				= this.stopDown;	
 	}
@@ -163,7 +175,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         image.draw(x, y);
         
         if (shielded) {
+            g.setDrawMode(Graphics.MODE_SCREEN);
         	animation_shielded.draw(x, y);
+            g.setDrawMode(Graphics.MODE_NORMAL);
         }
 
             
@@ -476,7 +490,16 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
             		
             		dying = true;
             		playSound(deathSound);
-            		this.animation_actual = this.animation_die;
+                    switch(movementDirection){
+                        case DOWN:  this.animation_actual=this.animation_die_down;
+                            break;
+                        case RIGHT: this.animation_actual=this.animation_die_right;
+                            break;
+                        case UP:    this.animation_actual=this.animation_die_up;
+                            break;
+                        case LEFT:  this.animation_actual=this.animation_die_left;
+                            break;
+                    }
             		this.animation_actual.restart();
             		this.dyingTimer = this.animation_actual.getFrameCount() * dyingAnimationInterval;
             	}
