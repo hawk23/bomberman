@@ -22,9 +22,9 @@ public abstract class GameObject implements IRenderable, IUpdateable
         setImage(null);
     }
 
-    public GameObject(int posX, int posY)
+    public GameObject(int tileX, int tileY)
     {
-        setPosition(posX,posY);
+        setPosition(tileX,tileY);
         setImage(null);
     }
 

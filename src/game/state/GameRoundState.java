@@ -17,6 +17,12 @@ import java.util.ArrayList;
 
 public class GameRoundState extends BombermanGameState
 {
+	// Sounds
+	private static final String 	gameStartMusicPath 		= "res/sounds/round/startround.ogg";
+	private Music 					gameStartMusic;
+	private static final String 	sirenSoundPath      	= "res/sounds/round/suddendeath.ogg";
+	private Sound 					sirenSound;
+	
 	public static final int			SUDDEN_DEATH_TIME		= 50_000;
 	
 	private static enum RoundState {
@@ -43,6 +49,7 @@ public class GameRoundState extends BombermanGameState
 	private boolean					showCountdown;
 	private boolean					setIndestructable;
 	private boolean					startSuddenDeath;
+	private boolean 				sirenplayed;
 	
 	// Strings
 	private final String			infoGO					= "BOMB !!!!";
@@ -51,10 +58,6 @@ public class GameRoundState extends BombermanGameState
 	private String					startCounter;
 	private String					winner;
 	private String					countdown;
-	
-	// Sounds
-	private static final String 	gameStartMusicPath 		= "res/sounds/round/startround.ogg";
-	private Music 					gameStartMusic;
 	
 	// for gameRoundState
     private Image 					gameRoundStateBuffer  	= null;
@@ -283,6 +286,11 @@ public class GameRoundState extends BombermanGameState
 			showHurryUP = true;
 			showCountdown = true;
 			SHOW_HURRY_TIME += delta;
+			if (!this.sirenplayed) {
+				this.sirenSound.play();
+				this.sirenplayed = true;
+			}
+			
 		}
 		else {
 			showHurryUP = false;
@@ -377,6 +385,7 @@ public class GameRoundState extends BombermanGameState
     	showCountdown 		= false;
     	setIndestructable 	= false;
     	startSuddenDeath	= false;
+    	sirenplayed			= false;
     	
     	startCounter 	= "";
     	winner 			= "";
@@ -408,6 +417,7 @@ public class GameRoundState extends BombermanGameState
 		try
 		{
 			this.gameStartMusic = new Music(gameStartMusicPath);
+			this.sirenSound		= new Sound(sirenSoundPath);
 		}
 		catch (SlickException e)
 		{
