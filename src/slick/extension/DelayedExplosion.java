@@ -7,7 +7,7 @@ import org.newdawn.slick.particles.ParticleEmitter;
  */
 public class DelayedExplosion {
     private ParticleEmitter emitter;
-    private int delay;
+    private int             delay;
 
     public DelayedExplosion(ParticleEmitter emitter, int delay) {
         setEmitter(emitter);
@@ -20,6 +20,7 @@ public class DelayedExplosion {
 
     public void setEmitter(ParticleEmitter emitter) {
         this.emitter = emitter;
+        emitter.setEnabled(false);
     }
 
     public int getDelay() {

@@ -17,6 +17,7 @@ import org.newdawn.slick.particles.ParticleIO;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -30,7 +31,7 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
     private static final float END_SPREAD=50;
     private static final int END_DIVIDER =3;
 
-    private static final int delay=500;
+    private static final int delay=25;
 
     private LinkedList<DelayedExplosion> explosionQue;
     private LinkedList<GameObject> objects;
@@ -60,15 +61,21 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) {
 
-        for(DelayedExplosion exp:explosionQue){
-            exp.setDelay(exp.getDelay()-delta);
-            if(exp.getDelay()<=0)
+        for (Iterator<DelayedExplosion> iterator = explosionQue.iterator(); iterator.hasNext();) {
+            DelayedExplosion exp = iterator.next();
+            System.out.println(exp.getEmitter().toString()+": "+exp.getDelay()+": delta:"+delta);
+            if(exp.getDelay() <= 0) {
                 exp.getEmitter().setEnabled(true);
+                System.out.println("BOOM!");
+                iterator.remove();
+            }else
+                exp.setDelay(exp.getDelay()-delta);
         }
 
         for(GameObject obj:objects){
             obj.update(container,game,delta);
         }
+
         effectSystem.update(delta);
     }
 
@@ -76,7 +83,7 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
     public void render(GameContainer container, StateBasedGame game, Graphics g) {
 
         for(GameObject obj:objects){
-            obj.render(container,game,g);
+            obj.render(container, game, g);
         }
 
         effectSystem.render();
@@ -86,7 +93,7 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
         ArrayList<Vector2f> endCurve = new ArrayList<Vector2f>();
         endCurve.add(new Vector2f(0f,0.2f));
         endCurve.add(new Vector2f(0.3f,0.01f));
-        endCurve.add(new Vector2f(1f,0.0f));
+        endCurve.add(new Vector2f(1f, 0.0f));
 
 
          for(FlamePoint flamePoint:explosion.getFlamePositions()) {
