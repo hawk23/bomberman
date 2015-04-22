@@ -55,7 +55,7 @@ public class PlayerStateScreen implements IRenderable
         this.g.drawImage(playerStatsBackground, 0, 0);
 
         this.player.getPlayerConfig().getImage().draw(0.0f,0.0f,0.625f);
-
+		
         // draw icons
         this.g.drawImage(this.pubomb.getSprite(0,0),    5, 160);
         this.g.drawImage(this.puRange.getSprite(0,0),   5, 220);

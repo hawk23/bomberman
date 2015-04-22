@@ -8,6 +8,7 @@ import game.config.InputConfiguration;
 import game.config.MapConfig;
 import game.config.PlayerConfig;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -142,7 +143,8 @@ public class MainMenu extends Menu
 	}
 	
 	private void renderAvatarLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
-		fontOutline2.drawString(50, 10, "Avatar Selection");
+		fontOutline2.drawString(40, 30, "Avatar Selection");
+	
 		
 		graphics.scale(0.7f, 0.7f);
 		
@@ -219,6 +221,10 @@ public class MainMenu extends Menu
 		float scale = 0.7f;
 		
 		mapConfigs.get(actualMap).getImage().draw(xPaddingMap, yPadding + playersSpace / 2, 1.0f);
+		Color tmp = graphics.getColor();
+		graphics.setColor(Color.black);
+		graphics.drawRect(xPaddingMap, yPadding + playersSpace / 2, mapConfigs.get(actualMap).getImage().getWidth(), mapConfigs.get(actualMap).getImage().getHeight());
+		graphics.setColor(tmp);
 		fontOutline2.drawString(xPaddingMap - BombermanGame.JAMES_FONT.getWidth("Map") / 2, yPadding - fontOutline2.getHeight("Map") / 2, "Map");
 		
 		for (int i = 0; i < actualPlayerConfigs.size(); i++) {
@@ -226,6 +232,10 @@ public class MainMenu extends Menu
 			PlayerConfig p = actualPlayerConfigs.get(i);
 			if (i == 0) {
 				p.getImage().draw(xPaddingPlayers, yPadding, 0.5f);
+				tmp = graphics.getColor();
+				graphics.setColor(Color.black);
+				graphics.drawRect(xPaddingPlayers, yPadding, p.getImage().getWidth() * 0.5f, p.getImage().getHeight() * 0.5f);
+				graphics.setColor(tmp);
 				graphics.scale(scale, scale);
 				fontOutline2.drawString((xPaddingPlayers - fontOutline2.getWidth("P1") * scale / 2) / scale , 
 						(yPadding - fontOutline2.getHeight("P1") * scale / 2) / scale, "P1");
@@ -233,6 +243,11 @@ public class MainMenu extends Menu
 			}
 			if (i == 1) {
 				p.getImage().draw(xPaddingPlayers + p.getImage().getScaledCopy(0.5f).getWidth() + playersSpace, yPadding, 0.5f);
+				tmp = graphics.getColor();
+				graphics.setColor(Color.black);
+				graphics.drawRect(xPaddingPlayers + p.getImage().getScaledCopy(0.5f).getWidth() + playersSpace, 
+						yPadding, p.getImage().getWidth() * 0.5f, p.getImage().getHeight() * 0.5f);
+				graphics.setColor(tmp);
 				graphics.scale(scale, scale);
 				fontOutline2.drawString((xPaddingPlayers + p.getImage().getScaledCopy(0.5f).getWidth() + p.getImage().getScaledCopy(0.5f).getWidth() + playersSpace - fontOutline2.getWidth("P2") * scale / 2) / scale , 
 						(yPadding - fontOutline2.getHeight("P2") * scale / 2 ) / scale, "P2");
@@ -240,14 +255,25 @@ public class MainMenu extends Menu
 			}
 			if (i == 2) {
 				p.getImage().draw(xPaddingPlayers, yPadding + p.getImage().getScaledCopy(0.5f).getHeight() + playersSpace, 0.5f);
+				tmp = graphics.getColor();
+				graphics.setColor(Color.black);
+				graphics.drawRect(xPaddingPlayers, yPadding + p.getImage().getScaledCopy(0.5f).getHeight() + playersSpace, 
+						p.getImage().getWidth() * 0.5f, p.getImage().getHeight() * 0.5f);
+				graphics.setColor(tmp);
 				graphics.scale(scale, scale);
 				fontOutline2.drawString((xPaddingPlayers - fontOutline2.getWidth("P1") * scale / 2) / scale , 
 						(yPadding + p.getImage().getScaledCopy(0.5f).getHeight() + playersSpace - fontOutline2.getHeight("P3") * scale / 2) / scale, "P3");
 				graphics.resetTransform();
 			}
 			if (i == 3) {
-				p.getImage().draw(xPaddingPlayers + + p.getImage().getScaledCopy(0.5f).getWidth() + playersSpace, 
+				p.getImage().draw(xPaddingPlayers + p.getImage().getScaledCopy(0.5f).getWidth() + playersSpace, 
 						yPadding + p.getImage().getScaledCopy(0.5f).getHeight() + playersSpace, 0.5f);
+				tmp = graphics.getColor();
+				graphics.setColor(Color.black);
+				graphics.drawRect(xPaddingPlayers + p.getImage().getScaledCopy(0.5f).getWidth() + playersSpace, 
+						yPadding + p.getImage().getScaledCopy(0.5f).getHeight() + playersSpace, 
+						p.getImage().getWidth() * 0.5f, p.getImage().getHeight() * 0.5f);
+				graphics.setColor(tmp);
 				graphics.scale(scale, scale);
 				fontOutline2.drawString((xPaddingPlayers + p.getImage().getScaledCopy(0.5f).getWidth() + p.getImage().getScaledCopy(0.5f).getWidth() + playersSpace - fontOutline2.getWidth("P4") * scale / 2) / scale , 
 						(yPadding + p.getImage().getScaledCopy(0.5f).getHeight() + playersSpace - fontOutline2.getHeight("P4") * scale / 2 ) / scale, "P4");
@@ -326,7 +352,7 @@ public class MainMenu extends Menu
 	}
 
 	private void renderControlsLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
-		fontOutline2.drawString(50, 10, "Controls");
+		fontOutline2.drawString(40, 30, "Controls");
 		
 		graphics.scale(0.7f, 0.7f);
 		fontOutline.drawString((canvasWidth - fontOutline.getWidth(controlsLayer_0)) / 2 /0.7f, 

@@ -26,6 +26,8 @@ public class BombermanGame extends StateBasedGame {
 	public static AngelCodeFont STEAMPUNK_FONT_MED;
 	public static AngelCodeFont STEAMPUNK_FONT_OL_MED;
 	
+	public static AngelCodeFont SUBWAY_FONT;
+	
 	public static AngelCodeFont STEAMPUNK2_FONT;
 	public static AngelCodeFont STEAMPUNK2_FONT_OL;
 	
@@ -100,6 +102,8 @@ public class BombermanGame extends StateBasedGame {
 		
 		BASKERVILLE_FONT_BIG = new AngelCodeFont("res/fonts/Baskerville_80.fnt", new Image("res/fonts/Baskerville_80.png"));
 		BASKERVILLE_FONT_OL_BIG = new AngelCodeFont("res/fonts/Baskerville_ol_80.fnt", new Image("res/fonts/Baskerville_ol_80.png"));
+		
+		SUBWAY_FONT = new AngelCodeFont("res/fonts/subway.fnt", new Image("res/fonts/subway.png"));
     }
 
     private void createConfig () throws SlickException
