@@ -559,7 +559,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         {
         	if(!(this.map.isBlocked(tileX, tileY)))
         	{
-        		Bomb bomb = new Bomb(tileX, tileY, bombRange, bombTimer);
+                int bombTimerCalculated = bombTimer + (this.bombRange * GameSettings.BOMB_TIMER_INCREASE);
+
+        		Bomb bomb = new Bomb(tileX, tileY, bombRange, bombTimerCalculated);
                 bomb.addListener(this);
 
         		this.map.addBomb(bomb);
