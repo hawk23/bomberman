@@ -10,6 +10,7 @@ import game.interfaces.IDestroyable;
 import java.awt.Point;
 
 import org.newdawn.slick.*;
+import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
@@ -43,7 +44,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Image		stopLeft;
 
     private int 		animationInterval;
-    private int 		dyingAnimationInterval = 50;
+    private int 		dyingAnimationInterval = 75;
     private int			shieldAnimationInterval = 50;
     
     private Animation 	animation_actual;
@@ -175,8 +176,11 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         image.draw(x, y);
         
         if (shielded) {
+            //creates an filter for fading the shields alpha with shieldtime
+            float ramp = shieldTimer/10000f;
+            Color alphaFilter = new Color(ramp*3f,ramp*2f ,ramp, ramp);
             g.setDrawMode(Graphics.MODE_SCREEN);
-        	animation_shielded.draw(x, y);
+        	animation_shielded.draw(x, y, 64, 128, alphaFilter);
             g.setDrawMode(Graphics.MODE_NORMAL);
         }
 
