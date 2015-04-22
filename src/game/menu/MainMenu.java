@@ -161,7 +161,7 @@ public class MainMenu extends Menu
 		
 		fontOutline2.drawString(40, 30, "Avatar Selection");
 	
-		if (avatarLayerIndex >= 1 && avatarLayerSize <= 4) {
+		if (avatarLayerIndex >= 1 && avatarLayerIndex <= 4) {
 			
 			PlayerConfig config = null;
 			
