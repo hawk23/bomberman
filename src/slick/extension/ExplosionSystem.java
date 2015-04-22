@@ -12,50 +12,78 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.particles.ParticleEmitter;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.particles.ParticleIO;
-import org.newdawn.slick.util.ResourceLoader;
 
-import java.io.File;
-import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.util.LinkedList;
 
 /**
  * Created by MrMeister on 17.04.2015.
  */
-public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpdateable {
+public class ExplosionSystem implements IRenderable, IUpdateable {
 
-    private static final String particlePath=    "res/visuals/particles/explosion.png";
-    private static final String particleConfig=  "res/visuals/particles/explosion.xml";
 
-    private static final float directionSpread =20;
+    private static final String explosionConfig =  "res/visuals/particles/explosionSystem.xml";
+    private static final float directionSpread =75;
 
-    private ParticleEmitter explosionEmitter;
+    private static final int delay=200;
+
+    private LinkedList<DelayedExplosion> explosionQue;
+    private LinkedList<GameObject> objects;
+
+    private ParticleSystem effectSystem;
+    private ParticleEmitter flameEmitter,smokeEmitter,sparkEmitter;
 
     public ExplosionSystem() {
-        super(particlePath,1500);
-
-        InputStream xmlFile = ResourceLoader.getResourceAsStream(particleConfig);
-
         try {
-            explosionEmitter = ParticleIO.loadEmitter(xmlFile);
+            effectSystem = ParticleIO.loadConfiguredSystem(explosionConfig);
+            flameEmitter = effectSystem.getEmitter(0);
+            smokeEmitter = effectSystem.getEmitter(1);
+            sparkEmitter = effectSystem.getEmitter(2);
         }catch (Exception e){
             e.printStackTrace();
+            System.exit(-1);
         }
-        explosionEmitter.setEnabled(false);
-        this.setRemoveCompletedEmitters(true);
+        flameEmitter.setEnabled(false);
+        smokeEmitter.setEnabled(false);
+        sparkEmitter.setEnabled(false);
+        effectSystem.setRemoveCompletedEmitters(true);
+
+        explosionQue = new LinkedList<DelayedExplosion>();
+        objects = new LinkedList<GameObject>();
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) {
-        super.update(delta);
+
+        for(DelayedExplosion exp:explosionQue){
+            exp.setDelay(exp.getDelay()-delta);
+            if(exp.getDelay()<=0)
+                exp.getEmitter().setEnabled(true);
+        }
+
+        for(GameObject obj:objects){
+            obj.update(container,game,delta);
+        }
+        effectSystem.update(delta);
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) {
-        super.render();
+
+        for(GameObject obj:objects){
+            obj.render(container,game,g);
+        }
+
+        effectSystem.render();
     }
 
     public void addExplosion(Explosion explosion){
          for(FlamePoint flamePoint:explosion.getFlamePositions()) {
-             ConfigurableEmitter e = ((ConfigurableEmitter)explosionEmitter).duplicate(); // copy initial emitter
+             ConfigurableEmitter eFlame = ((ConfigurableEmitter)flameEmitter).duplicate(); // copy initial emitter
+             ConfigurableEmitter eSmoke = ((ConfigurableEmitter)smokeEmitter).duplicate(); // copy initial emitter
+             ConfigurableEmitter eSpark = ((ConfigurableEmitter)sparkEmitter).duplicate(); // copy initial emitter
+
+             ConfigurableEmitter emitters[]={eFlame,eSmoke};
 
              int offsetX=0, offsetY=0, emitterWidth=0, emitterHeight=0;
              float spread=0;
@@ -65,36 +93,36 @@ public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpd
              int timer = explosion.getTimer();
              int range = timer/70;
 
-             e.initialLife.setMin((float) timer - range);
-             e.initialLife.setMax((float) timer + range);
-             e.initialLife.setEnabled(true);
+
+             offsetX= GameSettings.TILE_WIDTH/2;
+             offsetY= GameSettings.TILE_HEIGHT/2;
 
              switch(flamePoint.getDirection()){
                  case DOWN:
                      spread=directionSpread;
                      angle=180F;
-                     offsetX= GameSettings.TILE_WIDTH/2;
+                     emitterWidth= GameSettings.TILE_WIDTH/3;
+                     emitterHeight= GameSettings.TILE_HEIGHT/2;
                      break;
 
                  case RIGHT:
-                     offsetY= GameSettings.TILE_HEIGHT/2;
-                     emitterHeight= GameSettings.TILE_HEIGHT/2;
+                     emitterWidth= GameSettings.TILE_WIDTH/2;
+                     emitterHeight= GameSettings.TILE_HEIGHT/3;
                      spread=directionSpread;
                      angle=90F;
                      break;
 
                  case UP:
-                     emitterWidth= GameSettings.TILE_WIDTH/2;
-                     offsetY= GameSettings.TILE_HEIGHT;
-                     offsetX= GameSettings.TILE_WIDTH/2;
+                     emitterWidth= GameSettings.TILE_WIDTH/3;
+                     emitterHeight= GameSettings.TILE_HEIGHT/2;
+                     spread=directionSpread;
                      angle=0;
                      break;
 
                  case LEFT:
-                     emitterHeight= GameSettings.TILE_HEIGHT/2;
                      spread=directionSpread;
-                     offsetY= GameSettings.TILE_HEIGHT/2;
-                     offsetX=GameSettings.TILE_WIDTH;
+                     emitterWidth= GameSettings.TILE_WIDTH/2;
+                     emitterHeight= GameSettings.TILE_HEIGHT/3;
                      angle=-90F;
                      break;
 
@@ -105,6 +133,10 @@ public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpd
                      angle=0;
                      offsetX= GameSettings.TILE_WIDTH/2;
                      offsetY= GameSettings.TILE_HEIGHT/2;
+                     eSpark.setPosition(flamePoint.x * GameSettings.TILE_WIDTH + offsetX, flamePoint.y * GameSettings.TILE_HEIGHT + offsetY, false);
+                     effectSystem.addEmitter(eSpark);
+                     eSpark.setEnabled(true);
+
                      break;
 
                  default:
@@ -112,16 +144,19 @@ public class ExplosionSystem extends ParticleSystem implements IRenderable, IUpd
 
              }
 
-             e.yOffset.setMin(-emitterHeight/2);
-             e.yOffset.setMax(emitterHeight / 2);
-             e.xOffset.setMin(-emitterWidth / 2);
-             e.xOffset.setMax(emitterWidth / 2);
-             e.spread.setValue(spread);
-             e.angularOffset.setValue(angle);
+             for(ConfigurableEmitter emitter:emitters){
 
-             e.setPosition(flamePoint.x * GameSettings.TILE_WIDTH + offsetX, flamePoint.y * GameSettings.TILE_HEIGHT + offsetY, false);
-             this.addEmitter(e); // add to particle system for rendering and updating
-             e.setEnabled(true); // let the explosion begin
+                 emitter.yOffset.setMin(-emitterHeight / 2);
+                 emitter.yOffset.setMax(emitterHeight / 2);
+                 emitter.xOffset.setMin(-emitterWidth / 2);
+                 emitter.xOffset.setMax(emitterWidth / 2);
+                 emitter.spread.setValue(spread);
+                 emitter.angularOffset.setValue(angle);
+
+                 emitter.setPosition(flamePoint.x * GameSettings.TILE_WIDTH + offsetX, flamePoint.y * GameSettings.TILE_HEIGHT + offsetY, false);
+                 effectSystem.addEmitter(emitter); // add to particle system for rendering and updating
+                 this.explosionQue.add(new DelayedExplosion(emitter,flamePoint.getDistanceFromCenter()*delay));
+             }
          }
     }
 }

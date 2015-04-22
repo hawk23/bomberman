@@ -42,7 +42,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         ArrayList<FlamePoint> explodedTiles = new ArrayList<FlamePoint>();
 
         // add center position of explosion
-        explodedTiles.add(new FlamePoint(this.getTileX(), this.getTileY(),FlameDirection.CENTER));
+        explodedTiles.add(new FlamePoint(this.getTileX(), this.getTileY(),FlameDirection.CENTER, 0));
 
         boolean blockedLeft     = false;
         boolean blockedTop      = false;
@@ -52,10 +52,10 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         for (int i = 1; i <= this.range; i++)
         {
             // add four rays.
-            FlamePoint rayLeft       = new FlamePoint(this.getTileX() - i, this.getTileY(), FlameDirection.LEFT);
-            FlamePoint rayTop        = new FlamePoint(this.getTileX(), this.getTileY() - i, FlameDirection.UP);
-            FlamePoint rayRight      = new FlamePoint(this.getTileX() + i, this.getTileY(), FlameDirection.RIGHT);
-            FlamePoint rayBottom     = new FlamePoint(this.getTileX(), this.getTileY() + i, FlameDirection.DOWN);
+            FlamePoint rayLeft       = new FlamePoint(this.getTileX() - i, this.getTileY(), FlameDirection.LEFT,i);
+            FlamePoint rayTop        = new FlamePoint(this.getTileX(), this.getTileY() - i, FlameDirection.UP,i);
+            FlamePoint rayRight      = new FlamePoint(this.getTileX() + i, this.getTileY(), FlameDirection.RIGHT,i);
+            FlamePoint rayBottom     = new FlamePoint(this.getTileX(), this.getTileY() + i, FlameDirection.DOWN,i);
 
             blockedLeft         = this.handleFlamePosition(blockedLeft,   rayLeft,    explodedTiles);
             blockedTop          = this.handleFlamePosition(blockedTop,    rayTop,     explodedTiles);

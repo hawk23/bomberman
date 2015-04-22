@@ -20,6 +20,8 @@ public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderabl
 
     private int layerBackground, layerForeground, layerBlocks;
     private Block[][] blockMatrix;
+
+	private CrackleSystem crackle;
 	
 	public TiledMapWrapper(String ref) throws SlickException
 	{
@@ -46,6 +48,7 @@ public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderabl
     {
         initLayers();
         initBlockMatrix();
+		crackle = new CrackleSystem();
     }
 
     private void initLayers()
@@ -104,17 +107,20 @@ public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderabl
 				}
 			}
 		}
+		crackle.update(container,game,delta);
 	}
 	
 	public void removeBlock(int i, int j) {
 		this.setTileId(i, j, this.layerBlocks, 0);
 		this.blockMatrix[i][j] = null;
+		crackle.addCrackle(i,j);
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 	{
 		super.render(0, 0);
+		crackle.render(container,game,g);
 	}
 	
 	
