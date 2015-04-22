@@ -66,7 +66,7 @@ public class PlayerStateScreen implements IRenderable
 
         this.font.drawString(160, 320, Integer.toString(this.player.getBombLimit()));
         this.font.drawString(160, 440, Integer.toString(this.player.getBombRange()));
-        this.font.drawString(160, 560, this.decimalFormat.format(this.player.getSpeed()));
+        this.font.drawString(160, 560, Integer.toString((this.player.getSpeedUpCount())));
         this.font.drawString(160, 680, Integer.toString(this.player.getShieldTimerSeconds()));
 
         this.g.resetTransform();

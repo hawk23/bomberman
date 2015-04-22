@@ -10,7 +10,6 @@ import game.interfaces.IDestroyable;
 import java.awt.Point;
 
 import org.newdawn.slick.*;
-import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
@@ -20,6 +19,8 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private static final String deathSoundPath      = "res/sounds/player/death.ogg";
     private static final String shieldImagePath 	= "res/visuals/shield/shieldmap.png";
     
+    private static final float	DEFAULT_SPEED		= 2.0f;    
+   
     private BombermanMap map;
     private InputManager inputManager;
     private PlayerConfig playerConfig;
@@ -100,7 +101,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.inputManager			= inputManager;
         this.playerConfig			= playerConfig;
         
-        this.speed 					= this.playerConfig.getInitialSpeed();
+        this.speed 					= DEFAULT_SPEED + this.playerConfig.getInitialSpeedUp() * GameSettings.SPEED_UP_VALUE;
         this.bombLimit 				= this.playerConfig.getInitialBombLimit();
         this.bombRange 				= this.playerConfig.getInitialBombRange();
         this.bombTimer 				= this.playerConfig.getInitialBombTimer();
@@ -185,7 +186,8 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         	if (shieldTimer > 3_000
         			|| (shieldTimer <= 2_500 && shieldTimer >= 2_000)
         			|| (shieldTimer <= 1_500 && shieldTimer >= 1_000)
-        			|| (shieldTimer <= 800 && shieldTimer >= 600)
+        			|| (shieldTimer <= 900 && shieldTimer >= 800)
+        			|| (shieldTimer <= 700 && shieldTimer >= 600)
         			|| (shieldTimer <= 500 && shieldTimer >= 400)
         			|| (shieldTimer <= 300 && shieldTimer >= 200)
         			|| (shieldTimer <= 100 && shieldTimer >= 0)) {
@@ -616,7 +618,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     }
     
     private void adjustAnimationSpeed() {
-    	float perc = this.speed / 2;
+    	float perc = this.speed / DEFAULT_SPEED;
     	this.animationInterval = (int) (50 / perc);
     }
     
@@ -684,7 +686,11 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
     public float getSpeed()
     {
-        return speed;
+        return this.speed;
+    }
+    
+    public int getSpeedUpCount() {
+    	return (int)((speed - DEFAULT_SPEED) / GameSettings.SPEED_UP_VALUE);
     }
 
 	public boolean isDying() {
