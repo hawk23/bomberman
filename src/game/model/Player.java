@@ -133,7 +133,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		SpriteSheet animUp 		= new SpriteSheet(spriteSheet.getSubImage(0, 256, 640, 128), 64, 128);
 		SpriteSheet animLeft 	= new SpriteSheet(spriteSheet.getSubImage(0, 384, 640, 128), 64, 128);
 		SpriteSheet animDieDown	= new SpriteSheet(spriteSheet.getSubImage(0, 512, 640, 128), 64, 128);
-        SpriteSheet animDieRight	= new SpriteSheet(spriteSheet.getSubImage(0, 640, 640, 128), 64, 128);
+        SpriteSheet animDieRight= new SpriteSheet(spriteSheet.getSubImage(0, 640, 640, 128), 64, 128);
         SpriteSheet animDieUp	= new SpriteSheet(spriteSheet.getSubImage(0, 768, 640, 128), 64, 128);
         SpriteSheet animDieLeft	= new SpriteSheet(spriteSheet.getSubImage(0, 896, 640, 128), 64, 128);
 		
@@ -173,15 +173,24 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         float x = (drawPosX - lastDrawPosX) * interpolate + lastDrawPosX;
         float y = (drawPosY - lastDrawPosY) * interpolate + lastDrawPosY;
         
-        image.draw(x, y);
+        g.drawImage(image, drawPosX, drawPosY);
         
         if (shielded) {
-            //creates an filter for fading the shields alpha with shieldtime
-            float ramp = shieldTimer/10000f;
-            Color alphaFilter = new Color(ramp*3f,ramp*2f ,ramp, ramp);
-            g.setDrawMode(Graphics.MODE_SCREEN);
-        	animation_shielded.draw(x, y, 64, 128, alphaFilter);
-            g.setDrawMode(Graphics.MODE_NORMAL);
+//            //creates an filter for fading the shields alpha with shieldtime
+//            float ramp = shieldTimer/10000f;
+//            Color alphaFilter = new Color(ramp*3f,ramp*2f ,ramp, ramp);
+//            g.setDrawMode(Graphics.MODE_SCREEN);
+//        	  animation_shielded.draw(x, y, alphaFilter);
+//            g.setDrawMode(Graphics.MODE_NORMAL);
+        	if (shieldTimer > 3_000
+        			|| (shieldTimer <= 2_500 && shieldTimer >= 2_000)
+        			|| (shieldTimer <= 1_500 && shieldTimer >= 1_000)
+        			|| (shieldTimer <= 800 && shieldTimer >= 600)
+        			|| (shieldTimer <= 500 && shieldTimer >= 400)
+        			|| (shieldTimer <= 300 && shieldTimer >= 200)
+        			|| (shieldTimer <= 100 && shieldTimer >= 0)) {
+        		animation_shielded.draw(x, y);
+        	}
         }
 
             
@@ -503,6 +512,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
                             break;
                         case LEFT:  this.animation_actual=this.animation_die_left;
                             break;
+                        default:break;
                     }
             		this.animation_actual.restart();
             		this.dyingTimer = this.animation_actual.getFrameCount() * dyingAnimationInterval;

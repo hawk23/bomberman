@@ -37,13 +37,13 @@ public class BombTest extends BasicGame {
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
-        explosionSystem.render();
+        explosionSystem.render(gameContainer, null, graphics);
     }
 
 
     @Override
     public void update(GameContainer gameContainer, int delta) throws SlickException {
-        explosionSystem.update(delta);
+        explosionSystem.update(gameContainer, null, delta);
     }
 
     @Override
