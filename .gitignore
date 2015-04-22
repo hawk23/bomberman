@@ -24,3 +24,15 @@ proguard/
 
 # Log Files
 *.log
+
+# eclipse project files
+*.project
+*.classpath
+
+# IntelliJ project files
+.idea/
+*.iml
+
+*.orig
+*.jar
+*.MF
