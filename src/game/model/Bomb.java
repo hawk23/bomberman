@@ -9,16 +9,24 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.particles.ParticleEmitter;
+import org.newdawn.slick.particles.ParticleIO;
+import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.state.StateBasedGame;
 
 import javax.swing.event.EventListenerList;
 
 public class Bomb extends GameObject implements IDestroyable
 {
-    private static final String             bombImagePath 		= "res/visuals/bomb/bomb.png";
-    private static final int	            animationInterval	= 40;
+    private static final String             BOMB_IMAGE_PATH     = "res/visuals/bomb/bomb.png";
+    private static final String             BURN_IMAGE_PATH     = "res/visuals/bomb/burn.png";
+    private static final String             EXPLOSION_CONFIG    = "res/visuals/particles/bombSparks.xml";
+    private static final int                ANIMATION_INTERVAL = 40;
+    private static final int                FUZE_POS_Y = 13;
+    private static final int                FUZE_HEIGHT = 13;
     private SpriteSheet			            bombSheet;
-    private Animation			            animationBurn;
+    private Animation                       bombAnimation;
+    private Animation                       fuzeBurn;
     
     private int					            range;
     private int					            timer;
@@ -26,6 +34,11 @@ public class Bomb extends GameObject implements IDestroyable
     private boolean				            exploded;
     private boolean							destroyed;
     private EventListenerList               listeners           = new EventListenerList();
+
+    private ParticleSystem  effectSystem;
+    private ParticleEmitter flameEmitter;
+
+    private float burnDist=FUZE_HEIGHT;
 
     
     public Bomb(int tileX, int tileY, int bombRange, int bombTimer)
@@ -37,6 +50,7 @@ public class Bomb extends GameObject implements IDestroyable
         this.exploded	            = false;
         this.destroyed				= false;
         loadAnimation();
+        loadParticleSystem();
     }
 
     public int getRange()
@@ -69,7 +83,9 @@ public class Bomb extends GameObject implements IDestroyable
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
-        animationBurn.draw(tileX * GameSettings.TILE_HEIGHT, tileY * GameSettings.TILE_WIDTH);
+        bombAnimation.draw(tileX * GameSettings.TILE_HEIGHT, tileY * GameSettings.TILE_WIDTH);
+        fuzeBurn.draw(tileX * GameSettings.TILE_HEIGHT + GameSettings.TILE_HEIGHT / 2, tileY * GameSettings.TILE_WIDTH+GameSettings.TILE_HEIGHT/2-FUZE_POS_Y-burnDist,3,burnDist);
+        effectSystem.render();
     }
 
     @Override
@@ -79,8 +95,16 @@ public class Bomb extends GameObject implements IDestroyable
     	{
     		this.setExploded();
     	}
-    	
-    	time += delta;
+
+
+
+        float timeLeft = timer-time;
+        burnDist=FUZE_HEIGHT * timeLeft/timer;
+
+        effectSystem.setPosition(tileX * GameSettings.TILE_HEIGHT+GameSettings.TILE_HEIGHT/2, tileY * GameSettings.TILE_WIDTH+GameSettings.TILE_HEIGHT/2-FUZE_POS_Y-burnDist);
+        effectSystem.update(delta);
+
+        time += delta;
     }
     
     public void setExploded()
@@ -104,13 +128,26 @@ public class Bomb extends GameObject implements IDestroyable
     {
         try
         {
-            bombSheet		= new SpriteSheet(bombImagePath, 64, 64);
-            animationBurn	= new Animation(bombSheet, animationInterval);
+            bombSheet		    = new SpriteSheet(BOMB_IMAGE_PATH, 64, 64);
+            bombAnimation       = new Animation(bombSheet, ANIMATION_INTERVAL);
+            SpriteSheet sheet	= new SpriteSheet(BURN_IMAGE_PATH, 3, 11);
+            fuzeBurn            = new Animation(sheet, ANIMATION_INTERVAL);
         }
         catch (SlickException e)
         {
             //TODO
         }
+    }
+
+    private void loadParticleSystem(){
+        try {
+            effectSystem = ParticleIO.loadConfiguredSystem(EXPLOSION_CONFIG);
+            flameEmitter = effectSystem.getEmitter(0);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        effectSystem.setPosition(tileX * GameSettings.TILE_HEIGHT+GameSettings.TILE_HEIGHT/2, tileY * GameSettings.TILE_WIDTH+GameSettings.TILE_HEIGHT/2-FUZE_POS_Y-burnDist);
     }
 
     public void addListener(ExplosionListener listener)

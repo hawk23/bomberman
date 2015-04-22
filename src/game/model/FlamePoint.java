@@ -28,4 +28,15 @@ public class FlamePoint extends Point {
     public void setDistanceFromCenter(int distanceFromCenter) {
         this.distanceFromCenter = distanceFromCenter;
     }
+
+    public FlameDirection makeDirectionEnd(FlameDirection d){
+        switch(d){
+            case LEFT:      return FlameDirection.LEFT_END;
+            case UP:        return FlameDirection.UP_END;
+            case DOWN:      return FlameDirection.DOWN_END;
+            case RIGHT:     return FlameDirection.RIGHT_END;
+            case CENTER:    return FlameDirection.CENTER;
+            default:        return d;
+        }
+    }
 }

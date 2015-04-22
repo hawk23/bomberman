@@ -178,12 +178,12 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         
         if (shielded) {
 //            //creates an filter for fading the shields alpha with shieldtime
-//            float ramp = shieldTimer/10000f;
-//            Color alphaFilter = new Color(ramp*3f,ramp*2f ,ramp, ramp);
+             float ramp = shieldTimer/10000f;
+            Color alphaFilter = new Color(ramp*3f,ramp*2f ,ramp, ramp);
 //            g.setDrawMode(Graphics.MODE_SCREEN);
-//        	  animation_shielded.draw(x, y, alphaFilter);
+        	  animation_shielded.draw(x, y, alphaFilter);
 //            g.setDrawMode(Graphics.MODE_NORMAL);
-        	if (shieldTimer > 3_000
+        	/*if (shieldTimer > 3_000
         			|| (shieldTimer <= 2_500 && shieldTimer >= 2_000)
         			|| (shieldTimer <= 1_500 && shieldTimer >= 1_000)
         			|| (shieldTimer <= 900 && shieldTimer >= 800)
@@ -192,7 +192,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         			|| (shieldTimer <= 300 && shieldTimer >= 200)
         			|| (shieldTimer <= 100 && shieldTimer >= 0)) {
         		animation_shielded.draw(x, y);
-        	}
+        	}*/
         }
 
             

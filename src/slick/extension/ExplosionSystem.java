@@ -7,6 +7,8 @@ import game.model.*;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Curve;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.particles.ConfigurableEmitter;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.particles.ParticleEmitter;
@@ -14,6 +16,7 @@ import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.particles.ParticleIO;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -22,10 +25,12 @@ import java.util.LinkedList;
 public class ExplosionSystem implements IRenderable, IUpdateable {
 
 
-    private static final String explosionConfig =  "res/visuals/particles/explosionSystem.xml";
-    private static final float directionSpread =75;
+    private static final String EXPLOSION_CONFIG =  "res/visuals/particles/explosionSystem.xml";
+    private static final float DIRECTION_SPREAD =20;
+    private static final float END_SPREAD=50;
+    private static final int END_DIVIDER =3;
 
-    private static final int delay=200;
+    private static final int delay=500;
 
     private LinkedList<DelayedExplosion> explosionQue;
     private LinkedList<GameObject> objects;
@@ -35,7 +40,7 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
 
     public ExplosionSystem() {
         try {
-            effectSystem = ParticleIO.loadConfiguredSystem(explosionConfig);
+            effectSystem = ParticleIO.loadConfiguredSystem(EXPLOSION_CONFIG);
             flameEmitter = effectSystem.getEmitter(0);
             smokeEmitter = effectSystem.getEmitter(1);
             sparkEmitter = effectSystem.getEmitter(2);
@@ -78,12 +83,18 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
     }
 
     public void addExplosion(Explosion explosion){
+        ArrayList<Vector2f> endCurve = new ArrayList<Vector2f>();
+        endCurve.add(new Vector2f(0f,0.2f));
+        endCurve.add(new Vector2f(0.3f,0.01f));
+        endCurve.add(new Vector2f(1f,0.0f));
+
+
          for(FlamePoint flamePoint:explosion.getFlamePositions()) {
              ConfigurableEmitter eFlame = ((ConfigurableEmitter)flameEmitter).duplicate(); // copy initial emitter
              ConfigurableEmitter eSmoke = ((ConfigurableEmitter)smokeEmitter).duplicate(); // copy initial emitter
              ConfigurableEmitter eSpark = ((ConfigurableEmitter)sparkEmitter).duplicate(); // copy initial emitter
 
-             ConfigurableEmitter emitters[]={eFlame,eSmoke};
+             ConfigurableEmitter emitters[]={eFlame,eSmoke};//,eSmoke};
 
              int offsetX=0, offsetY=0, emitterWidth=0, emitterHeight=0;
              float spread=0;
@@ -96,39 +107,56 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
 
              offsetX= GameSettings.TILE_WIDTH/2;
              offsetY= GameSettings.TILE_HEIGHT/2;
+             emitterWidth= GameSettings.TILE_WIDTH/2;
+             emitterHeight= GameSettings.TILE_HEIGHT/2;
+             spread=DIRECTION_SPREAD;
 
              switch(flamePoint.getDirection()){
+                 case DOWN_END:
+                     ((ConfigurableEmitter) eFlame).velocity.setCurve(endCurve);
+                     ((ConfigurableEmitter) eSmoke).velocity.setCurve(endCurve);
+                     emitterHeight= GameSettings.TILE_HEIGHT/END_DIVIDER;
+                     offsetY=offsetY-(GameSettings.TILE_HEIGHT-GameSettings.TILE_HEIGHT/END_DIVIDER)/2;
+                     spread=END_SPREAD;
                  case DOWN:
-                     spread=directionSpread;
                      angle=180F;
                      emitterWidth= GameSettings.TILE_WIDTH/3;
-                     emitterHeight= GameSettings.TILE_HEIGHT/2;
                      break;
 
+                 case RIGHT_END:
+                     ((ConfigurableEmitter) eFlame).velocity.setCurve(endCurve);
+                     ((ConfigurableEmitter) eSmoke).velocity.setCurve(endCurve);
+                     emitterWidth= GameSettings.TILE_WIDTH/END_DIVIDER;
+                     offsetX=offsetX-(GameSettings.TILE_WIDTH-GameSettings.TILE_WIDTH/END_DIVIDER)/2;
+                     spread=END_SPREAD;
                  case RIGHT:
-                     emitterWidth= GameSettings.TILE_WIDTH/2;
                      emitterHeight= GameSettings.TILE_HEIGHT/3;
-                     spread=directionSpread;
                      angle=90F;
                      break;
 
+                 case UP_END:
+                     ((ConfigurableEmitter) eFlame).velocity.setCurve(endCurve);
+                     ((ConfigurableEmitter) eSmoke).velocity.setCurve(endCurve);
+                     emitterHeight= GameSettings.TILE_HEIGHT/END_DIVIDER;
+                     offsetY=offsetY+(GameSettings.TILE_HEIGHT-GameSettings.TILE_HEIGHT/END_DIVIDER)/2;
+                     spread=END_SPREAD;
                  case UP:
                      emitterWidth= GameSettings.TILE_WIDTH/3;
-                     emitterHeight= GameSettings.TILE_HEIGHT/2;
-                     spread=directionSpread;
                      angle=0;
                      break;
 
+                 case LEFT_END:
+                     ((ConfigurableEmitter) eFlame).velocity.setCurve(endCurve);
+                     ((ConfigurableEmitter) eSmoke).velocity.setCurve(endCurve);
+                     emitterWidth= GameSettings.TILE_WIDTH/END_DIVIDER;
+                     offsetX=offsetX+(GameSettings.TILE_WIDTH-GameSettings.TILE_WIDTH/END_DIVIDER)/2;
+                     spread=END_SPREAD;
                  case LEFT:
-                     spread=directionSpread;
-                     emitterWidth= GameSettings.TILE_WIDTH/2;
                      emitterHeight= GameSettings.TILE_HEIGHT/3;
                      angle=-90F;
                      break;
 
                  case CENTER:
-                     emitterWidth= GameSettings.TILE_WIDTH/2;
-                     emitterHeight= GameSettings.TILE_HEIGHT/2;
                      spread=360F;
                      angle=0;
                      offsetX= GameSettings.TILE_WIDTH/2;

@@ -6,6 +6,10 @@ public enum FlameDirection {
     DOWN,
     LEFT,
     RIGHT,
-    CENTER
+    CENTER,
+    UP_END,
+    DOWN_END,
+    LEFT_END,
+    RIGHT_END;
 
 }

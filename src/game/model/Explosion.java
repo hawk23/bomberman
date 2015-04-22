@@ -1,12 +1,10 @@
 package game.model;
 
+import game.config.GameSettings;
 import game.interfaces.IRenderable;
 import game.interfaces.IUpdateable;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.TiledMapWrapper;
@@ -72,18 +70,31 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
     private boolean handleFlamePosition (boolean blocked, FlamePoint p, ArrayList<FlamePoint> explodedTiles)
     {
         if (!blocked)
-        {
-            // check if point should be added
+        {   // check if point should be added
             if (!this.wrapper.isSolid(p.x, p.y))
             {
                 explodedTiles.add(p);
+            }else{
+                //Make shure the last explosion before the solid is marked as _END
+                for(int i=explodedTiles.size()-1;i>=0;i--){
+                    FlamePoint flame = explodedTiles.get(i);
+
+                    if(flame.getDirection()==p.getDirection()){
+                        flame.setDirection(flame.makeDirectionEnd(p.getDirection()));
+                        break;
+                    }
+                }
             }
 
             // check if flame ray should be blocked in this direction.
-            if (this.wrapper.isSolid(p.x, p.y) || this.wrapper.isDestroyable(p.x, p.y))
+            if (this.wrapper.isSolid(p.x, p.y) || this.wrapper.isDestroyable(p.x, p.y) || p.getDistanceFromCenter()==this.range)
             {
+                //Make an End Mark in this direction
+                p.setDirection(p.makeDirectionEnd(p.getDirection()));
                 blocked = true;
             }
+
+
         }
 
         return blocked;
@@ -95,8 +106,14 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
         //Rendering in ExplosionSystem in BombermanMap
-        /*for (FlamePoint p : this.flamePositions)
+        /*
+        for (FlamePoint p : this.flamePositions)
         {
+            if(p.getDirection()==p.makeDirectionEnd(p.getDirection()))
+                g.setColor(Color.red);
+            else
+                g.setColor(Color.green);
+
             g.drawRect(p.x * GameSettings.TILE_WIDTH, p.y * GameSettings.TILE_HEIGHT, GameSettings.TILE_WIDTH, GameSettings.TILE_HEIGHT);
         }*/
 	}
