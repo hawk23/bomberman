@@ -25,7 +25,7 @@ public class PauseMenu extends Menu
 	
 	public PauseMenu() {
 		this.canvasWidth 		= AppGameContainerFSCustom.GAME_CANVAS_WIDTH;
-		this.CanvasHeight 		= AppGameContainerFSCustom.GAME_CANVAS_HEIGHT;
+		this.canvasHeight 		= AppGameContainerFSCustom.GAME_CANVAS_HEIGHT;
 	}
 	
 	@Override

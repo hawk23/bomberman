@@ -14,7 +14,7 @@ public abstract class Menu
 	protected AngelCodeFont fontOutline2 	= BombermanGame.SUBWAY_FONT;
 	
 	protected int canvasWidth;
-	protected int CanvasHeight;
+	protected int canvasHeight;
 	
 	protected Layer actualLayer;
 	

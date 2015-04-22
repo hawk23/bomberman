@@ -3,7 +3,7 @@ package game.config;
 public class PlayerConfig extends GameObjectConfig
 {
     private int     initialBombLimit;
-    private float   initialSpeedUp;
+    private int	    initialSpeedUp;
     private int 	initialBombTimer;
     private int 	initialBombRange;
 
@@ -19,11 +19,11 @@ public class PlayerConfig extends GameObjectConfig
         this.initialBombLimit = initialBombLimit;
     }
 
-    public float getInitialSpeedUp() {
+    public int getInitialSpeedUp() {
         return initialSpeedUp;
     }
 
-    public void setInitialSpeedUp(float initialSpeed) {
+    public void setInitialSpeedUp(int initialSpeed) {
         this.initialSpeedUp = initialSpeed;
     }
 

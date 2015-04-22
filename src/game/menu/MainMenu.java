@@ -11,7 +11,9 @@ import game.config.PlayerConfig;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
@@ -23,6 +25,9 @@ public class MainMenu extends Menu
 	private ArrayList<PlayerConfig> playerConfigs 		= new ArrayList<PlayerConfig>();
 	private ArrayList<PlayerConfig> actualPlayerConfigs = new ArrayList<PlayerConfig>();
 	private ArrayList<InputConfiguration> inputConfigs 	= new ArrayList<InputConfiguration>();
+	
+	private Image avatar_back;
+	private static final String avatarBackgroundPath	= "res/visuals/backgrounds/avatar_background.png";
 
 	// MainLayer
 	private int mainLayerIndex;
@@ -86,7 +91,13 @@ public class MainMenu extends Menu
 		this.playerConfigs 		= playerConfigs;
 		this.inputConfigs 		= inputConfigs;
 		this.canvasWidth 		= AppGameContainerFSCustom.GAME_CANVAS_WIDTH;
-		this.CanvasHeight 		= AppGameContainerFSCustom.GAME_CANVAS_HEIGHT;
+		this.canvasHeight 		= AppGameContainerFSCustom.GAME_CANVAS_HEIGHT;
+		try {
+			this.avatar_back		= new Image(avatarBackgroundPath);
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void init() {
@@ -143,8 +154,61 @@ public class MainMenu extends Menu
 	}
 	
 	private void renderAvatarLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
+		
+		int xPaddingBack = 320;
+		int yPadding = 100;
+		int fontSpace = 40;
+		
 		fontOutline2.drawString(40, 30, "Avatar Selection");
 	
+		if (avatarLayerIndex >= 1 && avatarLayerSize <= 4) {
+			
+			PlayerConfig config = null;
+			
+			switch(avatarLayerIndex) {
+				case 1: 
+					config = actualPlayerConfigs.get(0);
+					break;
+				case 2: 
+					config = actualPlayerConfigs.get(1);
+					break;
+				case 3: 
+					config = actualPlayerConfigs.get(2);
+					break;
+				case 4: 
+					config = actualPlayerConfigs.get(3);
+					break;
+			}
+			
+			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.5f));
+			
+			if (config != null) {
+				graphics.drawImage(config.getImage(), xPaddingBack  + 35, yPadding  + 35);
+				Color tmp = graphics.getColor();
+				graphics.setColor(Color.black);
+				graphics.drawRect(xPaddingBack  + 35, yPadding  + 35, config.getImage().getWidth(), config.getImage().getHeight());
+				graphics.setColor(tmp);
+				
+				String speed = "";
+				if (config.getInitialSpeedUp() == 0) {
+					speed = "slow";
+				}
+				else if (config.getInitialSpeedUp() == 1) {
+					speed = "default";
+				}
+				else if (config.getInitialSpeedUp() >= 2) {
+					speed = "fast";
+				}
+				
+				float scale = 0.5f;
+				graphics.scale(scale, scale);
+				fontOutline2.drawString((xPaddingBack + 330) /scale , (yPadding  + 35) /scale, config.getName());
+				fontOutline2.drawString((xPaddingBack + 330) /scale , (yPadding  + 35 + fontSpace * 2) /scale, "Speed: " + speed);
+				fontOutline2.drawString((xPaddingBack + 330) /scale , (yPadding  + 35 + fontSpace * 3) /scale, "Bombs: " + config.getInitialBombLimit());
+				fontOutline2.drawString((xPaddingBack + 330) /scale , (yPadding  + 35 + fontSpace * 4) /scale, "Range: " + config.getInitialBombRange());
+				graphics.resetTransform();
+			}
+		}
 		
 		graphics.scale(0.7f, 0.7f);
 		

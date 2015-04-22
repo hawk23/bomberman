@@ -18,7 +18,7 @@ public class EndMenu extends Menu
 	public EndMenu()
 	{
 		this.canvasWidth 		= AppGameContainerFSCustom.GAME_CANVAS_WIDTH;
-		this.CanvasHeight 		= AppGameContainerFSCustom.GAME_CANVAS_HEIGHT;
+		this.canvasHeight 		= AppGameContainerFSCustom.GAME_CANVAS_HEIGHT;
 	}
 	
 	@Override
