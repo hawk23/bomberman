@@ -63,10 +63,8 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
 
         for (Iterator<DelayedExplosion> iterator = explosionQue.iterator(); iterator.hasNext();) {
             DelayedExplosion exp = iterator.next();
-            System.out.println(exp.getEmitter().toString()+": "+exp.getDelay()+": delta:"+delta);
             if(exp.getDelay() <= 0) {
                 exp.getEmitter().setEnabled(true);
-                System.out.println("BOOM!");
                 iterator.remove();
             }else
                 exp.setDelay(exp.getDelay()-delta);
@@ -85,7 +83,6 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
         for(GameObject obj:objects){
             obj.render(container, game, g);
         }
-
         effectSystem.render();
     }
 
@@ -94,6 +91,11 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
         endCurve.add(new Vector2f(0f,0.2f));
         endCurve.add(new Vector2f(0.3f,0.01f));
         endCurve.add(new Vector2f(1f, 0.0f));
+
+        ArrayList<Vector2f> centerCurve = new ArrayList<Vector2f>();
+        centerCurve.add(new Vector2f(0f,0.3f));
+        centerCurve.add(new Vector2f(0.25f,0.01f));
+        centerCurve.add(new Vector2f(1f, 0.0f));
 
 
          for(FlamePoint flamePoint:explosion.getFlamePositions()) {
@@ -164,6 +166,8 @@ public class ExplosionSystem implements IRenderable, IUpdateable {
                      break;
 
                  case CENTER:
+                     ((ConfigurableEmitter) eFlame).velocity.setCurve(centerCurve);
+                     ((ConfigurableEmitter) eSmoke).velocity.setCurve(centerCurve);
                      spread=360F;
                      angle=0;
                      offsetX= GameSettings.TILE_WIDTH/2;

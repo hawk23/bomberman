@@ -3,7 +3,7 @@
 <emitter imageName="res/visuals/particles/explosion.png" name="Explosion" renderType="quads" useAdditive="true" useOriented="true">
 <spawnInterval enabled="true" max="0.0" min="0.0"/>
 <spawnCount enabled="true" max="3.0" min="1.0"/>
-<initialLife enabled="true" max="500.0" min="200.0"/>
+<initialLife enabled="true" max="450.0" min="350.0"/>
 <initialSize enabled="true" max="50.0" min="20.0"/>
 <xOffset enabled="true" max="15.0" min="-15.0"/>
 <yOffset enabled="true" max="15.0" min="-15.0"/>
@@ -29,7 +29,7 @@
 <point x="1.0" y="0.0"/>
 </size>
 <velocity active="true" max="1" min="0" type="linear">
-<point x="0.0" y="0.3"/>
+<point x="0.0" y="0.26"/>
 <point x="0.4" y="0.01"/>
 <point x="1.0" y="0.0"/>
 </velocity>
