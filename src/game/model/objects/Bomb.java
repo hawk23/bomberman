@@ -26,13 +26,13 @@ public class Bomb extends GameObject implements IDestroyable
     private static final int                FUZE_POS_Y = 13;
     private static final int                FUZE_HEIGHT = 13;
     private SpriteSheet			            bombSheet;
-    private Animation                       bombAnimation;
+    private Animation                     	bombAnimation;
     private Animation                       fuzeBurn;
     
     private int					            range;
-    private int					            timer;
-    private int					            time;
-    private boolean				            exploded;
+    private int					        	timer;
+    private int					        	time;
+    private boolean				        	exploded;
     private boolean							destroyed;
     private EventListenerList               listeners           = new EventListenerList();
 

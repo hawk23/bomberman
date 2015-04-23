@@ -31,6 +31,7 @@ public class SuddenDeathManager implements IUpdateable {
 		if(51 <= rand && rand <= 100) {
 			this.generator = new SpikeGenerator(map, suddenDeathTime, mapWidth, mapHeight);
 		}	
+
 	}
 
 	@Override

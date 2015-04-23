@@ -89,7 +89,7 @@ public class FallingBlock extends Block {
         }
         
         if (this.deadly && !this.dropped) {
-        	drop.play(1.5f, 0.3f);;
+        	drop.play(1.5f, 0.3f);
         	this.dropped = true;
         }
 	}
