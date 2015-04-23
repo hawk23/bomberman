@@ -177,21 +177,19 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         g.drawImage(image, drawPosX, drawPosY);
         
         if (shielded) {
-//            //creates an filter for fading the shields alpha with shieldtime
-//             float ramp = shieldTimer/10000f;
-//            Color alphaFilter = new Color(ramp*3f,ramp*2f ,ramp, ramp);
-//        	  animation_shielded.draw(x, y, alphaFilter);
-//            g.setDrawMode(Graphics.MODE_NORMAL);
-            g.setDrawMode(Graphics.MODE_SCREEN);
+            //creates an filter for fading the shields alpha with shieldtime
+            float ramp = shieldTimer/10000f;
+            Color alphaFilter = new Color(ramp,ramp*2f,ramp*4f, ramp/2f);
+            g.setDrawMode(Graphics.MODE_ADD);
         	if (shieldTimer > 3_000
-        			|| (shieldTimer <= 2_500 && shieldTimer >= 2_000)
-        			|| (shieldTimer <= 1_500 && shieldTimer >= 1_000)
-        			|| (shieldTimer <= 900 && shieldTimer >= 800)
-        			|| (shieldTimer <= 700 && shieldTimer >= 600)
-        			|| (shieldTimer <= 500 && shieldTimer >= 400)
+        			|| (shieldTimer <= 2_950 && shieldTimer >= 2_000)
+        			|| (shieldTimer <= 1_850 && shieldTimer >= 1_000)
+        			|| (shieldTimer <= 900 && shieldTimer >= 850)
+        			|| (shieldTimer <= 700 && shieldTimer >= 680)
+        			|| (shieldTimer <= 500 && shieldTimer >= 430)
         			|| (shieldTimer <= 300 && shieldTimer >= 200)
-        			|| (shieldTimer <= 100 && shieldTimer >= 0)) {
-        		animation_shielded.draw(x, y);
+        			|| (shieldTimer <= 150 && shieldTimer >= 0)) {
+        		animation_shielded.draw(x, y, alphaFilter);
         	}
             g.setDrawMode(Graphics.MODE_NORMAL);
         }
