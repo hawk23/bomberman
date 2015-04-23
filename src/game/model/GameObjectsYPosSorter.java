@@ -1,6 +1,8 @@
 package game.model;
 
 import game.config.GameSettings;
+import game.model.objects.GameObject;
+import game.model.objects.Player;
 
 import java.util.Comparator;
 

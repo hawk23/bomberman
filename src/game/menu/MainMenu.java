@@ -20,68 +20,68 @@ import slick.extension.AppGameContainerFSCustom;
 
 public class MainMenu extends Menu
 {
-	private GameRoundConfig gameRoundConfig 			= new GameRoundConfig();
-	private ArrayList<MapConfig> mapConfigs 			= new ArrayList<MapConfig>();
-	private ArrayList<PlayerConfig> playerConfigs 		= new ArrayList<PlayerConfig>();
-	private ArrayList<PlayerConfig> actualPlayerConfigs = new ArrayList<PlayerConfig>();
-	private ArrayList<InputConfiguration> inputConfigs 	= new ArrayList<InputConfiguration>();
+	private GameRoundConfig 				gameRoundConfig 	= new GameRoundConfig();
+	private ArrayList<MapConfig> 			mapConfigs 			= new ArrayList<MapConfig>();
+	private ArrayList<PlayerConfig> 		playerConfigs 		= new ArrayList<PlayerConfig>();
+	private ArrayList<PlayerConfig> 		actualPlayerConfigs = new ArrayList<PlayerConfig>();
+	private ArrayList<InputConfiguration> 	inputConfigs 		= new ArrayList<InputConfiguration>();
 	
 	private Image avatar_back;
-	private static final String avatarBackgroundPath	= "res/visuals/backgrounds/avatar_background.png";
+	private static final String avatarBackgroundPath = "res/visuals/backgrounds/avatar_background.png";
 
 	// MainLayer
 	private int mainLayerIndex;
-	private int mainLayerSize = 3;
-	private String mainLayer_0 = "New Game";
-	private String mainLayer_1 = "Controls";
-	private String mainLayer_2 = "Exit Game";
+	private int mainLayerSize 	= 3;
+	private String mainLayer_0 	= "New Game";
+	private String mainLayer_1 	= "Controls";
+	private String mainLayer_2 	= "Exit Game";
 	
 	// ExitLayer
 	private int exitLayerIndex;
-	private int exitLayerSize = 2;
+	private int exitLayerSize 		= 2;
 	private String exitLayerHeading = "Exit Game ?";
-	private String exitLayer_0 = "Yes";
-	private String exitLayer_1 = "No";
+	private String exitLayer_0 		= "Yes";
+	private String exitLayer_1		= "No";
 	
 	// ControlsLayer
 	private String controlsLayer_0 = "Back";
 	
 	// SettingsLayer1
 	private int settingsLayer1Index;
-	private int settingsLayer1Size = 6;
-	private int settings_space = 80;
-	private int settings_xOffset = 500;
-	private int settings_xOffset2 = 550;
-	private int settings_yOffset = 630;
+	private int settingsLayer1Size 		= 6;
+	private int settings_space 			= 80;
+	private int settings_xOffset 		= 500;
+	private int settings_xOffset2 		= 550;
+	private int settings_yOffset 		= 630;
 	private int timeLimit;
-	private int maxTimeLimit = 10;
+	private int maxTimeLimit 			= 10;
 	private int players;
-	private int minPlayers = 2;
-	private int maxPlayers = 4;
+	private int minPlayers 				= 2;
+	private int maxPlayers 				= 4;
 	private int actualMap;
-	private String settingsLayer1_0 = "Start Round!";
-	private String settingsLayer1_1 = "Timelimit";
-	private String settingsLayer1_2 = "Players";
-	private String settingsLayer1_3 = "Avatar Selection";
-	private String settingsLayer1_4 = "Map";
-	private String settingsLayer1_5 = "Back";
+	private String settingsLayer1_0 	= "Start Round!";
+	private String settingsLayer1_1 	= "Timelimit";
+	private String settingsLayer1_2 	= "Players";
+	private String settingsLayer1_3 	= "Avatar Selection";
+	private String settingsLayer1_4	 	= "Map";
+	private String settingsLayer1_5 	= "Back";
 	
 	// AvatarLayer
 	private int avatarLayerIndex;
 	private int avatarLayerSize;
-	private int avatar_space = 80;
-	private int avatar_xOffset = 500;
-	private int avatar_xOffset2 = 550;
-	private int avatar_yOffset = 580;
+	private int avatar_space 			= 80;
+	private int avatar_xOffset 			= 500;
+	private int avatar_xOffset2 		= 550;
+	private int avatar_yOffset 			= 580;
 	private int actualPlayer1;
 	private int actualPlayer2;
 	private int actualPlayer3;
 	private int actualPlayer4;
-	private String avatarLayer_0 = "Back";
-	private String avatarLayer_1 = "Player 1";
-	private String avatarLayer_2 = "Player 2";
-	private String avatarLayer_3 = "Player 3";
-	private String avatarLayer_4 = "Player 4";
+	private String avatarLayer_0 		= "Back";
+	private String avatarLayer_1 		= "Player 1";
+	private String avatarLayer_2 		= "Player 2";
+	private String avatarLayer_3 		= "Player 3";
+	private String avatarLayer_4 		= "Player 4";
 	
 	
 	public MainMenu(GameRoundConfig gameRoundConfig, ArrayList<MapConfig> mapConfigs, 
@@ -95,7 +95,6 @@ public class MainMenu extends Menu
 		try {
 			this.avatar_back		= new Image(avatarBackgroundPath);
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -111,13 +110,14 @@ public class MainMenu extends Menu
 		resetControlsLayer();
 		resetSettingsLayer1();
 		resetAvatarLayer();
-		actualAction = Action.NO_ACTION;
-		actualLayer = Layer.MAIN_LAYER;
+		actualAction 	= Action.NO_ACTION;
+		actualLayer 	= Layer.MAIN_LAYER;
 	}
 
 	private void initSettings() {
-		timeLimit = gameRoundConfig.getTimeLimit();
-		players = gameRoundConfig.getCurrentPlayerConfigs().size();
+		timeLimit 	= gameRoundConfig.getTimeLimit();
+		players		= gameRoundConfig.getCurrentPlayerConfigs().size();
+		
 		for (MapConfig mc : mapConfigs) {
 			if (mc == gameRoundConfig.getMapConfig()) {
 				actualMap = mapConfigs.indexOf(mc);
@@ -160,7 +160,7 @@ public class MainMenu extends Menu
 		int fontSpace = 40;
 		
 		fontOutline2.drawString(40, 30, "Avatar Selection");
-	
+		
 		if (avatarLayerIndex >= 1 && avatarLayerIndex <= 4) {
 			
 			PlayerConfig config = null;
@@ -180,7 +180,7 @@ public class MainMenu extends Menu
 					break;
 			}
 			
-			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.5f));
+			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.3f));
 			
 			if (config != null) {
 				graphics.drawImage(config.getImage(), xPaddingBack  + 35, yPadding  + 35);

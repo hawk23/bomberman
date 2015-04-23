@@ -1,4 +1,4 @@
-package game.model;
+package game.model.objects;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;

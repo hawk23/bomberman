@@ -3,6 +3,7 @@ package game.state;
 import game.BombermanGame;
 import game.PlayerStateScreen;
 import game.config.GameRoundConfig;
+import game.config.GameSettings;
 import game.menu.Menu.Action;
 import game.menu.EndMenu;
 import game.menu.PauseMenu;
@@ -22,8 +23,6 @@ public class GameRoundState extends BombermanGameState
 	private Music 					gameStartMusic;
 	private static final String 	sirenSoundPath      	= "res/sounds/round/suddendeath.ogg";
 	private Sound 					sirenSound;
-	
-	public static final int			SUDDEN_DEATH_TIME		= 50_000;
 	
 	private static enum RoundState {
 		STARTING, PLAYING, PAUSED, ROUND_END
@@ -50,6 +49,7 @@ public class GameRoundState extends BombermanGameState
 	private boolean					setIndestructable;
 	private boolean					startSuddenDeath;
 	private boolean 				sirenplayed;
+	private int 					suddenDeathTime;
 	
 	// Strings
 	private final String			infoGO					= "BOMB !!!!";
@@ -93,6 +93,8 @@ public class GameRoundState extends BombermanGameState
     	menu.init();
     	endMenu = new EndMenu();
     	endMenu.init();
+    	
+    	suddenDeathTime = GameSettings.SUDDEN_DEATH_TIME;
     	
     	loadMusic();
     	
@@ -282,7 +284,7 @@ public class GameRoundState extends BombermanGameState
 			setIndestructable = true;
 		}
 		
-		if ((timeLimit && (ROUND_TIME >= (ROUND_TIME_LIMIT - SUDDEN_DEATH_TIME - SHOW_HURRY_TIMER))) && (SHOW_HURRY_TIME <= SHOW_HURRY_TIMER)) {
+		if ((timeLimit && (ROUND_TIME >= (ROUND_TIME_LIMIT - suddenDeathTime - SHOW_HURRY_TIMER))) && (SHOW_HURRY_TIME <= SHOW_HURRY_TIMER)) {
 			showHurryUP = true;
 			showCountdown = true;
 			SHOW_HURRY_TIME += delta;
@@ -297,7 +299,7 @@ public class GameRoundState extends BombermanGameState
 		}
 		
 		
-		if (timeLimit && !startSuddenDeath && (ROUND_TIME >= (ROUND_TIME_LIMIT - SUDDEN_DEATH_TIME))) {
+		if (timeLimit && !startSuddenDeath && (ROUND_TIME >= (ROUND_TIME_LIMIT - suddenDeathTime))) {
 			this.map.startSuddenDeath();
 			startSuddenDeath = true;
 		}

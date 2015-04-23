@@ -1,4 +1,5 @@
-package game.model;
+package game.model.objects;
+
 
 public abstract class Block extends GameObject
 {

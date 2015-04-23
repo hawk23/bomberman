@@ -1,10 +1,9 @@
-package game.model;
+package game.model.objects;
 
 import game.config.GameSettings;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.StateBasedGame;
@@ -90,7 +89,7 @@ public class FallingBlock extends Block {
         }
         
         if (this.deadly && !this.dropped) {
-        	drop.play(1.5f, 0.3f);;
+        	drop.play(1.5f, 0.3f);
         	this.dropped = true;
         }
 	}

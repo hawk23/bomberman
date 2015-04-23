@@ -1,8 +1,9 @@
-package game.model;
+package game.model.objects;
 
 import game.config.GameSettings;
 import game.event.ExplosionEvent;
 import game.interfaces.IDestroyable;
+import game.model.ExplosionListener;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
@@ -25,13 +26,13 @@ public class Bomb extends GameObject implements IDestroyable
     private static final int                FUZE_POS_Y = 13;
     private static final int                FUZE_HEIGHT = 13;
     private SpriteSheet			            bombSheet;
-    private Animation                       bombAnimation;
+    private Animation                     	bombAnimation;
     private Animation                       fuzeBurn;
     
     private int					            range;
-    private int					            timer;
-    private int					            time;
-    private boolean				            exploded;
+    private int					        	timer;
+    private int					        	time;
+    private boolean				        	exploded;
     private boolean							destroyed;
     private EventListenerList               listeners           = new EventListenerList();
 
