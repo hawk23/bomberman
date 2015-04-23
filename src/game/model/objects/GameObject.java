@@ -1,4 +1,4 @@
-package game.model;
+package game.model.objects;
 
 import game.interfaces.IRenderable;
 import game.interfaces.IUpdateable;
@@ -80,7 +80,7 @@ public abstract class GameObject implements IRenderable, IUpdateable
         }
     }
 
-    protected Image getImage()
+    public Image getImage()
     {
         return this.image;
     }

@@ -2,7 +2,7 @@ package game;
 
 import game.config.GameSettings;
 import game.interfaces.IRenderable;
-import game.model.Player;
+import game.model.objects.Player;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;

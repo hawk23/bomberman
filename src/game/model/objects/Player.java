@@ -1,4 +1,4 @@
-package game.model;
+package game.model.objects;
 
 import game.config.GameSettings;
 import game.config.PlayerConfig;
@@ -6,6 +6,8 @@ import game.event.ExplosionEvent;
 import game.input.Direction;
 import game.input.InputManager;
 import game.interfaces.IDestroyable;
+import game.model.BombermanMap;
+import game.model.ExplosionListener;
 
 import java.awt.Point;
 

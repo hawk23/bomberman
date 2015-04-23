@@ -1,8 +1,9 @@
-package game.model;
+package game.model.objects;
 
 import game.config.GameSettings;
 import game.event.ExplosionEvent;
 import game.interfaces.IDestroyable;
+import game.model.ExplosionListener;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;

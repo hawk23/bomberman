@@ -14,6 +14,17 @@ import game.input.KeyboardInputManager;
 import game.interfaces.IDestroyable;
 import game.interfaces.IRenderable;
 import game.interfaces.IUpdateable;
+import game.model.objects.Block;
+import game.model.objects.Bomb;
+import game.model.objects.BombUp;
+import game.model.objects.DestroyableBlock;
+import game.model.objects.Explosion;
+import game.model.objects.FlameUp;
+import game.model.objects.GameObject;
+import game.model.objects.Player;
+import game.model.objects.PowerUpItem;
+import game.model.objects.ShieldUp;
+import game.model.objects.SpeedUp;
 import game.state.GameRoundState;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
@@ -26,8 +37,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.ExplosionSystem;
 import slick.extension.TiledMapWrapper;
-import suddenDeath.BlockGenerator;
-import suddenDeath.SpikeGenerator;
+import suddenDeath.SuddenDeathManager;
 
 public class BombermanMap implements IUpdateable, IRenderable
 {
@@ -41,12 +51,7 @@ public class BombermanMap implements IUpdateable, IRenderable
     PowerUpItem[][]         powerups;
 	ArrayList<GameObject>	objects;
     ExplosionSystem         explosionSystem;
-    
-    Spike[][]				spikes;
-    FallingBlock[][]		fallingBlocks;
-	SpikeGenerator			spikeGenerator;
-	BlockGenerator			blockGenerator;
-	
+	SuddenDeathManager		suddenDeathManager;
 	int						deadPlayers;
 	private boolean			suddenDeath;
 	
@@ -59,12 +64,8 @@ public class BombermanMap implements IUpdateable, IRenderable
         this.powerups   	= new PowerUpItem[wrapper.getHeight()][wrapper.getWidth()];
         this.objects		= new ArrayList<GameObject>();
         this.explosionSystem= new ExplosionSystem();
-        
-//        this.spikes			= new Spike[wrapper.getHeight()][wrapper.getWidth()];
-//        this.spikeGenerator	= new SpikeGenerator(this, GameRoundState.SUDDEN_DEATH_TIME, wrapper.getHeight(), wrapper.getWidth());
-        this.fallingBlocks	= new FallingBlock[wrapper.getHeight()][wrapper.getWidth()];
-        this.blockGenerator = new BlockGenerator(this, GameRoundState.SUDDEN_DEATH_TIME, wrapper.getHeight(), wrapper.getWidth());
-        
+        this.suddenDeathManager = SuddenDeathManager.getInstance();
+        this.suddenDeathManager.generateSuddenDeath(this, GameSettings.SUDDEN_DEATH_TIME, wrapper.getWidth(), wrapper.getHeight());
         this.suddenDeath	= false;
 		this.deadPlayers	= 0;
         Controller[]    controllers     = ControllerEnvironment.getDefaultEnvironment().getControllers();
@@ -123,57 +124,7 @@ public class BombermanMap implements IUpdateable, IRenderable
 		 * Manage SuddenDeath
 		 */
 		if (suddenDeath) {
-			
-//			spikeGenerator.update(container, game, delta);
-//			for (int i = 0; i < this.spikes.length; i++)
-//			{
-//				for (int j = 0; j < this.spikes[i].length; j++)
-//				{
-//					if (this.spikes[i][j] != null) {
-//						this.spikes[i][j].update(container, game, delta);
-//						
-//						if (this.wrapper.getBlockMatrix()[i][j] != null) {
-//							this.wrapper.removeBlock(i, j);
-//						}
-//						
-//						if (this.spikes[i][j].isDeadly()) {
-//							for (GameObject go : objects)
-//                            {
-//                                if (go instanceof IDestroyable && go.getTileX() == i && go.getTileY() == j)
-//                                {
-//                                    ((IDestroyable) go).destroy();
-//                                }
-//                            }
-//						}
-//					}
-//				}
-//			}
-			
-			blockGenerator.update(container, game, delta);
-			for (int i = 0; i < this.fallingBlocks.length; i++) {
-					
-				for (int j = 0; j < this.fallingBlocks[i].length; j++) {
-						
-					if (this.fallingBlocks[i][j] != null) {
-							
-						this.fallingBlocks[i][j].update(container, game, delta);
-						
-						if (this.fallingBlocks[i][j].isDeadly()) {
-							
-							if (!this.wrapper.isSolid(i, j)){
-								this.wrapper.getBlockMatrix()[i][j] = new SolidBlock(i, j);
-							}
-							
-							for (GameObject go : objects) {
-
-	                                if (go instanceof IDestroyable && go.getTileX() == i && go.getTileY() == j) {
-	                                    ((IDestroyable) go).destroy();
-	                                }
-	                        }
-						}
-					}	
-				}
-			}	
+			this.suddenDeathManager.update(container, game, delta);			
 		}
 
         /**
@@ -422,16 +373,6 @@ public class BombermanMap implements IUpdateable, IRenderable
 		this.objects.add(bomb);
 	}
 	
-	public void addSpike(Spike spike) {
-		this.spikes[spike.getTileX()][spike.getTileY()] = spike;
-		this.objects.add(spike);
-	}
-	
-	public void addBlock(FallingBlock block) {
-		this.fallingBlocks[block.getTileX()][block.getTileY()] = block;
-		this.objects.add(block);
-	}
-	
 	public void startSuddenDeath() {
 		this.suddenDeath = true;
 	}
@@ -439,6 +380,55 @@ public class BombermanMap implements IUpdateable, IRenderable
     public Player[] getPlayers() {
         return players;
     }
+    
+    public void addGameObject(GameObject object) {
+    	this.objects.add(object);
+    }
+    
+	public Bomb[][] getBombs() {
+		return bombs;
+	}
+
+	public Explosion[][] getExplosions() {
+		return explosions;
+	}
+
+	public PowerUpItem[][] getPowerups() {
+		return powerups;
+	}
+	
+	public Block[][] getBlocks() {
+		return this.wrapper.getBlockMatrix();
+	}
+	
+	public boolean isSolidBlock(int x, int y) {
+		if (this.wrapper.isSolid(x, y)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public void removeBlock(int x, int y) {
+		this.wrapper.removeBlock(x, y);
+	}
+
+	public ArrayList<GameObject> getObjects() {
+		return objects;
+	}
+    
+	public TiledMapWrapper getWrapper() {
+		return wrapper;
+	}
+	
+	public int getMapWidth() {
+		return this.wrapper.getWidth();
+	}
+	
+	public int getMapHeight() {
+		return this.wrapper.getHeight();
+	}
     
     private void loadSound ()
     {

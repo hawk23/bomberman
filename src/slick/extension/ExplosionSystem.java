@@ -4,6 +4,8 @@ import game.config.GameSettings;
 import game.interfaces.IRenderable;
 import game.interfaces.IUpdateable;
 import game.model.*;
+import game.model.objects.Explosion;
+import game.model.objects.GameObject;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;

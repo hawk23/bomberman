@@ -160,7 +160,7 @@ public class MainMenu extends Menu
 		int fontSpace = 40;
 		
 		fontOutline2.drawString(40, 30, "Avatar Selection");
-	
+		
 		if (avatarLayerIndex >= 1 && avatarLayerIndex <= 4) {
 			
 			PlayerConfig config = null;
@@ -180,7 +180,7 @@ public class MainMenu extends Menu
 					break;
 			}
 			
-			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.5f));
+			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.3f));
 			
 			if (config != null) {
 				graphics.drawImage(config.getImage(), xPaddingBack  + 35, yPadding  + 35);

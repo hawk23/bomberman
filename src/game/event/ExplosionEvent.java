@@ -1,6 +1,6 @@
 package game.event;
 
-import game.model.Bomb;
+import game.model.objects.Bomb;
 
 import java.util.EventObject;
 

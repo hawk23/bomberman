@@ -1,4 +1,4 @@
-package game.model;
+package game.model.objects;
 
 public class FlameUp extends PowerUpItem
 {
