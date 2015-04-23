@@ -6,7 +6,9 @@ import java.util.EventObject;
 
 public class ExplosionEvent extends EventObject
 {
-    private Bomb bomb;
+	private static final long serialVersionUID = 1L;
+	
+	private Bomb bomb;
 
     public ExplosionEvent(Object source, Bomb bomb) {
         super(source);

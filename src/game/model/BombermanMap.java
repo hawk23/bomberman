@@ -25,7 +25,6 @@ import game.model.objects.Player;
 import game.model.objects.PowerUpItem;
 import game.model.objects.ShieldUp;
 import game.model.objects.SpeedUp;
-import game.state.GameRoundState;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
@@ -41,36 +40,36 @@ import suddenDeath.SuddenDeathManager;
 
 public class BombermanMap implements IUpdateable, IRenderable
 {
-    private static final String powerUpSoundPath    = "res/sounds/player/powerup.ogg";
-    private Sound 			powerUpSound;
+    private static final String 	powerUpSoundPath    = "res/sounds/player/powerup.ogg";
+    private Sound 					powerUpSound;
     
-	TiledMapWrapper			wrapper;
-	Player[]				players;
-	Bomb[][]				bombs;
-	Explosion[][]	        explosions;
-    PowerUpItem[][]         powerups;
-	ArrayList<GameObject>	objects;
-    ExplosionSystem         explosionSystem;
-	SuddenDeathManager		suddenDeathManager;
-	int						deadPlayers;
-	private boolean			suddenDeath;
+	private TiledMapWrapper			wrapper;
+	private Player[]				players;
+	private Bomb[][]				bombs;
+	private Explosion[][]	        explosions;
+	private PowerUpItem[][]         powerups;
+	private ArrayList<GameObject>	objects;
+	private ExplosionSystem         explosionSystem;
+	private SuddenDeathManager		suddenDeathManager;
+	int								deadPlayers;
+	private boolean					suddenDeath;
 	
 	public BombermanMap(GameRoundConfig config, GameContainer container) throws SlickException
 	{
-		this.wrapper 		= new TiledMapWrapper(config.getMapConfig().getPath());
-		this.players 		= new Player[config.getCurrentPlayerConfigs().size()];
-		this.bombs	 		= new Bomb[wrapper.getHeight()][wrapper.getWidth()];
-		this.explosions		= new Explosion[wrapper.getHeight()][wrapper.getWidth()];
-        this.powerups   	= new PowerUpItem[wrapper.getHeight()][wrapper.getWidth()];
-        this.objects		= new ArrayList<GameObject>();
-        this.explosionSystem= new ExplosionSystem();
+		this.wrapper 			= new TiledMapWrapper(config.getMapConfig().getPath());
+		this.players 			= new Player[config.getCurrentPlayerConfigs().size()];
+		this.bombs	 			= new Bomb[wrapper.getHeight()][wrapper.getWidth()];
+		this.explosions			= new Explosion[wrapper.getHeight()][wrapper.getWidth()];
+        this.powerups   		= new PowerUpItem[wrapper.getHeight()][wrapper.getWidth()];
+        this.objects			= new ArrayList<GameObject>();
+        this.explosionSystem	= new ExplosionSystem();
         this.suddenDeathManager = SuddenDeathManager.getInstance();
         this.suddenDeathManager.generateSuddenDeath(this, GameSettings.SUDDEN_DEATH_TIME, wrapper.getWidth(), wrapper.getHeight());
-        this.suddenDeath	= false;
-		this.deadPlayers	= 0;
-        Controller[]    controllers     = ControllerEnvironment.getDefaultEnvironment().getControllers();
-        int             keyboardsUsed   = 0;
-        int             gamepadsUsed    = 0;
+        this.suddenDeath		= false;
+		this.deadPlayers		= 0;
+        Controller[] controllers     = ControllerEnvironment.getDefaultEnvironment().getControllers();
+        int keyboardsUsed   	= 0;
+        int gamepadsUsed    	= 0;
         
         loadSound();
 
@@ -337,11 +336,19 @@ public class BombermanMap implements IUpdateable, IRenderable
 		return this.wrapper.isBlocked(tileX, tileY) || this.bombs[tileX][tileY] != null;
 	}
 	
+	/**
+	 * 
+	 * @return width of the map in pixels
+	 */
 	public int getWidth() 
 	{
 		return this.wrapper.getWidth() * this.wrapper.getTileWidth();
 	}
 
+	/**
+	 * 
+	 * @return height of the map in pixels
+	 */
 	public int getHeight() 
 	{
 		return this.wrapper.getHeight() * this.wrapper.getTileHeight();

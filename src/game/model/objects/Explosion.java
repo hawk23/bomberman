@@ -1,6 +1,5 @@
 package game.model.objects;
 
-import game.config.GameSettings;
 import game.interfaces.IRenderable;
 import game.interfaces.IUpdateable;
 import game.model.FlameDirection;

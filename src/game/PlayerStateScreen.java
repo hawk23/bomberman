@@ -27,7 +27,6 @@ public class PlayerStateScreen implements IRenderable
     private SpriteSheet         puShield;
     private SpriteSheet         puSpeed;
 
-    private DecimalFormat       decimalFormat = new DecimalFormat("0.00");
     private Image		        playerStatsBackground	= null;
 
     public PlayerStateScreen (Player player, int posX, int posY, Graphics g, Image buffer) throws SlickException
