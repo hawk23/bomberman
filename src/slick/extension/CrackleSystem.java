@@ -24,9 +24,6 @@ import java.util.LinkedList;
 public class CrackleSystem implements IUpdateable, IRenderable{
 
     private static final String explosionConfig =  "res/visuals/particles/crackle.xml";
-    private static final float directionSpread =75;
-
-    private static final int delay=200;
 
     private ParticleSystem effectSystem;
     private ParticleEmitter crackleEmitter;
