@@ -27,10 +27,16 @@ public class SuddenDeathManager implements IUpdateable {
 		
 		if(1 <= rand && rand <= 50) {
 			this.generator = new BlockGenerator(map, suddenDeathTime, mapWidth, mapHeight);
-		}	
+		}
 		if(51 <= rand && rand <= 100) {
-			this.generator = new SpikeGenerator(map, suddenDeathTime, mapWidth, mapHeight);
-		}	
+			this.generator = new BombGenerator(map, suddenDeathTime, mapWidth, mapHeight);
+		}
+//		if(51 <= rand && rand <= 100) {
+//			this.generator = new SpikeGenerator(map, suddenDeathTime, mapWidth, mapHeight);
+//		}
+		
+	
+		
 
 	}
 

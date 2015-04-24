@@ -180,7 +180,7 @@ public class MainMenu extends Menu
 					break;
 			}
 			
-			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.3f));
+			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.5f));
 			
 			if (config != null) {
 				graphics.drawImage(config.getImage(), xPaddingBack  + 35, yPadding  + 35);
@@ -199,7 +199,7 @@ public class MainMenu extends Menu
 				else if (config.getInitialSpeedUp() >= 2) {
 					speed = "fast";
 				}
-				
+	
 				float scale = 0.5f;
 				graphics.scale(scale, scale);
 				fontOutline2.drawString((xPaddingBack + 330) /scale , (yPadding  + 35) /scale, config.getName());
