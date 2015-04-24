@@ -14,7 +14,7 @@ public class BombGenerator extends SuddenDeathGenerator {
 
 	private BombermanMap 			map;
 	private int 					secTimer;
-	private int 					timer;
+	private int 					bombTimer;
 	private int 					suddenDeathTime;
 	private int 					rows;
 	private int 					cols;
@@ -26,7 +26,7 @@ public class BombGenerator extends SuddenDeathGenerator {
 		this.rows = mapHeight - 2;
 		this.cols = mapWidth - 2;
 		this.secTimer = 0;
-		this.timer = 1_000;
+		this.bombTimer = 1_000;
 		this.suddenDeathTime = suddenDeathTime;
 		this.points = new ArrayList<Point>();
 		this.bombs  = new ArrayList<FallingBomb>();
@@ -46,23 +46,25 @@ public class BombGenerator extends SuddenDeathGenerator {
 	public void update(GameContainer container, StateBasedGame game, int delta) {
 		suddenDeathTime -= delta;
 		if (suddenDeathTime <= 10_000) {
-			timer = 100;
+			bombTimer = 100;
 		}
 			
 		secTimer += delta;
-		if (secTimer >= timer) {
-			secTimer %= timer;
-			boolean bombAdded = false;
-			while (!bombAdded) {
-				int rand = (int) (Math.random() * points.size());
-				if (!this.map.isBlocked((int)points.get(rand).getX(), (int)points.get(rand).getY())) {
-					FallingBomb bomb = new FallingBomb((int)points.get(rand).getX(), (int)points.get(rand).getY());
-					bombs.add(bomb);
-					this.map.addGameObject(bomb);
-					bombAdded = true;
-				}	
+		if (secTimer >= bombTimer) {
+			secTimer %= bombTimer;
+			
+			if (suddenDeathTime >= 0) {
+				boolean bombAdded = false;
+				while (!bombAdded) {
+					int rand = (int) (Math.random() * points.size());
+					if (!this.map.isBlocked((int)points.get(rand).getX(), (int)points.get(rand).getY())) {
+						FallingBomb bomb = new FallingBomb((int)points.get(rand).getX(), (int)points.get(rand).getY());
+						bombs.add(bomb);
+						this.map.addGameObject(bomb);
+						bombAdded = true;
+					}	
+				}
 			}
-	
 		} 	
 		
 		for (FallingBomb bomb : bombs) {

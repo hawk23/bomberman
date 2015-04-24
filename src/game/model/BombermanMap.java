@@ -188,7 +188,9 @@ public class BombermanMap implements IUpdateable, IRenderable
                                 ((DestroyableBlock) this.wrapper.getBlockMatrix()[p.x][p.y]).destroy();
 
                                 // drop powerup
-                                handlePowerUp(p.x, p.y);
+                                if (this.powerups[p.x][p.y] == null) {
+                                	handlePowerUp(p.x, p.y);
+                                }    
                             }
 
                             // check if objects are destroyed
