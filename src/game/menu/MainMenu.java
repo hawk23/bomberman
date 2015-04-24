@@ -180,7 +180,7 @@ public class MainMenu extends Menu
 					break;
 			}
 			
-			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.5f));
+			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.3f));
 			
 			if (config != null) {
 				graphics.drawImage(config.getImage(), xPaddingBack  + 35, yPadding  + 35);
@@ -281,6 +281,10 @@ public class MainMenu extends Menu
 		int xPaddingPlayers = 670;
 		int yPadding = 60;
 		int playersSpace = 10;
+		
+		Image backScaled = avatar_back.getScaledCopy(880, 335);
+		
+		backScaled.draw((this.canvasWidth - backScaled.getWidth()) /2, 10, new Color(1f, 1f, 1f, 0.3f));
 		
 		float scale = 0.7f;
 		
