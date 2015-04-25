@@ -265,16 +265,16 @@ public class GameRoundState extends BombermanGameState
 			if (alive > 1) {
 				winner = "Time Limit Reached";
 			}
-			else if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDestroyed()) {	
+			else if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDying()) {	
         		winner = "Player 1 wins!";
         	}
-        	else if (this.map.getPlayers().length > 1 && !this.map.getPlayers()[1].isDestroyed()) {
+        	else if (this.map.getPlayers().length > 1 && !this.map.getPlayers()[1].isDying()) {
         		winner = "Player 2 wins!";
         	}
-        	else if (this.map.getPlayers().length > 2 && !this.map.getPlayers()[2].isDestroyed()) {
+        	else if (this.map.getPlayers().length > 2 && !this.map.getPlayers()[2].isDying()) {
         		winner = "Player 3 wins!";
         	}
-        	else if (this.map.getPlayers().length > 3 &&!this.map.getPlayers()[3].isDestroyed()) {
+        	else if (this.map.getPlayers().length > 3 &&!this.map.getPlayers()[3].isDying()) {
         		winner = "Player 4 wins!";
         	}
         	else {
