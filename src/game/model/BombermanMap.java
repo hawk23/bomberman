@@ -3,6 +3,7 @@ package game.model;
 import game.config.GameRoundConfig;
 import game.config.GameSettings;
 import game.config.InputConfiguration;
+import game.input.Direction;
 import game.input.GamePadInputManager;
 import game.input.InputManager;
 
@@ -338,6 +339,18 @@ public class BombermanMap implements IUpdateable, IRenderable
 		return this.wrapper.isBlocked(tileX, tileY) || this.bombs[tileX][tileY] != null;
 	}
 	
+	public boolean isBomb(int tileX, int tileY) {
+		return this.bombs[tileX][tileY] != null;
+	}
+	
+	public void kickBomb(Bomb bomb, Direction direction) {
+		
+	}
+	
+	public Bomb getBomb(int tileX, int tileY) {
+		return this.bombs[tileX][tileY];
+	}
+	
 	/**
 	 * 
 	 * @return width of the map in pixels
@@ -369,11 +382,6 @@ public class BombermanMap implements IUpdateable, IRenderable
 	public int getNrPlayer() 
 	{
 		return this.players.length;
-	}
-	
-	public int getTileSize()
-	{
-		return this.wrapper.getTileHeight();
 	}
 
 	public void addBomb(Bomb bomb)

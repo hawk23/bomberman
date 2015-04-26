@@ -67,6 +67,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private int 		bombLimit;
     private int 		bombCount;
 
+    private boolean		isKicker = true;
     private boolean		shielded;
     private int 		shieldTimer;
     private boolean		indestructable;
@@ -287,11 +288,18 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
                         break;
                 }
                 
-                if (isBlocked(targetX, targetY)) {
-                	targetX = originalX;
-                	targetY = originalY;
-                	moving = false;
+                if (moving) {
+                    if (isBlocked(targetX, targetY)) {
+                    	if (isBomb(targetX, targetY) && isKicker) {
+                    		// ToDo kick
+                    		                   
+                    	}
+                    	targetX = originalX;
+                    	targetY = originalY;
+                    	moving = false;
+                    }
                 }
+
             }
 
             // currently moving between tiles?
@@ -426,8 +434,8 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
             {
                 posX = targetX;
                 posY = targetY;
-                tileX = posX / this.map.getTileSize();
-                tileY = posY / this.map.getTileSize();
+                tileX = posX / GameSettings.TILE_WIDTH;
+                tileY = posY / GameSettings.TILE_HEIGHT;
             }
 
             if (inputManager.bombDrop()) {
@@ -575,7 +583,19 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     
     private boolean isBlocked(float x, float y)
     {
-    	if (map.isBlocked((int) x / map.getTileSize(), (int) y / map.getTileSize()))
+    	if (map.isBlocked((int) x / GameSettings.TILE_WIDTH, (int) y / GameSettings.TILE_HEIGHT))
+    	{
+    		return true;
+    	}
+    	else
+    	{
+    		return false;
+    	}
+    }
+    
+    private boolean isBomb(float x, float y) {
+    	
+    	if (map.isBomb((int) x / GameSettings.TILE_WIDTH, (int) y / GameSettings.TILE_HEIGHT))
     	{
     		return true;
     	}

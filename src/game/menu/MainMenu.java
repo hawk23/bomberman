@@ -282,9 +282,8 @@ public class MainMenu extends Menu
 		int yPadding = 60;
 		int playersSpace = 10;
 		
-		Image backScaled = avatar_back.getScaledCopy(880, 335);
-		
-		backScaled.draw((this.canvasWidth - backScaled.getWidth()) /2, 10, new Color(1f, 1f, 1f, 0.3f));
+//		Image backScaled = avatar_back.getScaledCopy(880, 335);
+//		backScaled.draw((this.canvasWidth - backScaled.getWidth()) /2, 10, new Color(1f, 1f, 1f, 0.3f));
 		
 		float scale = 0.7f;
 		
