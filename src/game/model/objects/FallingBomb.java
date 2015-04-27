@@ -5,6 +5,7 @@ import game.config.GameSettings;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
@@ -14,6 +15,8 @@ import slick.extension.AppGameContainerFSCustom;
 public class FallingBomb extends GameObject {
 
 	private static final String animationPath 	= "res/visuals/bomb/bomb.png";
+	private static final String	bombHintPath	= "res/visuals/bomb/bomb_hint.png";
+	private Image bombHint;
 	private int animationInterval = 50;
 	private Animation animation;
 	
@@ -56,6 +59,10 @@ public class FallingBomb extends GameObject {
 	        animation.draw(x, y);
 		}
 		
+		if (!dropped) {
+			bombHint.draw(targetX, targetY);
+		}
+		
 	}
 
 	@Override
@@ -88,6 +95,7 @@ public class FallingBomb extends GameObject {
 		try {
 			SpriteSheet bombSheet 	= new SpriteSheet(animationPath, 64, 64);
 	        animation			    = new Animation(bombSheet, animationInterval);
+	        bombHint				= new Image(bombHintPath);
 		} catch (SlickException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
