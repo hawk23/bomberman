@@ -198,6 +198,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         	}
             g.setDrawMode(Graphics.MODE_NORMAL);
         }
+        //g.drawRect(tileX * GameSettings.TILE_WIDTH, tileY * GameSettings.TILE_HEIGHT, 64, 64);
 
             
     }
@@ -286,13 +287,12 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
                     default:
                         break;
-                }
+                }  
                 
                 if (moving) {
                     if (isBlocked(targetX, targetY)) {
                     	if (isBomb(targetX, targetY) && isKicker) {
-                    		// ToDo kick
-                    		                   
+                    		map.kickBomb(map.getBomb(targetX / GameSettings.TILE_WIDTH, targetY / GameSettings.TILE_HEIGHT), movementDirection);		
                     	}
                     	targetX = originalX;
                     	targetY = originalY;
@@ -304,6 +304,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
             // currently moving between tiles?
             if (moving) {
+            	
                 movementInterpolation += speed * deltaInSecs;
 
                 // move in opposite direction?
@@ -383,6 +384,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
                         }
                         
                         if (isBlocked(targetX, targetY)) {
+//                        	if (isBomb(targetX, targetY) && isKicker) {
+//                        		map.kickBomb(map.getBomb(targetX / GameSettings.TILE_WIDTH, targetY / GameSettings.TILE_HEIGHT), movementDirection);		
+//                        	}
                         	targetX = originalX;
                         	targetY = originalY;
                         	movementInterpolation = 1.0f;
@@ -724,5 +728,13 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
 	public void setIndestructable() {
 		this.indestructable = true;
+	}
+
+	public int getTargetX() {
+		return targetX;
+	}
+
+	public int getTargetY() {
+		return targetY;
 	}
 }

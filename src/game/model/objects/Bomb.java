@@ -23,23 +23,23 @@ public class Bomb extends GameObject implements IDestroyable
     private static final String             BURN_IMAGE_PATH     = "res/visuals/bomb/burn.png";
     private static final String             EXPLOSION_CONFIG    = "res/visuals/particles/bombSparks.xml";
     private static final int                ANIMATION_INTERVAL = 40;
-    private static final int                FUZE_POS_Y = 13;
-    private static final int                FUZE_HEIGHT = 13;
-    private SpriteSheet			            bombSheet;
-    private Animation                     	bombAnimation;
-    private Animation                       fuzeBurn;
+    protected static final int              FUZE_POS_Y = 13;
+    protected static final int              FUZE_HEIGHT = 13;
+    protected SpriteSheet			        bombSheet;
+    protected Animation                     bombAnimation;
+    protected Animation                     fuzeBurn;
     
-    private int					            range;
-    private int					        	timer;
-    private int					        	time;
-    private boolean				        	exploded;
-    private boolean							destroyed;
+    protected int					        range;
+    protected int					        timer;
+    protected int					        time;
+    protected boolean				        exploded;
+    protected boolean						destroyed;
     private EventListenerList               listeners           = new EventListenerList();
 
-    private ParticleSystem  effectSystem;
-    private ParticleEmitter flameEmitter;
+    protected ParticleSystem  				effectSystem;
+    protected ParticleEmitter 				flameEmitter;
 
-    private float burnDist=FUZE_HEIGHT;
+    protected float 						burnDist = FUZE_HEIGHT;
 
     
     public Bomb(int tileX, int tileY, int bombRange, int bombTimer)
@@ -74,12 +74,6 @@ public class Bomb extends GameObject implements IDestroyable
         this.timer = timer;
     }
 
-    @Override
-    public boolean destroy()
-    {
-        setExploded();
-        return true;
-    }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g)
@@ -92,20 +86,30 @@ public class Bomb extends GameObject implements IDestroyable
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta)
     {
-    	if(time >= timer && !this.exploded)
-    	{
-    		this.setExploded();
+    	if (time <= timer) {
+    		float timeLeft = timer-time;
+            burnDist=FUZE_HEIGHT * timeLeft/timer;
+
+            effectSystem.setPosition(tileX * GameSettings.TILE_HEIGHT+GameSettings.TILE_HEIGHT/2, tileY * GameSettings.TILE_WIDTH+GameSettings.TILE_HEIGHT/2-FUZE_POS_Y-burnDist);
+            effectSystem.update(delta);
+
+            time += delta;
     	}
-
-
-
-        float timeLeft = timer-time;
-        burnDist=FUZE_HEIGHT * timeLeft/timer;
-
-        effectSystem.setPosition(tileX * GameSettings.TILE_HEIGHT+GameSettings.TILE_HEIGHT/2, tileY * GameSettings.TILE_WIDTH+GameSettings.TILE_HEIGHT/2-FUZE_POS_Y-burnDist);
-        effectSystem.update(delta);
-
-        time += delta;
+    	else if (!exploded) {
+    		setExploded();
+    	}   
+    }
+    
+	@Override
+	public boolean isDestroyed() {
+		return this.destroyed;
+	}
+	
+	@Override
+    public boolean destroy()
+    {
+        setExploded();
+        return true;
     }
     
     public void setExploded()
@@ -171,8 +175,9 @@ public class Bomb extends GameObject implements IDestroyable
         }
     }
 
-	@Override
-	public boolean isDestroyed() {
-		return this.destroyed;
+	public int getTime() {
+		return time;
 	}
+
+
 }

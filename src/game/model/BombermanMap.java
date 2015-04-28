@@ -22,6 +22,7 @@ import game.model.objects.DestroyableBlock;
 import game.model.objects.Explosion;
 import game.model.objects.FlameUp;
 import game.model.objects.GameObject;
+import game.model.objects.KickedBomb;
 import game.model.objects.Player;
 import game.model.objects.PowerUpItem;
 import game.model.objects.ShieldUp;
@@ -129,14 +130,16 @@ public class BombermanMap implements IUpdateable, IRenderable
 
         /**
          * Manage bombs
-         */
+         */	
+		ArrayList<Bomb> updatedBombs = new ArrayList<Bomb>();
 		for (int i = 0; i < this.bombs.length; i++)
 		{
 			for (int j = 0; j < this.bombs[i].length; j++)
 			{
 				if(this.bombs[i][j] != null)
 				{
-                    if (this.bombs[i][j].isExploded())
+					
+					if (this.bombs[i][j].isExploded())
                     {
                         // add explosion
                         Explosion explosion = new Explosion(bombs[i][j].getTileX(), bombs[i][j].getTileY(), bombs[i][j].getRange(), this.wrapper);
@@ -152,10 +155,31 @@ public class BombermanMap implements IUpdateable, IRenderable
                     }
                     else
                     {
-                        this.bombs[i][j].update(container, game, delta);
-                    }
-				}
-				
+                    	if (!updatedBombs.contains(this.bombs[i][j])) {
+                        	this.bombs[i][j].update(container, game, delta);
+                        	updatedBombs.add(this.bombs[i][j]);
+                        	
+                        	if (this.bombs[i][j] instanceof KickedBomb) {
+        						
+        						KickedBomb kBomb = (KickedBomb)this.bombs[i][j];				
+        						
+        						if (kBomb.isWaiting()) {
+        							
+        							if (checkBombMovement(kBomb, kBomb.getDirection())) {
+        								kBomb.moveOn();
+        								this.bombs[kBomb.getTileX()][kBomb.getTileY()] = kBomb;
+        								this.bombs[i][j] = null;
+        							}
+        							else {
+        								this.bombs[i][j] = kBomb.getBomb();
+        								objects.remove(kBomb);
+        								objects.add(kBomb.getBomb());	
+        							}
+        						}
+        					}                   
+                    	}  
+                    }	
+				}				
 			}
 		}
 
@@ -343,8 +367,73 @@ public class BombermanMap implements IUpdateable, IRenderable
 		return this.bombs[tileX][tileY] != null;
 	}
 	
-	public void kickBomb(Bomb bomb, Direction direction) {
+	public boolean kickBomb(Bomb bomb, Direction direction) {
+		boolean kicked = false;
 		
+		if (bomb instanceof KickedBomb) {
+			KickedBomb kBomb = (KickedBomb) bomb;
+			if (kBomb.isWaiting()) {
+				this.bombs[kBomb.getTileX()][kBomb.getTileY()] = kBomb.getBomb();
+				objects.remove(kBomb);
+				objects.add(kBomb.getBomb());
+				bomb = kBomb.getBomb();
+			}	
+		}
+		
+		if (!(bomb instanceof KickedBomb)) {
+			if (checkBombMovement(bomb, direction)) {
+				KickedBomb kBomb = new KickedBomb(bomb, direction);
+				bombs[bomb.getTileX()][bomb.getTileY()] = null;
+				objects.remove(bomb);
+				kBomb.moveOn();
+				bombs[kBomb.getTileX()][kBomb.getTileY()] = kBomb;
+				objects.add(kBomb);
+				kicked = true;
+			}
+		}
+		
+		
+		
+		return kicked;
+	}
+	
+	public boolean checkBombMovement(Bomb bomb, Direction direction) {
+		boolean move = true;
+		
+		int tileX = bomb.getTileX();
+		int tileY = bomb.getTileY();
+		
+		switch (direction) {
+			case UP: 
+				tileY = tileY - 1;
+				break;
+			case LEFT: 
+				tileX = tileX - 1;
+				break;
+			case DOWN: 
+				tileY = tileY + 1;
+				break;
+			case RIGHT: 
+				tileX = tileX + 1;
+				break;
+			default: break;
+		}
+		
+		if (!isBlocked(tileX, tileY)) {
+			
+			for (int i = 0; i < players.length; i++) {
+				if (players[i].getTargetX() / GameSettings.TILE_WIDTH == tileX && players[i].getTargetY() / GameSettings.TILE_HEIGHT == tileY) {
+					move = false;
+					break;
+				}
+			}
+			
+		}
+		else {
+			move = false;
+		}
+		
+		return move;
 	}
 	
 	public Bomb getBomb(int tileX, int tileY) {
