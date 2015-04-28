@@ -171,5 +171,19 @@ public class KickedBomb extends Bomb {
 	public boolean isStopped() {
 		return this.stopped;
 	}
+	
+	@Override
+    public boolean destroy()
+    {
+        setExploded();
+        return true;
+    }
+    
+    public void setExploded()
+    {
+    	this.exploded = true;
+    	this.destroyed = true;
+        this.bomb.destroy();
+    }
 
 }
