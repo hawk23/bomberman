@@ -12,7 +12,7 @@ public class ShieldUp extends PowerUpItem
 
 	public int getTime()
 	{
-		return time;
+		return this.time;
 	}
 
 	public void setTime(int time)

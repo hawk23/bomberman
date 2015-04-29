@@ -96,7 +96,7 @@ public class MainMenuState extends BombermanGameState
 
 	private void loopSound(Sound sound)
 	{
-		sound.loop();
+		sound.loop(1.0f, 1.2f);;
 	}
 
 	private void stopSound(Sound sound)

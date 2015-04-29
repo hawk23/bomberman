@@ -12,7 +12,7 @@ public class BombUp extends PowerUpItem
 
     public int getValue()
     {
-        return value;
+        return this.value;
     }
 
     public void setValue(int value)

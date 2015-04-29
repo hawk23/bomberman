@@ -46,20 +46,20 @@ public class Spike extends GameObject {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) {
 		
-		if (!deadly) {
-			if (!crumblingSound.playing()) {
+		if (!this.deadly) {
+			if (!this.crumblingSound.playing()) {
 				//crumblingSound.play();
 			}
-			if (soilAnimation != null) {
-				soilAnimation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
+			if (this.soilAnimation != null) {
+				this.soilAnimation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
 			}
 		}
 		else {
-			if (spikeAnimation == null) {
-				g.drawImage(image, this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT - GameSettings.TILE_HEIGHT);
+			if (this.spikeAnimation == null) {
+				g.drawImage(this.image, this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT - GameSettings.TILE_HEIGHT);
 			}
 			else {
-				spikeAnimation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
+				this.spikeAnimation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
 			}
 		}
 		
@@ -67,11 +67,11 @@ public class Spike extends GameObject {
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) {
-		if (notDeadlyTime >= 0) {
-			notDeadlyTime -= delta;
+		if (this.notDeadlyTime >= 0) {
+			this.notDeadlyTime -= delta;
 		}
 		else {
-			deadly = true;
+			this.deadly = true;
 		}
 	}
 	
@@ -81,8 +81,8 @@ public class Spike extends GameObject {
         {
 //        	spikeSheet		= new SpriteSheet(spikeImagePath, 64, 64);
 //          spikeAnimation	= new Animation(spikeSheet, spikeAnimationInterval);
-        	soilSheet		= new SpriteSheet(soilImagePath, 64, 64);
-        	soilAnimation	= new Animation(soilSheet, soilAnimationInterval);
+        	this.soilSheet		= new SpriteSheet(soilImagePath, 64, 64);
+        	this.soilAnimation	= new Animation(this.soilSheet, soilAnimationInterval);
         }
         catch (SlickException e)
         {

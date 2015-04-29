@@ -56,7 +56,7 @@ public class Bomb extends GameObject implements IDestroyable
 
     public int getRange()
     {
-        return range;
+        return this.range;
     }
 
     public void setRange(int range) 
@@ -66,7 +66,7 @@ public class Bomb extends GameObject implements IDestroyable
 
     public int getTimer() 
     {
-        return timer;
+        return this.timer;
     }
 
     public void setTimer(int timer) 
@@ -78,24 +78,28 @@ public class Bomb extends GameObject implements IDestroyable
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
-        bombAnimation.draw(tileX * GameSettings.TILE_HEIGHT, tileY * GameSettings.TILE_WIDTH);
-        fuzeBurn.draw(tileX * GameSettings.TILE_HEIGHT + GameSettings.TILE_HEIGHT / 2, tileY * GameSettings.TILE_WIDTH+GameSettings.TILE_HEIGHT/2-FUZE_POS_Y-burnDist,3,burnDist);
-        effectSystem.render();
+    	this.bombAnimation.draw(this.tileX * GameSettings.TILE_HEIGHT, this.tileY * GameSettings.TILE_WIDTH);
+    	this.fuzeBurn.draw(this.tileX * GameSettings.TILE_HEIGHT + GameSettings.TILE_HEIGHT /2, 
+    			this.tileY * GameSettings.TILE_WIDTH+GameSettings.TILE_HEIGHT /2 - FUZE_POS_Y - this.burnDist, 
+    			3, 
+    			this.burnDist);
+    	this.effectSystem.render();
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta)
     {
-    	if (time <= timer) {
-    		float timeLeft = timer-time;
-            burnDist=FUZE_HEIGHT * timeLeft/timer;
+    	if (this.time <= this.timer) {
+    		float timeLeft = this.timer - this.time;
+    		this.burnDist = FUZE_HEIGHT * timeLeft /this.timer;
 
-            effectSystem.setPosition(tileX * GameSettings.TILE_HEIGHT+GameSettings.TILE_HEIGHT/2, tileY * GameSettings.TILE_WIDTH+GameSettings.TILE_HEIGHT/2-FUZE_POS_Y-burnDist);
-            effectSystem.update(delta);
+    		this.effectSystem.setPosition(this.tileX * GameSettings.TILE_HEIGHT + GameSettings.TILE_HEIGHT /2, 
+    				this.tileY * GameSettings.TILE_WIDTH + GameSettings.TILE_HEIGHT /2 -FUZE_POS_Y - this.burnDist);
+    		this.effectSystem.update(delta);
 
-            time += delta;
+    		this.time += delta;
     	}
-    	else if (!exploded) {
+    	else if (!this.exploded) {
     		setExploded();
     	}   
     }
@@ -133,10 +137,10 @@ public class Bomb extends GameObject implements IDestroyable
     {
         try
         {
-            bombSheet		    = new SpriteSheet(BOMB_IMAGE_PATH, 64, 64);
-            bombAnimation       = new Animation(bombSheet, ANIMATION_INTERVAL);
-            SpriteSheet sheet	= new SpriteSheet(BURN_IMAGE_PATH, 3, 11);
-            fuzeBurn            = new Animation(sheet, ANIMATION_INTERVAL);
+        	this.bombSheet		   	= new SpriteSheet(BOMB_IMAGE_PATH, 64, 64);
+        	this.bombAnimation      = new Animation(this.bombSheet, ANIMATION_INTERVAL);
+            SpriteSheet sheet		= new SpriteSheet(BURN_IMAGE_PATH, 3, 11);
+            this.fuzeBurn           = new Animation(sheet, ANIMATION_INTERVAL);
         }
         catch (SlickException e)
         {
@@ -146,37 +150,38 @@ public class Bomb extends GameObject implements IDestroyable
 
     private void loadParticleSystem(){
         try {
-            effectSystem = ParticleIO.loadConfiguredSystem(EXPLOSION_CONFIG);
-            flameEmitter = effectSystem.getEmitter(0);
+        	this.effectSystem = ParticleIO.loadConfiguredSystem(EXPLOSION_CONFIG);
+        	this.flameEmitter = this.effectSystem.getEmitter(0);
         }catch (Exception e){
             e.printStackTrace();
             System.exit(-1);
         }
-        effectSystem.setPosition(tileX * GameSettings.TILE_HEIGHT+GameSettings.TILE_HEIGHT/2, tileY * GameSettings.TILE_WIDTH+GameSettings.TILE_HEIGHT/2-FUZE_POS_Y-burnDist);
+        this.effectSystem.setPosition(this.tileX * GameSettings.TILE_HEIGHT + GameSettings.TILE_HEIGHT /2, 
+        		this.tileY * GameSettings.TILE_WIDTH + GameSettings.TILE_HEIGHT /2 - FUZE_POS_Y - this.burnDist);
     }
 
     public void addListener(ExplosionListener listener)
     {
-        listeners.add(ExplosionListener.class, listener);
+    	this.listeners.add(ExplosionListener.class, listener);
     }
 
     public void removeListener(ExplosionListener listener)
     {
-        listeners.remove(ExplosionListener.class, listener);
+    	this.listeners.remove(ExplosionListener.class, listener);
     }
 
     protected synchronized void notifyExploded ()
     {
         ExplosionEvent e = new ExplosionEvent(this, this);
 
-        for (ExplosionListener l : listeners.getListeners(ExplosionListener.class))
+        for (ExplosionListener l : this.listeners.getListeners(ExplosionListener.class))
         {
             l.exploded(e);
         }
     }
 
 	public int getTime() {
-		return time;
+		return this.time;
 	}
 
 

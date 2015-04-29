@@ -13,8 +13,10 @@ import slick.extension.AppGameContainerFSCustom;
 public class FallingBlock extends Block {
 
 	private static final String fallingBlock   	= "res/sounds/block/drop2.wav";
-	private Sound 				drop;
 	private static final String blockImagePath 	= "res/visuals/blocks/tile_solid_01.png";
+	
+	private Sound drop;
+	
 	private int originalX;
 	private int originalY;
 	private int targetX;
@@ -62,13 +64,13 @@ public class FallingBlock extends Block {
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) {
 		
-		if (drawY >= 0f) {
+		if (this.drawY >= 0f) {
 	        float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
 	        
-	        float x = (drawX - lastDrawX) * interpolate + lastDrawX;
-	        float y = (drawY - lastDrawY) * interpolate + lastDrawY;
+	        float x = (this.drawX - this.lastDrawX) * interpolate + this.lastDrawX;
+	        float y = (this.drawY - this.lastDrawY) * interpolate + this.lastDrawY;
 	        
-	        g.drawImage(image, x, y);
+	        g.drawImage(this.image, x, y);
 		}
 		
 	}
@@ -76,20 +78,20 @@ public class FallingBlock extends Block {
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) {
 		float deltaInSecs = (float) delta * 0.001f;
-        lastDrawX = drawX;
-        lastDrawY = drawY;
+		this.lastDrawX = this.drawX;
+		this.lastDrawY = this.drawY;
         
-        if (movementInterpolation <= 1) {
-            movementInterpolation += speed * deltaInSecs;
-            drawX = lerp(originalX, targetX, movementInterpolation);
-            drawY = lerp(originalY, targetY, movementInterpolation);
+        if (this.movementInterpolation <= 1) {
+        	this.movementInterpolation += this.speed * deltaInSecs;
+        	this.drawX = lerp(this.originalX, this.targetX, this.movementInterpolation);
+        	this.drawY = lerp(this.originalY, this.targetY, this.movementInterpolation);
         }
         else {
         	this.deadly = true;
         }
         
         if (this.deadly && !this.dropped) {
-        	drop.play(1.5f, 0.3f);
+        	this.drop.play(1.5f, 0.3f);
         	this.dropped = true;
         }
 	}

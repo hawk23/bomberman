@@ -50,17 +50,17 @@ public class FallingBomb extends GameObject {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g) {
-		if (drawY >= 0f) {
+		if (this.drawY >= 0f) {
 	        float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
 	        
-	        float x = (drawX - lastDrawX) * interpolate + lastDrawX;
-	        float y = (drawY - lastDrawY) * interpolate + lastDrawY;
+	        float x = (this.drawX - this.lastDrawX) * interpolate + this.lastDrawX;
+	        float y = (this.drawY - this.lastDrawY) * interpolate + this.lastDrawY;
 	        
-	        animation.draw(x, y);
+	        this.animation.draw(x, y);
 		}
 		
-		if (!dropped) {
-			bombHint.draw(targetX, targetY);
+		if (!this.dropped) {
+			this.bombHint.draw(this.targetX, this.targetY);
 		}
 		
 	}
@@ -68,13 +68,13 @@ public class FallingBomb extends GameObject {
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) {
 		float deltaInSecs = (float) delta * 0.001f;
-        lastDrawX = drawX;
-        lastDrawY = drawY;
+		this.lastDrawX = this.drawX;
+		this.lastDrawY = this.drawY;
         
-        if (movementInterpolation <= 1) {
-            movementInterpolation += speed * deltaInSecs;
-            drawX = lerp(originalX, targetX, movementInterpolation);
-            drawY = lerp(originalY, targetY, movementInterpolation);
+        if (this.movementInterpolation <= 1) {
+        	this.movementInterpolation += this.speed * deltaInSecs;
+        	this.drawX = lerp(this.originalX, this.targetX, this.movementInterpolation);
+        	this.drawY = lerp(this.originalY, this.targetY, this.movementInterpolation);
         }
         else {
         	this.dropped = true;
@@ -94,8 +94,8 @@ public class FallingBomb extends GameObject {
 
 		try {
 			SpriteSheet bombSheet 	= new SpriteSheet(animationPath, 64, 64);
-	        animation			    = new Animation(bombSheet, animationInterval);
-	        bombHint				= new Image(bombHintPath);
+			this.animation			= new Animation(bombSheet, this.animationInterval);
+			this.bombHint			= new Image(bombHintPath);
 		} catch (SlickException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

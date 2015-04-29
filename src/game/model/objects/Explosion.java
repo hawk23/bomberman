@@ -14,14 +14,14 @@ import java.util.ArrayList;
 
 public class Explosion extends GameObject implements IUpdateable, IRenderable
 {
-    private static final String explosionSoundPath = "res/sounds/bomb/explosion.ogg";
-    public static final	int 	timer			= 500;
-	private int                 range           = 1;
-    private int                 time            = 0;
-    private boolean             finished        = false;
-	private TiledMapWrapper     wrapper;
-    private ArrayList<FlamePoint>    flamePositions  = null;
-    private Sound               explosionSound;
+    private static final String 	explosionSoundPath = "res/sounds/bomb/explosion.ogg";
+    public static final	int 		timer			= 500;
+	private int                 	range           = 1;
+    private int                 	time            = 0;
+    private boolean             	finished        = false;
+	private TiledMapWrapper     	wrapper;
+    private ArrayList<FlamePoint>   flamePositions  = null;
+    private Sound               	explosionSound;
 
 	public Explosion(int posX, int posY, int range, TiledMapWrapper wrapper)
 	{
@@ -77,10 +77,10 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
                 explodedTiles.add(p);
             }else{
                 //Make shure the last explosion before the solid is marked as _END
-                for(int i=explodedTiles.size()-1;i>=0;i--){
+                for(int i = explodedTiles.size()-1; i >= 0; i--){
                     FlamePoint flame = explodedTiles.get(i);
 
-                    if(flame.getDirection()==p.getDirection()){
+                    if(flame.getDirection() == p.getDirection()){
                         flame.setDirection(flame.makeDirectionEnd(p.getDirection()));
                         break;
                     }
@@ -88,7 +88,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
             }
 
             // check if flame ray should be blocked in this direction.
-            if (this.wrapper.isSolid(p.x, p.y) || this.wrapper.isDestroyable(p.x, p.y) || p.getDistanceFromCenter()==this.range)
+            if (this.wrapper.isSolid(p.x, p.y) || this.wrapper.isDestroyable(p.x, p.y) || p.getDistanceFromCenter() == this.range)
             {
                 //Make an End Mark in this direction
                 p.setDirection(p.makeDirectionEnd(p.getDirection()));
@@ -122,23 +122,23 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
     {
-        if (!finished)
+        if (!this.finished)
         {
-            time += delta;
+        	this.time += delta;
 
-            if(time >= timer)
+            if(this.time >= this.timer)
             {
-                finished = true;
+            	this.finished = true;
             }
         }
     }
 
     public ArrayList<FlamePoint> getFlamePositions() {
-        return flamePositions;
+        return this.flamePositions;
     }
 
     public boolean isFinished() {
-        return finished;
+        return this.finished;
     }
 
     private void loadSound ()
@@ -159,6 +159,7 @@ public class Explosion extends GameObject implements IUpdateable, IRenderable
         sound.play();
     }
 
-    public int getTimer(){ return timer;}
+    public int getTimer(){ 
+    	return timer;}
 
 }

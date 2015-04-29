@@ -46,13 +46,13 @@ public class KickedBomb extends Bomb {
 
         float interpolate = ((AppGameContainerFSCustom) container).getRenderInterpolation();
         
-        float x = (drawX - lastDrawX) * interpolate + lastDrawX;
-        float y = (drawY - lastDrawY) * interpolate + lastDrawY;
+        float x = (this.drawX - this.lastDrawX) * interpolate + this.lastDrawX;
+        float y = (this.drawY - this.lastDrawY) * interpolate + this.lastDrawY;
 	        
-		bombAnimation.draw(x, y);
-        if (time <= timer) {
-    		fuzeBurn.draw(x + GameSettings.TILE_HEIGHT / 2, y + GameSettings.TILE_HEIGHT /2 - FUZE_POS_Y - burnDist, 3, burnDist);
-            effectSystem.render();
+        this.bombAnimation.draw(x, y);
+        if (this.time <= this.timer) {
+        	this.fuzeBurn.draw(x + GameSettings.TILE_HEIGHT / 2, y + GameSettings.TILE_HEIGHT /2 - FUZE_POS_Y - this.burnDist, 3, this.burnDist);
+        	this.effectSystem.render();
         }
         //g.drawRect(tileX * GameSettings.TILE_WIDTH, tileY * GameSettings.TILE_HEIGHT, 64, 64);
 	}
@@ -60,26 +60,26 @@ public class KickedBomb extends Bomb {
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) {
 		float deltaInSecs = (float) delta * 0.001f;
-        lastDrawX = drawX;
-        lastDrawY = drawY;
+		this.lastDrawX = this.drawX;
+		this.lastDrawY = this.drawY;
         
-        movementInterpolation += speed * deltaInSecs;
-        drawX = lerp(originalX, targetX, movementInterpolation);
-        drawY = lerp(originalY, targetY, movementInterpolation);
+		this.movementInterpolation += this.speed * deltaInSecs;
+		this.drawX = lerp(this.originalX, this.targetX, this.movementInterpolation);
+		this.drawY = lerp(this.originalY, this.targetY, this.movementInterpolation);
         
-        if (movementInterpolation >= 1) {
+        if (this.movementInterpolation >= 1) {
         	this.waiting = true;
         }
 
         
-        if (time <= timer) {
-    		float timeLeft = timer-time;
-            burnDist=FUZE_HEIGHT * timeLeft/timer;
+        if (this.time <= this.timer) {
+    		float timeLeft = this.timer - this.time;
+    		this.burnDist = FUZE_HEIGHT * timeLeft /this.timer;
 
-            effectSystem.setPosition(drawX + GameSettings.TILE_HEIGHT/2, drawY + GameSettings.TILE_HEIGHT/2 - FUZE_POS_Y - burnDist);
-            effectSystem.update(delta);
+    		this.effectSystem.setPosition(this.drawX + GameSettings.TILE_HEIGHT /2, this.drawY + GameSettings.TILE_HEIGHT /2 - FUZE_POS_Y - this.burnDist);
+    		this.effectSystem.update(delta);
 
-            time += delta;
+    		this.time += delta;
     	}
         else {
         	setExploded();
@@ -91,32 +91,32 @@ public class KickedBomb extends Bomb {
 	
 	public void moveOn() {
 		
-		originalX = tileX * GameSettings.TILE_WIDTH;
-		originalY = tileY * GameSettings.TILE_HEIGHT;
+		this.originalX = this.tileX * GameSettings.TILE_WIDTH;
+		this.originalY = this.tileY * GameSettings.TILE_HEIGHT;
 		
-		switch (direction) {
+		switch (this.direction) {
 		
 			case UP: 
-				targetY = (tileY - 1) * GameSettings.TILE_HEIGHT;
+				this.targetY = (this.tileY - 1) * GameSettings.TILE_HEIGHT;
 				break;
 			case LEFT: 
-				targetX = (tileX - 1) * GameSettings.TILE_WIDTH;
+				this.targetX = (this.tileX - 1) * GameSettings.TILE_WIDTH;
 				break;
 			case DOWN: 
-				targetY = (tileY + 1) * GameSettings.TILE_HEIGHT;
+				this.targetY = (this.tileY + 1) * GameSettings.TILE_HEIGHT;
 				break;
 			case RIGHT: 
-				targetX = (tileX + 1) * GameSettings.TILE_WIDTH;
+				this.targetX = (this.tileX + 1) * GameSettings.TILE_WIDTH;
 				break;
 			default: break;
 		}
         
-		tileX = targetX / GameSettings.TILE_WIDTH;
-        tileY = targetY / GameSettings.TILE_HEIGHT;
+		this.tileX = this.targetX / GameSettings.TILE_WIDTH;
+		this.tileY = this.targetY / GameSettings.TILE_HEIGHT;
         
-		this.bomb.setTileX(tileX);
-		this.bomb.setTileY(tileY);
-    	movementInterpolation = movementInterpolation % 1.0f;
+		this.bomb.setTileX(this.tileX);
+		this.bomb.setTileY(this.tileY);
+		this.movementInterpolation = this.movementInterpolation % 1.0f;
 		this.waiting = false;
 	}
 	
@@ -131,37 +131,39 @@ public class KickedBomb extends Bomb {
 	public void changeDirection(Direction direction) {
 		this.direction = direction;
 		int tempX, tempY;
-        tempX = originalX;
-        originalX = targetX;
-        targetX = tempX;
-        tempY = originalY;
-        originalY = targetY;
-        targetY = tempY;
         
-        tileX = originalX / GameSettings.TILE_WIDTH;
-        tileY = originalY / GameSettings.TILE_HEIGHT;
+		//swap
+		tempX = this.originalX;
+        this.originalX = this.targetX;
+        this.targetX = tempX;
+        tempY = this.originalY;
+        this.originalY = this.targetY;
+        this.targetY = tempY;
+        
+        this.tileX = this.originalX / GameSettings.TILE_WIDTH;
+        this.tileY = this.originalY / GameSettings.TILE_HEIGHT;
 
-        movementInterpolation = 1.0f - movementInterpolation;
+        this.movementInterpolation = 1.0f - this.movementInterpolation;
 	}
 	
 	public Bomb getBomb() {
-		return bomb;
+		return this.bomb;
 	}
 
 	public boolean isWaiting() {
-		return waiting;
+		return this.waiting;
 	}
 
 	public Direction getDirection() {
-		return direction;
+		return this.direction;
 	}
 
 	public int getOriginalX() {
-		return originalX;
+		return this.originalX;
 	}
 
 	public int getOriginalY() {
-		return originalY;
+		return this.originalY;
 	}
 	
 	public void setStopped() {
