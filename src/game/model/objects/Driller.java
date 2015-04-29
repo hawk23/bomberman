@@ -10,27 +10,31 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.state.StateBasedGame;
 
-public class Spike extends GameObject {
+public class Driller extends GameObject {
 
-	private static final String 			crumblingSoundPath      = "res/sounds/spike/crumbling.ogg";
+	private static final String 			crumblingSoundPath      = "res/sounds/driller/crumbling.ogg";
 	private Sound 							crumblingSound;
-	private static final String				soilImagePath			= "res/visuals/spike/soilSheet.png";
-    private static final String             spikeImagePath 			= "res/visuals/spike/spike.png";
-    private static final int	            soilAnimationInterval	= 100;
-    private static final int 				spikeAnimationInterval	= 40;
-    private SpriteSheet			            spikeSheet;
-    private Animation			            spikeAnimation;
+	
+	private static final String				soilSheetPath			= "res/visuals/driller/soilSheet.png";
+    private static final String             drillerSheetPath 		= "";
+    
+    private static final int	            soilAnimationInterval	= 40;
+    private static final int 				drillAnimationInterval	= 40;
+    
+    private SpriteSheet			            drillerSheet;
+    private Animation			            drillerAnimation;   
     private SpriteSheet						soilSheet;
     private Animation						soilAnimation;
+    
     private float							notDeadlyTime = 1_000;
 	private boolean 						deadly;
 	
-	public Spike(int tileX, int tileY) {
+	public Driller(int tileX, int tileY) {
 		super(tileX, tileY);
 		this.deadly = false;
 		loadAnimation();
 		loadSound();
-		setImage(spikeImagePath);
+		//setImage(spikeImagePath);
 	}
 	
 	private void loadSound() {
@@ -50,17 +54,13 @@ public class Spike extends GameObject {
 			if (!this.crumblingSound.playing()) {
 				//crumblingSound.play();
 			}
-			if (this.soilAnimation != null) {
-				this.soilAnimation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
-			}
+			this.soilAnimation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
 		}
 		else {
-			if (this.spikeAnimation == null) {
-				g.drawImage(this.image, this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT - GameSettings.TILE_HEIGHT);
+			if (this.crumblingSound.playing()) {
+				crumblingSound.stop();
 			}
-			else {
-				this.spikeAnimation.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
-			}
+			this.image.draw(this.tileX * GameSettings.TILE_WIDTH, this.tileY * GameSettings.TILE_HEIGHT);
 		}
 		
 	}
@@ -79,10 +79,11 @@ public class Spike extends GameObject {
     {
         try
         {
-//        	spikeSheet		= new SpriteSheet(spikeImagePath, 64, 64);
-//          spikeAnimation	= new Animation(spikeSheet, spikeAnimationInterval);
-        	this.soilSheet		= new SpriteSheet(soilImagePath, 64, 64);
-        	this.soilAnimation	= new Animation(this.soilSheet, soilAnimationInterval);
+//        	drillerSheet		= new SpriteSheet(drillerSheetPath, 64, 64);
+//        	drillerAnimation	= new Animation(drillerSheet, drillAnimationInterval);
+        	soilSheet			= new SpriteSheet(soilSheetPath, 64, 64);
+        	soilAnimation		= new Animation(soilSheet, soilAnimationInterval);
+
         }
         catch (SlickException e)
         {

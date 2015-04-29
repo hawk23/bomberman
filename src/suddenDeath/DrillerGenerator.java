@@ -9,41 +9,41 @@ import game.interfaces.IDestroyable;
 import game.interfaces.IUpdateable;
 import game.model.BombermanMap;
 import game.model.objects.GameObject;
-import game.model.objects.Spike;
+import game.model.objects.Driller;
 
-public class SpikeGenerator extends SuddenDeathGenerator implements IUpdateable {
+public class DrillerGenerator extends SuddenDeathGenerator implements IUpdateable {
 	
 	private BombermanMap 	map;
 	private float 			delta;
 	private float 			counter;
 	private int 			rows;
 	private int 			cols;
-	private int 			spikeCount;
-	private int 			spikesAdded;
-	private Spike[][] 		initialMatrix;
-	private Spike[][] 		spikes;
-	private ArrayList<Spike> sortedSpikes;
+	private int 			drillerCount;
+	private int 			drillerAdded;
+	private Driller[][] 	initialMatrix;
+	private Driller[][] 	drillers;
+	private ArrayList<Driller> sortedDrillers;
 	
-	public SpikeGenerator(BombermanMap map, int suddenDeathTime, int mapWidth, int mapHeight) {
+	public DrillerGenerator(BombermanMap map, int suddenDeathTime, int mapWidth, int mapHeight) {
 		this.map 			= map;
 		this.rows 			= mapHeight - 2;
 		this.cols 			= mapWidth - 2;
-		this.spikeCount 	= this.rows * this.cols;
-		this.delta 			= (float)suddenDeathTime / spikeCount;
+		this.drillerCount 	= this.rows * this.cols;
+		this.delta 			= (float)suddenDeathTime / drillerCount;
 		this.counter 		= 0;
-		this.spikesAdded 	= 0;
-		this.initialMatrix 	= new Spike[rows][cols];
-		this.spikes 		= new Spike[map.getMapHeight()][map.getMapWidth()];
-		this.sortedSpikes 	= new ArrayList<Spike>();
-		generateSpikes();
+		this.drillerAdded 	= 0;
+		this.initialMatrix 	= new Driller[rows][cols];
+		this.drillers 		= new Driller[map.getMapHeight()][map.getMapWidth()];
+		this.sortedDrillers = new ArrayList<Driller>();
+		generateDrillers();
 	}
 
-	private void generateSpikes() {
+	private void generateDrillers() {
 		
 		int i;
 		for (i = 0; i < initialMatrix.length; i++) {
 			for (int j = 0; j < initialMatrix[i].length; j++) {
-				initialMatrix[i][j] = new Spike(j + 1, i + 1);
+				initialMatrix[i][j] = new Driller(j + 1, i + 1);
 			}
 		}
 		
@@ -56,20 +56,20 @@ public class SpikeGenerator extends SuddenDeathGenerator implements IUpdateable 
 	        
 			/* first row from the remaining rows */
 	        for (i = l; i < n; ++i) {
-	            sortedSpikes.add(initialMatrix[k][i]);
+	            sortedDrillers.add(initialMatrix[k][i]);
 	        }
 	        k++;
 	 
 	        /* last column from the remaining columns */
 	        for (i = k; i < m; ++i) {
-	        	sortedSpikes.add(initialMatrix[i][n-1]);
+	        	sortedDrillers.add(initialMatrix[i][n-1]);
 	        }
 	        n--;
 	 
 	        /* last row from the remaining rows */
 	        if ( k < m) {
 	            for (i = n-1; i >= l; --i) {
-	            	sortedSpikes.add(initialMatrix[m-1][i]);
+	            	sortedDrillers.add(initialMatrix[m-1][i]);
 	            }
 	            m--;
 	        }
@@ -77,7 +77,7 @@ public class SpikeGenerator extends SuddenDeathGenerator implements IUpdateable 
 	        /* first column from the remaining columns */
 	        if (l < n) {
 	            for (i = m-1; i >= k; --i) {
-	            	sortedSpikes.add(initialMatrix[i][l]);
+	            	sortedDrillers.add(initialMatrix[i][l]);
 	            }
 	            l++;    
 	        }        
@@ -87,31 +87,31 @@ public class SpikeGenerator extends SuddenDeathGenerator implements IUpdateable 
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta) {
 		
-		if (spikesAdded < spikeCount) {
+		if (drillerAdded < drillerCount) {
 			
 			counter += delta;
 			if (counter >= this.delta) {
 				counter = counter % this.delta;
 				
-				spikes[sortedSpikes.get(spikesAdded).getTileX()][sortedSpikes.get(spikesAdded).getTileY()] = sortedSpikes.get(spikesAdded);
-				map.addGameObject(sortedSpikes.get(spikesAdded));
+				drillers[sortedDrillers.get(drillerAdded).getTileX()][sortedDrillers.get(drillerAdded).getTileY()] = sortedDrillers.get(drillerAdded);
+				map.addGameObject(sortedDrillers.get(drillerAdded));
 				
-				spikesAdded++;
+				drillerAdded++;
 			}
 		}
 		
-		for (int i = 0; i < this.spikes.length; i++)
+		for (int i = 0; i < this.drillers.length; i++)
 		{
-			for (int j = 0; j < this.spikes[i].length; j++)
+			for (int j = 0; j < this.drillers[i].length; j++)
 			{
-				if (this.spikes[i][j] != null) {
-					this.spikes[i][j].update(container, game, delta);
+				if (this.drillers[i][j] != null) {
+					this.drillers[i][j].update(container, game, delta);
 					
 					if (this.map.getBlocks()[i][j] != null) {
 						this.map.removeBlock(i, j);
 					}
 					
-					if (this.spikes[i][j].isDeadly()) {
+					if (this.drillers[i][j].isDeadly()) {
 						for (GameObject go : this.map.getObjects())
                         {
                             if (go instanceof IDestroyable && go.getTileX() == i && go.getTileY() == j)
