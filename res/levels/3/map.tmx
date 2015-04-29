@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="15" tilewidth="64" tileheight="64" nextobjectid="8">
  <tileset firstgid="1" name="bomber_tileset" tilewidth="64" tileheight="64">
-  <image source="bomber_tileset_2.png" width="960" height="960"/>
+  <image source="../bomber_tileset.png" width="960" height="960"/>
   <tile id="1">
    <properties>
     <property name="destroyable" value="true"/>
@@ -12,18 +12,23 @@
     <property name="destroyable" value="false"/>
    </properties>
   </tile>
+  <tile id="6">
+   <properties>
+    <property name="destroyable" value="false"/>
+   </properties>
+  </tile>
  </tileset>
- <layer name="background" width="15" height="15" visible="0">
+ <layer name="background" width="15" height="15">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NkYGBgHMWjeBQPGAYAv/M/3IQDAAA=
+   H4sIAAAAAAAAC2NjYGBgG8WjeBQPGAYABh+G4IQDAAA=
   </data>
  </layer>
  <layer name="blocks" width="15" height="15">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC6WSWQoAMQhDg97/zvPTQuZhGToRQnGJW21JHWBLLWz58jXiarC18dzmdn8J+p3reVnb9QJXyMFe6OO8jJt6nHbFuU/xNXCSusm8yZ6T/5XeeW/uSsa7vee/eAAPJ2hYhAMAAA==
+   H4sIAAAAAAAAC2NnYGBgpwAjAyYkzIzGRwbIenGpxWYWul5mLBifOEwvLjeiY2T5gdYL8wN62KBjGGAeBG6mRC/MD+TELyyMyE1X2MKZmPRMLgYA5gvko4QDAAA=
   </data>
  </layer>
- <layer name="foreground" width="15" height="15" visible="0">
+ <layer name="foreground" width="15" height="15">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC2NgGAWjYBQMJAAA7Ly31YQDAAA=
   </data>

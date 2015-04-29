@@ -82,7 +82,7 @@ public class KickedBomb extends Bomb {
             time += delta;
     	}
         else {
-        	exploded = true;
+        	setExploded();
         }
         
         this.bomb.update(container, game, delta);

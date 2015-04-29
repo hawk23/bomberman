@@ -130,7 +130,7 @@ public class GameRoundState extends BombermanGameState
 		resetGraphics();
 		
 		this.map.render(container, game, this.map_graphics);
-
+		
         graphics.drawImage(playerStatsBackground, 0, 0);
         graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
         

@@ -172,8 +172,8 @@ public class BombermanMap implements IUpdateable, IRenderable
         							}
         							else {
         								this.bombs[i][j] = kBomb.getBomb();
-        								objects.remove(kBomb);
-        								objects.add(kBomb.getBomb());	
+        								objects.add(kBomb.getBomb());
+        								objects.remove(kBomb);	
         							}
         						}
         					}                   
@@ -391,8 +391,6 @@ public class BombermanMap implements IUpdateable, IRenderable
 				kicked = true;
 			}
 		}
-		
-		
 		
 		return kicked;
 	}
