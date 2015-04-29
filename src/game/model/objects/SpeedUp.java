@@ -15,7 +15,7 @@ public class SpeedUp extends PowerUpItem
 
 	public float getValue()
 	{
-		return value;
+		return this.value;
 	}
 
 	public void setValue(float value)

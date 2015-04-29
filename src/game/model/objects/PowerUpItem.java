@@ -16,34 +16,34 @@ public class PowerUpItem extends GameObject implements IDestroyable
     private SpriteSheet			bombSheet;
     private Animation			animationBurn;
 
-    private boolean			destroyed			= false;
-    private int 			timer;
+    private boolean				destroyed			= false;
+    private int 				timer;
     
     public PowerUpItem(int posX, int posY, int flameTime, String path)
     {
         super(posX, posY);
-        timer = flameTime;
+        this.timer = flameTime;
         loadAnimation(path);
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g)
     {
-        animationBurn.draw(tileX * GameSettings.TILE_HEIGHT, tileY * GameSettings.TILE_WIDTH);
+    	this.animationBurn.draw(this.tileX * GameSettings.TILE_HEIGHT, this.tileY * GameSettings.TILE_WIDTH);
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta)
     {
-    	if (timer > 0) {
-        	timer -= delta;
+    	if (this.timer > 0) {
+    		this.timer -= delta;
     	}
     }
 
 	@Override
 	public boolean destroy()
 	{
-		if (timer <= 0) {
+		if (this.timer <= 0) {
 			return this.destroyed = true;
 		}
 		else {
@@ -64,8 +64,8 @@ public class PowerUpItem extends GameObject implements IDestroyable
     	}
         try
         {
-            bombSheet		= new SpriteSheet(path, 64, 64);
-            animationBurn	= new Animation(bombSheet, animationInterval);
+        	this.bombSheet		= new SpriteSheet(path, 64, 64);
+        	this.animationBurn	= new Animation(bombSheet, animationInterval);
         }
         catch (SlickException e)
         {

@@ -30,7 +30,7 @@ public abstract class GameObject implements IRenderable, IUpdateable
 
     public int getId()
     {
-        return id;
+        return this.id;
     }
 
     public void setId(int id)
@@ -40,7 +40,7 @@ public abstract class GameObject implements IRenderable, IUpdateable
 
     public int getTileX()
     {
-        return tileX;
+        return this.tileX;
     }
 
     public void setTileX(int tileX)
@@ -50,7 +50,7 @@ public abstract class GameObject implements IRenderable, IUpdateable
 
     public int getTileY()
     {
-        return tileY;
+        return this.tileY;
     }
 
     public void setTileY(int tileY)

@@ -122,11 +122,11 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         loadVisuals(this.playerConfig.getPath());
         loadSound();
 
-        originalX = targetX =  posX = (int) spawnPoint.getX();
-        originalY = targetY =  posY = (int) spawnPoint.getY();
-        this.calculateDrawPosition(posX, posY);
-        lastDrawPosX = drawPosX;
-        lastDrawPosY = drawPosY;
+        this.originalX = this.targetX =  this.posX = (int) spawnPoint.getX();
+        this.originalY = this.targetY =  this.posY = (int) spawnPoint.getY();
+        this.calculateDrawPosition(this.posX, this.posY);
+        this.lastDrawPosX = this.drawPosX;
+        this.lastDrawPosY = this.drawPosY;
     }
 
     private void loadVisuals(String path) throws SlickException {
@@ -142,27 +142,27 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         SpriteSheet animDieUp	= new SpriteSheet(spriteSheet.getSubImage(0, 768, 640, 128), 64, 128);
         SpriteSheet animDieLeft	= new SpriteSheet(spriteSheet.getSubImage(0, 896, 640, 128), 64, 128);
 		
-		this.animation_down 		= new Animation(animDown, animationInterval);
+		this.animation_down 		= new Animation(animDown, this.animationInterval);
 		this.animation_down.setAutoUpdate(false);
-		this.animation_right		= new Animation(animRight, animationInterval);
+		this.animation_right		= new Animation(animRight, this.animationInterval);
 		this.animation_right.setAutoUpdate(false);
-		this.animation_up			= new Animation(animUp, animationInterval);
+		this.animation_up			= new Animation(animUp, this.animationInterval);
 		this.animation_up.setAutoUpdate(false);
-		this.animation_left			= new Animation(animLeft, animationInterval);
+		this.animation_left			= new Animation(animLeft, this.animationInterval);
 		this.animation_left.setAutoUpdate(false);
-		this.animation_die_down		= new Animation(animDieDown, dyingAnimationInterval);
+		this.animation_die_down		= new Animation(animDieDown, this.dyingAnimationInterval);
 		this.animation_die_down.setAutoUpdate(false);
-        this.animation_die_right	= new Animation(animDieRight, dyingAnimationInterval);
+        this.animation_die_right	= new Animation(animDieRight, this.dyingAnimationInterval);
         this.animation_die_right.setAutoUpdate(false);
-        this.animation_die_up		= new Animation(animDieUp, dyingAnimationInterval);
+        this.animation_die_up		= new Animation(animDieUp, this.dyingAnimationInterval);
         this.animation_die_up.setAutoUpdate(false);
-        this.animation_die_left		= new Animation(animDieLeft, dyingAnimationInterval);
+        this.animation_die_left		= new Animation(animDieLeft, this.dyingAnimationInterval);
         this.animation_die_left.setAutoUpdate(false);
 		this.animation_actual		= new Animation();
 		
         SpriteSheet shield		= new SpriteSheet(shieldImagePath, 64, 128);
         shield.setFilter(Image.FILTER_NEAREST);
-        this.animation_shielded	= new Animation(shield, shieldAnimationInterval);
+        this.animation_shielded	= new Animation(shield, this.shieldAnimationInterval);
 		
 		this.stopDown			= spriteSheet.getSubImage(192, 1024, 64, 128);
 		this.stopRight			= spriteSheet.getSubImage(256, 1024, 64, 128);

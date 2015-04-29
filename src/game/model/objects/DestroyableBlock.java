@@ -26,7 +26,7 @@ public class DestroyableBlock extends Block implements IDestroyable
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int delta)
 	{
-		// TODO Auto-generated method stub
+		// no operation here
 	}
 
 	@Override
