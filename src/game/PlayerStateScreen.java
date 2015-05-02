@@ -7,8 +7,6 @@ import game.model.objects.Player;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.text.DecimalFormat;
-
 public class PlayerStateScreen implements IRenderable
 {
     private Player              player;
