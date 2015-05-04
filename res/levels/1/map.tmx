@@ -12,15 +12,28 @@
     <property name="destroyable" value="false"/>
    </properties>
   </tile>
+  <tile id="9">
+   <properties>
+    <property name="destroyable" value="false"/>
+   </properties>
+  </tile>
+  <tile id="38">
+   <properties>
+    <property name="destroyable" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="background" width="15" height="15">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+NgYGDgGMWjeBQPGAYAdMb1mYQDAAA=
+   H4sIAAAAAAAAC5NkYGCQHMVgLEGmHnRMrj5i9VOilxI3U0MvpeE9HDEAV4pO1YQDAAA=
   </data>
  </layer>
  <layer name="blocks" width="15" height="15">
+  <properties>
+   <property name="destroyable" value="false"/>
+  </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC2NmYGBgpgDDABMRGAaQ9TJD5YihkfUSYx86ZibRPnR61N6hYS8DifYxoOllINI+BjS95GIARUPBEoQDAAA=
+   H4sIAAAAAAAAC6VSQQoAIAySrv7/v10ahOSSEqRBurU1AuAHCyNgYfdy3SXn7k3qKWny6ns6neY6wWk11rnhoh+ht6tL4z31rXPu+k3mrHVgdL//6/Ime1V42edXTmEPWpCEAwAA
   </data>
  </layer>
  <layer name="foreground" width="15" height="15">
