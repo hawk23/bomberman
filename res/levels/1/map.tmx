@@ -17,7 +17,22 @@
     <property name="destroyable" value="false"/>
    </properties>
   </tile>
+  <tile id="25">
+   <properties>
+    <property name="destroyable" value="true"/>
+   </properties>
+  </tile>
   <tile id="38">
+   <properties>
+    <property name="destroyable" value="false"/>
+   </properties>
+  </tile>
+  <tile id="39">
+   <properties>
+    <property name="destroyable" value="true"/>
+   </properties>
+  </tile>
+  <tile id="40">
    <properties>
     <property name="destroyable" value="true"/>
    </properties>
@@ -33,7 +48,7 @@
    <property name="destroyable" value="false"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC6VSQQoAIAySrv7/v10ahOSSEqRBurU1AuAHCyNgYfdy3SXn7k3qKWny6ns6neY6wWk11rnhoh+ht6tL4z31rXPu+k3mrHVgdL//6/Ime1V42edXTmEPWpCEAwAA
+   H4sIAAAAAAAAC6VSgQnAMAgLPqP/XzgGE0LWdmkniKUaU1MTQP7wtjK8jbF3DDMytp5710uw3Fffk5JXbOA9PxvjR7x9Vt3wUR8mdsWbE2xO6lnn1byOzsoDyc94d/9X++7sVZuzzyPtTvwCec0AyoQDAAA=
   </data>
  </layer>
  <layer name="foreground" width="15" height="15">

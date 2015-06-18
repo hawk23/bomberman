@@ -84,7 +84,7 @@ public class IntroState extends BombermanGameState
 	@Override
 	public void leave(GameContainer container, StateBasedGame game) throws SlickException {
 		container.getInput().clearKeyPressedRecord();
-		hornSound.play(1.0f, 0.4f);;
+		//hornSound.play(1.0f, 0.4f);;
 	}
 
 }
