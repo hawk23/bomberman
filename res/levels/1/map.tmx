@@ -48,7 +48,7 @@
    <property name="destroyable" value="false"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC6VSgQnAMAgLPqP/XzgGE0LWdmkniKUaU1MTQP7wtjK8jbF3DDMytp5710uw3Fffk5JXbOA9PxvjR7x9Vt3wUR8mdsWbE2xO6lnn1byOzsoDyc94d/9X++7sVZuzzyPtTvwCec0AyoQDAAA=
+   H4sIAAAAAAAAC6VSAQoAIQgbfkb//8I4OGGss7MaDCOdpukA/IKJaDDB2sda07I23vsuQ7ScV9/j4letYe6fwfqvunnWueEn3praVV0vtF7E85xX/XbmrHUg/qru7v9q3p29Spzs8ykHw3lKoYQDAAA=
   </data>
  </layer>
  <layer name="foreground" width="15" height="15">
