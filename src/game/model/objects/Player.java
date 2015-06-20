@@ -59,6 +59,14 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Animation	animation_die_right;
     private Animation	animation_die_up;
     private Animation	animation_die_left;
+    private Animation   animation_win_down;
+    private Animation   animation_win_left;
+    private Animation   animation_win_right;
+    private Animation   animation_win_up;
+    private Animation   animation_kick_down;
+    private Animation   animation_kick_left;
+    private Animation   animation_kick_right;
+    private Animation   animation_kick_up;
     private Animation	animation_shielded;
 
     private float 		speed;
@@ -133,14 +141,26 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 		Image spriteSheet 		= new Image(path);
 		spriteSheet.setFilter(Image.FILTER_NEAREST);
 		
-		SpriteSheet animDown 	= new SpriteSheet(spriteSheet.getSubImage(0, 0, 640, 128), 64, 128);
-		SpriteSheet animRight 	= new SpriteSheet(spriteSheet.getSubImage(0, 128, 640, 128), 64, 128);
-		SpriteSheet animUp 		= new SpriteSheet(spriteSheet.getSubImage(0, 256, 640, 128), 64, 128);
-		SpriteSheet animLeft 	= new SpriteSheet(spriteSheet.getSubImage(0, 384, 640, 128), 64, 128);
+		SpriteSheet animDown 	= new SpriteSheet(spriteSheet.getSubImage(0,   0, 640, 128), 64, 128);
+        SpriteSheet animLeft 	= new SpriteSheet(spriteSheet.getSubImage(0, 128, 640, 128), 64, 128);
+        SpriteSheet animRight 	= new SpriteSheet(spriteSheet.getSubImage(0, 256, 640, 128), 64, 128);
+		SpriteSheet animUp 		= new SpriteSheet(spriteSheet.getSubImage(0, 384, 640, 128), 64, 128);
+
 		SpriteSheet animDieDown	= new SpriteSheet(spriteSheet.getSubImage(0, 512, 640, 128), 64, 128);
-        SpriteSheet animDieRight= new SpriteSheet(spriteSheet.getSubImage(0, 640, 640, 128), 64, 128);
-        SpriteSheet animDieUp	= new SpriteSheet(spriteSheet.getSubImage(0, 768, 640, 128), 64, 128);
-        SpriteSheet animDieLeft	= new SpriteSheet(spriteSheet.getSubImage(0, 896, 640, 128), 64, 128);
+        SpriteSheet animDieLeft	= new SpriteSheet(spriteSheet.getSubImage(0, 640, 640, 128), 64, 128);
+        SpriteSheet animDieRight= new SpriteSheet(spriteSheet.getSubImage(0, 768, 640, 128), 64, 128);
+        SpriteSheet animDieUp	= new SpriteSheet(spriteSheet.getSubImage(0, 896, 640, 128), 64, 128);
+
+        SpriteSheet animWinDown	= new SpriteSheet(spriteSheet.getSubImage(0, 1152, 640, 128), 64, 128);
+        SpriteSheet animWinLeft	= new SpriteSheet(spriteSheet.getSubImage(0, 1280, 640, 128), 64, 128);
+        SpriteSheet animWinRight= new SpriteSheet(spriteSheet.getSubImage(0, 1408, 640, 128), 64, 128);
+        SpriteSheet animWinUp	= new SpriteSheet(spriteSheet.getSubImage(0, 1536, 640, 128), 64, 128);
+
+        SpriteSheet animKickDown	= new SpriteSheet(spriteSheet.getSubImage(0, 1664, 640, 128), 64, 128);
+        SpriteSheet animKickLeft	= new SpriteSheet(spriteSheet.getSubImage(0, 1792, 640, 128), 64, 128);
+        SpriteSheet animKickRight   = new SpriteSheet(spriteSheet.getSubImage(0, 1920, 640, 128), 64, 128);
+        SpriteSheet animKickUp	    = new SpriteSheet(spriteSheet.getSubImage(0, 2048, 640, 128), 64, 128);
+
 		
 		this.animation_down 		= new Animation(animDown, this.animationInterval);
 		this.animation_down.setAutoUpdate(false);
@@ -159,15 +179,39 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.animation_die_left		= new Animation(animDieLeft, this.dyingAnimationInterval);
         this.animation_die_left.setAutoUpdate(false);
 		this.animation_actual		= new Animation();
-		
+
+        this.animation_win_down     = new Animation(animWinDown, this.animationInterval);
+        this.animation_win_down.setPingPong(true);
+        this.animation_win_down.setAutoUpdate(false);
+        this.animation_win_left     = new Animation(animWinLeft, this.animationInterval);
+        this.animation_win_left.setPingPong(true);
+        this.animation_win_left.setAutoUpdate(false);
+        this.animation_win_right     = new Animation(animWinRight, this.animationInterval);
+        this.animation_win_right.setPingPong(true);
+        this.animation_win_right.setAutoUpdate(false);
+        this.animation_win_up     = new Animation(animWinUp, this.animationInterval);
+        this.animation_win_up.setPingPong(true);
+        this.animation_win_up.setAutoUpdate(false);
+
+        this.animation_kick_down     = new Animation(animKickDown, this.animationInterval);
+        this.animation_kick_down.setAutoUpdate(false);
+        this.animation_kick_left     = new Animation(animKickLeft, this.animationInterval);
+        this.animation_kick_left.setAutoUpdate(false);
+        this.animation_kick_right     = new Animation(animKickRight, this.animationInterval);
+        this.animation_kick_right.setAutoUpdate(false);
+        this.animation_kick_up     = new Animation(animKickUp, this.animationInterval);
+        this.animation_kick_up.setAutoUpdate(false);
+        
+        
         SpriteSheet shield		= new SpriteSheet(shieldImagePath, 64, 128);
         shield.setFilter(Image.FILTER_NEAREST);
         this.animation_shielded	= new Animation(shield, this.shieldAnimationInterval);
 		
 		this.stopDown			= spriteSheet.getSubImage(192, 1024, 64, 128);
-		this.stopRight			= spriteSheet.getSubImage(256, 1024, 64, 128);
-		this.stopUp				= spriteSheet.getSubImage(320, 1024, 64, 128);
-		this.stopLeft			= spriteSheet.getSubImage(384, 1024, 64, 128);
+        this.stopLeft			= spriteSheet.getSubImage(256, 1024, 64, 128);
+        this.stopRight			= spriteSheet.getSubImage(320, 1024, 64, 128);
+		this.stopUp				= spriteSheet.getSubImage(384, 1024, 64, 128);
+
 		
 		this.image				= this.stopDown;	
 	}
@@ -287,12 +331,34 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
                     default:
                         break;
-                }  
-                
+                }
+//TODO: Implement the Kick animation, currently conflicting with the walk animation
                 if (moving) {
                     if (isBlocked(targetX, targetY)) {
                     	if (isBomb(targetX, targetY) && isKicker) {
-                    		map.kickBomb(map.getBomb(targetX / GameSettings.TILE_WIDTH, targetY / GameSettings.TILE_HEIGHT), movementDirection);		
+                    		map.kickBomb(map.getBomb(targetX / GameSettings.TILE_WIDTH, targetY / GameSettings.TILE_HEIGHT), movementDirection);
+                            switch (direction) {
+
+                                case UP:
+                                    animation_actual = animation_kick_up;
+                                    break;
+
+                                case DOWN:
+                                    animation_actual = animation_kick_down;
+                                    break;
+
+                                case LEFT:
+                                    animation_actual = animation_kick_left;
+                                    break;
+
+                                case RIGHT:
+                                    animation_actual = animation_kick_right;
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                            animation_actual.restart();
                     	}
                     	targetX = originalX;
                     	targetY = originalY;
@@ -596,10 +662,10 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     		return false;
     	}
     }
-    
+
     private boolean isBomb(float x, float y) {
-    	
-    	if (map.isBomb((int) x / GameSettings.TILE_WIDTH, (int) y / GameSettings.TILE_HEIGHT))
+
+        if (map.isBomb((int) x / GameSettings.TILE_WIDTH, (int) y / GameSettings.TILE_HEIGHT))
     	{
     		return true;
     	}

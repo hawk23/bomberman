@@ -52,7 +52,7 @@ public class MainMenu extends Menu
 	private int settings_space 			= 80;
 	private int settings_xOffset 		= 500;
 	private int settings_xOffset2 		= 550;
-	private int settings_yOffset 		= 630;
+	private int settings_yOffset 		= 690;
 	private int timeLimit;
 	private int maxTimeLimit 			= 10;
 	private int players;
@@ -72,7 +72,7 @@ public class MainMenu extends Menu
 	private int avatar_space 			= 80;
 	private int avatar_xOffset 			= 500;
 	private int avatar_xOffset2 		= 550;
-	private int avatar_yOffset 			= 580;
+	private int avatar_yOffset 			= 690;
 	private int actualPlayer1;
 	private int actualPlayer2;
 	private int actualPlayer3;
@@ -156,10 +156,10 @@ public class MainMenu extends Menu
 	private void renderAvatarLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
 		
 		int xPaddingBack = 320;
-		int yPadding = 100;
+		int yPadding = 150;
 		int fontSpace = 40;
 		
-		fontOutline2.drawString(40, 30, "Avatar Selection");
+		fontOutline2.drawString(180, 5, "Avatar Selection");
 		
 		if (avatarLayerIndex >= 1 && avatarLayerIndex <= 4) {
 			
@@ -277,10 +277,12 @@ public class MainMenu extends Menu
 
 	private void renderSettingsLayer1(GameContainer container, StateBasedGame game, Graphics graphics) {
 		
-		int xPaddingMap = 320;
+		int xPaddingMap = 350;
 		int xPaddingPlayers = 670;
-		int yPadding = 60;
+		int yPadding = 170;
 		int playersSpace = 10;
+
+		int yPaddingStart=-85, xPaddingStart=0;
 		
 //		Image backScaled = avatar_back.getScaledCopy(880, 335);
 //		backScaled.draw((this.canvasWidth - backScaled.getWidth()) /2, 10, new Color(1f, 1f, 1f, 0.3f));
@@ -348,17 +350,15 @@ public class MainMenu extends Menu
 			}
 			
 		}
-		
+		graphics.scale(0.7f, 0.7f);
 		if (settingsLayer1Index == 0) {
-			fontOutline.drawString((canvasWidth - fontOutline.getWidth(settingsLayer1_0)) / 2,
-					330, settingsLayer1_0);
+			fontOutline.drawString(settings_xOffset+xPaddingStart, settings_yOffset+yPaddingStart, settingsLayer1_0);
 		}
 		else {
-			font.drawString((canvasWidth - font.getWidth(settingsLayer1_0)) / 2,
-					330, settingsLayer1_0);
+			font.drawString(settings_xOffset+xPaddingStart, settings_yOffset+yPaddingStart, settingsLayer1_0);
 		}
 		
-		graphics.scale(0.7f, 0.7f);
+
 		if (settingsLayer1Index == 1) {
 			fontOutline.drawString(settings_xOffset, settings_yOffset, settingsLayer1_1);
 			if (timeLimit == 0) {
@@ -419,7 +419,7 @@ public class MainMenu extends Menu
 	}
 
 	private void renderControlsLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
-		fontOutline2.drawString(40, 30, "Controls");
+		fontOutline2.drawString(180, 5, "Controls");
 		
 		graphics.scale(0.7f, 0.7f);
 		fontOutline.drawString((canvasWidth - fontOutline.getWidth(controlsLayer_0)) / 2 /0.7f, 
@@ -429,7 +429,7 @@ public class MainMenu extends Menu
 
 	private void renderExitLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
 		
-		font.drawString((canvasWidth - font.getWidth(exitLayerHeading)) / 2, 450, exitLayerHeading);
+		fontOutline2.drawString((canvasWidth - font.getWidth(exitLayerHeading)) / 2, 450, exitLayerHeading);
 		
 		float scale = 0.7f;
 		graphics.scale(scale, scale);
