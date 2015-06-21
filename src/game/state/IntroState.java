@@ -12,8 +12,8 @@ import slick.extension.AppGameContainerFSCustom;
 
 public class IntroState extends BombermanGameState
 {
-	private static final String 	hornSoundPath      	= "res/sounds/div/horn.wav";
-	private Sound hornSound;
+	private static final String 	introSoundPath      	= "res/sounds/menu/first.wav";
+	private Sound introSound;
 	
 	/**
 	 * timer should be set to 0 and be incremented in update() by delta
@@ -40,7 +40,7 @@ public class IntroState extends BombermanGameState
     private void loadMusic() {
     	try
 		{
-			this.hornSound	= new Sound(hornSoundPath);
+			this.introSound	= new Sound(introSoundPath);
 		}
 		catch (SlickException e)
 		{
@@ -69,7 +69,10 @@ public class IntroState extends BombermanGameState
     		leaveIntro = true;
     	}
     	
-    	if (leaveIntro) {
+//    	if (leaveIntro) {
+//    		game.enterState(BombermanGameState.MAIN_MENU);
+//    	}
+    	if (!introSound.playing()) {
     		game.enterState(BombermanGameState.MAIN_MENU);
     	}
     }
@@ -78,13 +81,14 @@ public class IntroState extends BombermanGameState
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException {
 		timer = 0;
 		time = 5_000;
-		leaveIntro = false;		
+		leaveIntro = false;	
+		introSound.play(1.0f, 0.4f);
 	}
 
 	@Override
 	public void leave(GameContainer container, StateBasedGame game) throws SlickException {
 		container.getInput().clearKeyPressedRecord();
-		//hornSound.play(1.0f, 0.4f);;
+		
 	}
 
 }
