@@ -49,6 +49,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private int 		animationInterval;
     private int 		dyingAnimationInterval = 75;
     private int			shieldAnimationInterval = 50;
+    private int			kickingAnimationInterval = 20;
     
     private Animation 	animation_actual;
     private Animation 	animation_up;
@@ -76,7 +77,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private int 		bombCount;
 
     private boolean		isKicker = true;
+    private boolean 	isKicking = false;
     private boolean		shielded;
+    private int 		kickTimer;
     private int 		shieldTimer;
     private boolean		indestructable;
     private boolean 	destroyed;
@@ -193,13 +196,13 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.animation_win_up.setPingPong(true);
         this.animation_win_up.setAutoUpdate(false);
 
-        this.animation_kick_down     = new Animation(animKickDown, this.animationInterval);
+        this.animation_kick_down     = new Animation(animKickDown, this.kickingAnimationInterval);
         this.animation_kick_down.setAutoUpdate(false);
-        this.animation_kick_left     = new Animation(animKickLeft, this.animationInterval);
+        this.animation_kick_left     = new Animation(animKickLeft, this.kickingAnimationInterval);
         this.animation_kick_left.setAutoUpdate(false);
-        this.animation_kick_right     = new Animation(animKickRight, this.animationInterval);
+        this.animation_kick_right    = new Animation(animKickRight, this.kickingAnimationInterval);
         this.animation_kick_right.setAutoUpdate(false);
-        this.animation_kick_up     = new Animation(animKickUp, this.animationInterval);
+        this.animation_kick_up     	= new Animation(animKickUp, this.kickingAnimationInterval);
         this.animation_kick_up.setAutoUpdate(false);
         
         
@@ -265,6 +268,18 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         		image = animation_actual.getCurrentFrame();
         		animation_actual.update(delta);
         	}
+        }
+        else if (isKicking) {
+            if (isKicking) {
+            	if (kickTimer <= 0) {
+            		isKicking = false;
+            	}
+            	else {
+            		kickTimer -= delta;
+            		image = animation_actual.getCurrentFrame();
+            		animation_actual.update(delta);
+            	}
+            }
         }
         else // alive!
         {
@@ -332,37 +347,40 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
                     default:
                         break;
                 }
-//TODO: Implement the Kick animation, currently conflicting with the walk animation
+                //TODO: Implement the Kick animation, currently conflicting with the walk animation
                 if (moving) {
                     if (isBlocked(targetX, targetY)) {
                     	if (isBomb(targetX, targetY) && isKicker) {
-                    		map.kickBomb(map.getBomb(targetX / GameSettings.TILE_WIDTH, targetY / GameSettings.TILE_HEIGHT), movementDirection);
-                            switch (direction) {
-
-                                case UP:
-                                    animation_actual = animation_kick_up;
-                                    break;
-
-                                case DOWN:
-                                    animation_actual = animation_kick_down;
-                                    break;
-
-                                case LEFT:
-                                    animation_actual = animation_kick_left;
-                                    break;
-
-                                case RIGHT:
-                                    animation_actual = animation_kick_right;
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                            animation_actual.restart();
+                    		if (map.kickBomb(map.getBomb(targetX / GameSettings.TILE_WIDTH, targetY / GameSettings.TILE_HEIGHT), movementDirection)) {
+	                            switch (direction) {
+	
+	                                case UP:
+	                                    animation_actual = animation_kick_up;
+	                                    break;
+	
+	                                case DOWN:
+	                                    animation_actual = animation_kick_down;
+	                                    break;
+	
+	                                case LEFT:
+	                                    animation_actual = animation_kick_left;
+	                                    break;
+	
+	                                case RIGHT:
+	                                    animation_actual = animation_kick_right;
+	                                    break;
+	
+	                                default:
+	                                    break;
+	                            }
+	                            this.kickTimer = this.animation_actual.getFrameCount() * kickingAnimationInterval;
+	                            animation_actual.start();
+                    		}
                     	}
                     	targetX = originalX;
                     	targetY = originalY;
                     	moving = false;
+                    	isKicking = true;
                     }
                 }
 
