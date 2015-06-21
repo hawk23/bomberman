@@ -113,6 +113,7 @@ public class GameRoundState extends BombermanGameState
 	        case ROUND_END: render_STATE_ROUND_END(container, game, graphics); break;
 	    
 	    }
+        
     }
 
     private void render_STATE_ROUND_END(GameContainer container, StateBasedGame game, Graphics graphics) {
@@ -357,6 +358,7 @@ public class GameRoundState extends BombermanGameState
     public void enter(GameContainer container, StateBasedGame game) throws SlickException
     {
     	this.map = new BombermanMap(this.gameRoundConfig, container);
+    	this.stateScreens = new ArrayList<PlayerStateScreen>();
     	
     	// create player state screens
     	for (int i = 0; i < this.map.getPlayers().length; i++)

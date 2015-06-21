@@ -151,6 +151,7 @@ public class MainMenu extends Menu
 			
 			default: break;
 		}
+		
 	}
 	
 	private void renderAvatarLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
