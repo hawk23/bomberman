@@ -23,7 +23,7 @@ public class GameRoundState extends BombermanGameState
 	private Sound 					gameStartMusic;
 	private static final String 	sirenSoundPath      	= "res/sounds/round/suddendeath.ogg";
 	private Sound 					sirenSound;
-	private static final String 	gameSoundPath      	= "res/sounds/round/roundSound.ogg";
+	private static final String 	gameSoundPath      	= "res/sounds/round/gameSound.wav";
 	private Sound 					gameSound;
 	
 	private static enum RoundState {
@@ -402,8 +402,8 @@ public class GameRoundState extends BombermanGameState
     	countdown		= "";
     	
     	actualState = RoundState.STARTING;
-    	gameStartMusic.play(1.0f, 1.0f);
-    	gameSound.loop(1.0f, 1.0f); 	
+    	gameStartMusic.play(1.0f, 1.2f);
+    	gameSound.loop(1.0f, 0.2f); 	
     }
     
     @Override
