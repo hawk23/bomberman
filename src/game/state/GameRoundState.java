@@ -23,8 +23,9 @@ public class GameRoundState extends BombermanGameState
 	private Sound 					gameStartMusic;
 	private static final String 	sirenSoundPath      	= "res/sounds/round/suddendeath.ogg";
 	private Sound 					sirenSound;
-	private static final String 	gameSoundPath      	= "res/sounds/round/gameSound.wav";
+	private static final String 	gameSoundPath      		= "res/sounds/round/gameSound2.wav";
 	private Sound 					gameSound;
+
 	
 	private static enum RoundState {
 		STARTING, PLAYING, PAUSED, ROUND_END
@@ -193,7 +194,7 @@ public class GameRoundState extends BombermanGameState
     }
     
     private void update_STATE_ROUND_END(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-
+    	
     	endMenu.update(container, game, delta);
         	
     	if (endMenu.getActualAction() != Action.NO_ACTION) {
@@ -298,6 +299,7 @@ public class GameRoundState extends BombermanGameState
 			if (!this.sirenplayed) {
 				this.sirenSound.play();
 				this.sirenplayed = true;
+				gameSound.loop(1.0f, 0.6f);
 			}
 			
 		}
@@ -324,6 +326,16 @@ public class GameRoundState extends BombermanGameState
         	if(END_TIME >= END_TIMER) {
         		actualState = RoundState.ROUND_END;
         		input.clearKeyPressedRecord();
+            	if (gameSound.playing()) {
+            		gameSound.stop();
+            	}
+            	
+            	if (sirenSound.playing()) {
+            		sirenSound.stop();
+            	}
+            	if (gameStartMusic.playing()) {
+            		gameStartMusic.stop();
+            	}
         	}
         	else {
         		END_TIME += delta;
@@ -403,7 +415,7 @@ public class GameRoundState extends BombermanGameState
     	
     	actualState = RoundState.STARTING;
     	gameStartMusic.play(1.0f, 1.2f);
-    	gameSound.loop(1.0f, 0.2f); 	
+    	 	
     }
     
     @Override
