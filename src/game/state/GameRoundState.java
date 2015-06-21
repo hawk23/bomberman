@@ -20,9 +20,11 @@ public class GameRoundState extends BombermanGameState
 {
 	// Sounds
 	private static final String 	gameStartMusicPath 		= "res/sounds/round/startround.ogg";
-	private Music 					gameStartMusic;
+	private Sound 					gameStartMusic;
 	private static final String 	sirenSoundPath      	= "res/sounds/round/suddendeath.ogg";
 	private Sound 					sirenSound;
+	private static final String 	gameSoundPath      	= "res/sounds/round/roundSound.ogg";
+	private Sound 					gameSound;
 	
 	private static enum RoundState {
 		STARTING, PLAYING, PAUSED, ROUND_END
@@ -400,12 +402,14 @@ public class GameRoundState extends BombermanGameState
     	countdown		= "";
     	
     	actualState = RoundState.STARTING;
-    	playMusic (gameStartMusic);
+    	gameStartMusic.play(1.0f, 1.0f);
+    	gameSound.loop(1.0f, 1.0f); 	
     }
     
     @Override
     public void leave(GameContainer container, StateBasedGame game) throws SlickException
     {
+    	gameSound.stop();
     	container.getInput().clearKeyPressedRecord();
     }
 	
@@ -424,27 +428,13 @@ public class GameRoundState extends BombermanGameState
 	{
 		try
 		{
-			this.gameStartMusic = new Music(gameStartMusicPath);
+			this.gameStartMusic = new Sound(gameStartMusicPath);
 			this.sirenSound		= new Sound(sirenSoundPath);
+			this.gameSound		= new Sound(gameSoundPath);
 		}
 		catch (SlickException e)
 		{
 			//TODO
 		}
-	}
-	
-	private void playMusic (Music music)
-	{
-		music.play();
-	}
-
-	private void pauseMusic (Music music)
-	{
-		music.pause();
-	}
-
-	private void resumeMusic (Music music)
-	{
-		music.resume();
 	}
 }
