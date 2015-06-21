@@ -261,20 +261,24 @@ public class GameRoundState extends BombermanGameState
 					this.map.getPlayers()[i].setIndestructable();
 					alive++;
 				}
-			//TODO: implement winning animation
+			
 			if (alive > 1) {
 				winner = "Time Limit Reached";
 			}
 			else if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDying()) {	
-        		winner = "Player 1 wins!";
+				this.map.getPlayers()[0].setWinner();
+				winner = "Player 1 wins!";
         	}
         	else if (this.map.getPlayers().length > 1 && !this.map.getPlayers()[1].isDying()) {
+        		this.map.getPlayers()[1].setWinner();
         		winner = "Player 2 wins!";
         	}
         	else if (this.map.getPlayers().length > 2 && !this.map.getPlayers()[2].isDying()) {
+        		this.map.getPlayers()[2].setWinner();
         		winner = "Player 3 wins!";
         	}
         	else if (this.map.getPlayers().length > 3 &&!this.map.getPlayers()[3].isDying()) {
+        		this.map.getPlayers()[3].setWinner();
         		winner = "Player 4 wins!";
         	}
         	else {

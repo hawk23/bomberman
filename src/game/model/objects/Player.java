@@ -47,9 +47,10 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Image		stopLeft;
 
     private int 		animationInterval;
+    private int			winningAnimationInterval = 50;
     private int 		dyingAnimationInterval = 75;
     private int			shieldAnimationInterval = 50;
-    private int			kickingAnimationInterval = 20;
+    private int			kickingAnimationInterval = 17;
     
     private Animation 	animation_actual;
     private Animation 	animation_up;
@@ -76,6 +77,8 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private int 		bombLimit;
     private int 		bombCount;
 
+    private boolean 	winningAnimStarted = false;
+    private boolean 	isWinner = false;
     private boolean		isKicker = true;
     private boolean 	isKicking = false;
     private boolean		shielded;
@@ -183,16 +186,16 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.animation_die_left.setAutoUpdate(false);
 		this.animation_actual		= new Animation();
 
-        this.animation_win_down     = new Animation(animWinDown, this.animationInterval);
+        this.animation_win_down     = new Animation(animWinDown, this.winningAnimationInterval);
         this.animation_win_down.setPingPong(true);
         this.animation_win_down.setAutoUpdate(false);
-        this.animation_win_left     = new Animation(animWinLeft, this.animationInterval);
+        this.animation_win_left     = new Animation(animWinLeft, this.winningAnimationInterval);
         this.animation_win_left.setPingPong(true);
         this.animation_win_left.setAutoUpdate(false);
-        this.animation_win_right     = new Animation(animWinRight, this.animationInterval);
+        this.animation_win_right     = new Animation(animWinRight, this.winningAnimationInterval);
         this.animation_win_right.setPingPong(true);
         this.animation_win_right.setAutoUpdate(false);
-        this.animation_win_up     = new Animation(animWinUp, this.animationInterval);
+        this.animation_win_up     = new Animation(animWinUp, this.winningAnimationInterval);
         this.animation_win_up.setPingPong(true);
         this.animation_win_up.setAutoUpdate(false);
 
@@ -265,6 +268,37 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         	}
         	else {
         		dyingTimer -= delta;
+        		image = animation_actual.getCurrentFrame();
+        		animation_actual.update(delta);
+        	}
+        }
+        else if(isWinner) {
+        	if (!winningAnimStarted) {
+        		switch (movementDirection) {
+        		
+                case UP:
+                    animation_actual = animation_win_up;
+                    break;
+
+                case DOWN:
+                    animation_actual = animation_win_down;
+                    break;
+
+                case LEFT:
+                    animation_actual = animation_win_left;
+                    break;
+
+                case RIGHT:
+                    animation_actual = animation_win_right;
+                    break;
+
+                default:
+                    break;
+        		}
+            animation_actual.start();
+            winningAnimStarted = true;
+        	}
+        	else {
         		image = animation_actual.getCurrentFrame();
         		animation_actual.update(delta);
         	}
@@ -347,12 +381,12 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
                     default:
                         break;
                 }
-                //TODO: Implement the Kick animation, currently conflicting with the walk animation
+                
                 if (moving) {
                     if (isBlocked(targetX, targetY)) {
                     	if (isBomb(targetX, targetY) && isKicker) {
                     		if (map.kickBomb(map.getBomb(targetX / GameSettings.TILE_WIDTH, targetY / GameSettings.TILE_HEIGHT), movementDirection)) {
-	                            switch (direction) {
+	                            switch (movementDirection) {
 	
 	                                case UP:
 	                                    animation_actual = animation_kick_up;
@@ -820,5 +854,9 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
 
 	public int getTargetY() {
 		return targetY;
+	}
+	
+	public void setWinner() {
+		this.isWinner = true;
 	}
 }
