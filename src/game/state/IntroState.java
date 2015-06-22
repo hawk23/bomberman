@@ -12,8 +12,10 @@ import slick.extension.AppGameContainerFSCustom;
 
 public class IntroState extends BombermanGameState
 {
-	private static final String 	introSoundPath      	= "res/sounds/menu/first.wav";
+	private static final String 	introSoundPath      	= "res/sounds/menu/introStart.ogg";
 	private Sound introSound;
+	private static final String 	explosionSoundPath      = "res/sounds/bomb/explosion.ogg";
+	private Sound explosionSound;
 	
 	/**
 	 * timer should be set to 0 and be incremented in update() by delta
@@ -41,6 +43,7 @@ public class IntroState extends BombermanGameState
     	try
 		{
 			this.introSound	= new Sound(introSoundPath);
+			this.explosionSound = new Sound(explosionSoundPath);
 		}
 		catch (SlickException e)
 		{
@@ -58,21 +61,22 @@ public class IntroState extends BombermanGameState
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
     	
-    	Input input = container.getInput();
-    	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-    		leaveIntro = true;
-    	}
-    	
-    	// increment timer by delta
-    	timer += delta;
-    	if (timer >= time) {
-    		leaveIntro = true;
-    	}
-    	
+//    	Input input = container.getInput();
+//    	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+//    		leaveIntro = true;
+//    	}
+//    	
+//    	// increment timer by delta
+//    	timer += delta;
+//    	if (timer >= time) {
+//    		leaveIntro = true;
+//    	}
+//    	
 //    	if (leaveIntro) {
 //    		game.enterState(BombermanGameState.MAIN_MENU);
 //    	}
     	if (!introSound.playing()) {
+    		explosionSound.play(1.0f,  2.0f);
     		game.enterState(BombermanGameState.MAIN_MENU);
     	}
     }
@@ -87,8 +91,7 @@ public class IntroState extends BombermanGameState
 
 	@Override
 	public void leave(GameContainer container, StateBasedGame game) throws SlickException {
-		container.getInput().clearKeyPressedRecord();
-		
+		container.getInput().clearKeyPressedRecord();	
 	}
 
 }

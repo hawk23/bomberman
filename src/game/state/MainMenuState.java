@@ -10,9 +10,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class MainMenuState extends BombermanGameState
 {
-	private static final String mainMenuSoundPath		= "res/sounds/menu/second.wav";
+	private static final String mainMenuSoundPath		= "res/sounds/menu/menuLoop.wav";
 	//private static final String mainMenuSoundPath		= "res/sounds/menu/mainmenu.ogg";
-
 	private Sound mainMenuSound;
 
 	private Image background				= null;
