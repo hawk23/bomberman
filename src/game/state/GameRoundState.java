@@ -29,6 +29,8 @@ public class GameRoundState extends BombermanGameState
 	private Sound 					gameSound;
 	private static final String 	sdLoopPath      		= "res/sounds/round/sd_Loop.wav";
 	private Sound 					sdLoop;
+	private static final String 	crumbleSoundPath      	= "res/sounds/round/crumble.wav";
+	private Sound 					crumbleSound;
 
 	
 	private static enum RoundState {
@@ -317,6 +319,7 @@ public class GameRoundState extends BombermanGameState
 			SHOW_HURRY_TIME += delta;
 			if (!this.sirenplayed) {
 				this.sirenSound.play();
+				this.crumbleSound.play(1.2f, 1.0f);
 				this.sirenplayed = true;
 			}
 			
@@ -455,6 +458,7 @@ public class GameRoundState extends BombermanGameState
 			this.gameSound		= new Sound(gameSoundPath);
 			this.sdLoop			= new Sound(sdLoopPath);
 			this.gameStartSound = new Sound(gameStartSoundPath);
+			this.crumbleSound	= new Sound(crumbleSoundPath);
 		}
 		catch (SlickException e)
 		{
@@ -478,6 +482,9 @@ public class GameRoundState extends BombermanGameState
 		}
     	if (gameStartSound.playing()) {
     		gameStartSound.stop();
+    	}
+    	if (crumbleSound.playing()) {
+    		crumbleSound.stop();
     	}
 	}
 }
