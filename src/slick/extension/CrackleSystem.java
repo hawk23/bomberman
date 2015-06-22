@@ -4,9 +4,10 @@ import game.config.GameSettings;
 import game.interfaces.IDestroyable;
 import game.interfaces.IRenderable;
 import game.interfaces.IUpdateable;
-import game.model.Explosion;
 import game.model.FlamePoint;
-import game.model.GameObject;
+import game.model.objects.Explosion;
+import game.model.objects.GameObject;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.particles.ConfigurableEmitter;
@@ -23,9 +24,6 @@ import java.util.LinkedList;
 public class CrackleSystem implements IUpdateable, IRenderable{
 
     private static final String explosionConfig =  "res/visuals/particles/crackle.xml";
-    private static final float directionSpread =75;
-
-    private static final int delay=200;
 
     private ParticleSystem effectSystem;
     private ParticleEmitter crackleEmitter;

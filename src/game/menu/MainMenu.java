@@ -20,68 +20,68 @@ import slick.extension.AppGameContainerFSCustom;
 
 public class MainMenu extends Menu
 {
-	private GameRoundConfig gameRoundConfig 			= new GameRoundConfig();
-	private ArrayList<MapConfig> mapConfigs 			= new ArrayList<MapConfig>();
-	private ArrayList<PlayerConfig> playerConfigs 		= new ArrayList<PlayerConfig>();
-	private ArrayList<PlayerConfig> actualPlayerConfigs = new ArrayList<PlayerConfig>();
-	private ArrayList<InputConfiguration> inputConfigs 	= new ArrayList<InputConfiguration>();
+	private GameRoundConfig 				gameRoundConfig 	= new GameRoundConfig();
+	private ArrayList<MapConfig> 			mapConfigs 			= new ArrayList<MapConfig>();
+	private ArrayList<PlayerConfig> 		playerConfigs 		= new ArrayList<PlayerConfig>();
+	private ArrayList<PlayerConfig> 		actualPlayerConfigs = new ArrayList<PlayerConfig>();
+	private ArrayList<InputConfiguration> 	inputConfigs 		= new ArrayList<InputConfiguration>();
 	
 	private Image avatar_back;
-	private static final String avatarBackgroundPath	= "res/visuals/backgrounds/avatar_background.png";
+	private static final String avatarBackgroundPath = "res/visuals/backgrounds/avatar_background.png";
 
 	// MainLayer
 	private int mainLayerIndex;
-	private int mainLayerSize = 3;
-	private String mainLayer_0 = "New Game";
-	private String mainLayer_1 = "Controls";
-	private String mainLayer_2 = "Exit Game";
+	private int mainLayerSize 	= 3;
+	private String mainLayer_0 	= "New Game";
+	private String mainLayer_1 	= "Controls";
+	private String mainLayer_2 	= "Exit Game";
 	
 	// ExitLayer
 	private int exitLayerIndex;
-	private int exitLayerSize = 2;
+	private int exitLayerSize 		= 2;
 	private String exitLayerHeading = "Exit Game ?";
-	private String exitLayer_0 = "Yes";
-	private String exitLayer_1 = "No";
+	private String exitLayer_0 		= "Yes";
+	private String exitLayer_1		= "No";
 	
 	// ControlsLayer
 	private String controlsLayer_0 = "Back";
 	
 	// SettingsLayer1
 	private int settingsLayer1Index;
-	private int settingsLayer1Size = 6;
-	private int settings_space = 80;
-	private int settings_xOffset = 500;
-	private int settings_xOffset2 = 550;
-	private int settings_yOffset = 630;
+	private int settingsLayer1Size 		= 6;
+	private int settings_space 			= 80;
+	private int settings_xOffset 		= 500;
+	private int settings_xOffset2 		= 550;
+	private int settings_yOffset 		= 690;
 	private int timeLimit;
-	private int maxTimeLimit = 10;
+	private int maxTimeLimit 			= 10;
 	private int players;
-	private int minPlayers = 2;
-	private int maxPlayers = 4;
+	private int minPlayers 				= 2;
+	private int maxPlayers 				= 4;
 	private int actualMap;
-	private String settingsLayer1_0 = "Start Round!";
-	private String settingsLayer1_1 = "Timelimit";
-	private String settingsLayer1_2 = "Players";
-	private String settingsLayer1_3 = "Avatar Selection";
-	private String settingsLayer1_4 = "Map";
-	private String settingsLayer1_5 = "Back";
+	private String settingsLayer1_0 	= "Start Round!";
+	private String settingsLayer1_1 	= "Timelimit";
+	private String settingsLayer1_2 	= "Players";
+	private String settingsLayer1_3 	= "Avatar Selection";
+	private String settingsLayer1_4	 	= "Map";
+	private String settingsLayer1_5 	= "Back";
 	
 	// AvatarLayer
 	private int avatarLayerIndex;
 	private int avatarLayerSize;
-	private int avatar_space = 80;
-	private int avatar_xOffset = 500;
-	private int avatar_xOffset2 = 550;
-	private int avatar_yOffset = 580;
+	private int avatar_space 			= 80;
+	private int avatar_xOffset 			= 500;
+	private int avatar_xOffset2 		= 550;
+	private int avatar_yOffset 			= 690;
 	private int actualPlayer1;
 	private int actualPlayer2;
 	private int actualPlayer3;
 	private int actualPlayer4;
-	private String avatarLayer_0 = "Back";
-	private String avatarLayer_1 = "Player 1";
-	private String avatarLayer_2 = "Player 2";
-	private String avatarLayer_3 = "Player 3";
-	private String avatarLayer_4 = "Player 4";
+	private String avatarLayer_0 		= "Back";
+	private String avatarLayer_1 		= "Player 1";
+	private String avatarLayer_2 		= "Player 2";
+	private String avatarLayer_3 		= "Player 3";
+	private String avatarLayer_4 		= "Player 4";
 	
 	
 	public MainMenu(GameRoundConfig gameRoundConfig, ArrayList<MapConfig> mapConfigs, 
@@ -95,7 +95,6 @@ public class MainMenu extends Menu
 		try {
 			this.avatar_back		= new Image(avatarBackgroundPath);
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -111,13 +110,14 @@ public class MainMenu extends Menu
 		resetControlsLayer();
 		resetSettingsLayer1();
 		resetAvatarLayer();
-		actualAction = Action.NO_ACTION;
-		actualLayer = Layer.MAIN_LAYER;
+		actualAction 	= Action.NO_ACTION;
+		actualLayer 	= Layer.MAIN_LAYER;
 	}
 
 	private void initSettings() {
-		timeLimit = gameRoundConfig.getTimeLimit();
-		players = gameRoundConfig.getCurrentPlayerConfigs().size();
+		timeLimit 	= gameRoundConfig.getTimeLimit();
+		players		= gameRoundConfig.getCurrentPlayerConfigs().size();
+		
 		for (MapConfig mc : mapConfigs) {
 			if (mc == gameRoundConfig.getMapConfig()) {
 				actualMap = mapConfigs.indexOf(mc);
@@ -151,16 +151,17 @@ public class MainMenu extends Menu
 			
 			default: break;
 		}
+		
 	}
 	
 	private void renderAvatarLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
 		
 		int xPaddingBack = 320;
-		int yPadding = 100;
+		int yPadding = 150;
 		int fontSpace = 40;
 		
-		fontOutline2.drawString(40, 30, "Avatar Selection");
-	
+		fontOutline2.drawString(180, 5, "Avatar Selection");
+		
 		if (avatarLayerIndex >= 1 && avatarLayerIndex <= 4) {
 			
 			PlayerConfig config = null;
@@ -180,7 +181,7 @@ public class MainMenu extends Menu
 					break;
 			}
 			
-			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.5f));
+			graphics.drawImage(avatar_back, xPaddingBack, yPadding, new Color(1f, 1f, 1f, 0.3f));
 			
 			if (config != null) {
 				graphics.drawImage(config.getImage(), xPaddingBack  + 35, yPadding  + 35);
@@ -199,7 +200,7 @@ public class MainMenu extends Menu
 				else if (config.getInitialSpeedUp() >= 2) {
 					speed = "fast";
 				}
-				
+	
 				float scale = 0.5f;
 				graphics.scale(scale, scale);
 				fontOutline2.drawString((xPaddingBack + 330) /scale , (yPadding  + 35) /scale, config.getName());
@@ -277,10 +278,15 @@ public class MainMenu extends Menu
 
 	private void renderSettingsLayer1(GameContainer container, StateBasedGame game, Graphics graphics) {
 		
-		int xPaddingMap = 320;
+		int xPaddingMap = 350;
 		int xPaddingPlayers = 670;
-		int yPadding = 60;
+		int yPadding = 170;
 		int playersSpace = 10;
+
+		int yPaddingStart=-85, xPaddingStart=0;
+		
+//		Image backScaled = avatar_back.getScaledCopy(880, 335);
+//		backScaled.draw((this.canvasWidth - backScaled.getWidth()) /2, 10, new Color(1f, 1f, 1f, 0.3f));
 		
 		float scale = 0.7f;
 		
@@ -345,17 +351,15 @@ public class MainMenu extends Menu
 			}
 			
 		}
-		
+		graphics.scale(0.7f, 0.7f);
 		if (settingsLayer1Index == 0) {
-			fontOutline.drawString((canvasWidth - fontOutline.getWidth(settingsLayer1_0)) / 2,
-					330, settingsLayer1_0);
+			fontOutline.drawString(settings_xOffset+xPaddingStart, settings_yOffset+yPaddingStart, settingsLayer1_0);
 		}
 		else {
-			font.drawString((canvasWidth - font.getWidth(settingsLayer1_0)) / 2,
-					330, settingsLayer1_0);
+			font.drawString(settings_xOffset+xPaddingStart, settings_yOffset+yPaddingStart, settingsLayer1_0);
 		}
 		
-		graphics.scale(0.7f, 0.7f);
+
 		if (settingsLayer1Index == 1) {
 			fontOutline.drawString(settings_xOffset, settings_yOffset, settingsLayer1_1);
 			if (timeLimit == 0) {
@@ -416,7 +420,7 @@ public class MainMenu extends Menu
 	}
 
 	private void renderControlsLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
-		fontOutline2.drawString(40, 30, "Controls");
+		fontOutline2.drawString(180, 5, "Controls");
 		
 		graphics.scale(0.7f, 0.7f);
 		fontOutline.drawString((canvasWidth - fontOutline.getWidth(controlsLayer_0)) / 2 /0.7f, 
@@ -426,7 +430,7 @@ public class MainMenu extends Menu
 
 	private void renderExitLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
 		
-		font.drawString((canvasWidth - font.getWidth(exitLayerHeading)) / 2, 450, exitLayerHeading);
+		fontOutline2.drawString((canvasWidth - font.getWidth(exitLayerHeading)) / 2, 450, exitLayerHeading);
 		
 		float scale = 0.7f;
 		graphics.scale(scale, scale);

@@ -3,6 +3,7 @@ package game.state;
 import game.BombermanGame;
 import game.PlayerStateScreen;
 import game.config.GameRoundConfig;
+import game.config.GameSettings;
 import game.menu.Menu.Action;
 import game.menu.EndMenu;
 import game.menu.PauseMenu;
@@ -19,11 +20,12 @@ public class GameRoundState extends BombermanGameState
 {
 	// Sounds
 	private static final String 	gameStartMusicPath 		= "res/sounds/round/startround.ogg";
-	private Music 					gameStartMusic;
+	private Sound 					gameStartMusic;
 	private static final String 	sirenSoundPath      	= "res/sounds/round/suddendeath.ogg";
 	private Sound 					sirenSound;
-	
-	public static final int			SUDDEN_DEATH_TIME		= 50_000;
+	private static final String 	gameSoundPath      		= "res/sounds/round/gameSound2.wav";
+	private Sound 					gameSound;
+
 	
 	private static enum RoundState {
 		STARTING, PLAYING, PAUSED, ROUND_END
@@ -50,6 +52,7 @@ public class GameRoundState extends BombermanGameState
 	private boolean					setIndestructable;
 	private boolean					startSuddenDeath;
 	private boolean 				sirenplayed;
+	private int 					suddenDeathTime;
 	
 	// Strings
 	private final String			infoGO					= "BOMB !!!!";
@@ -94,6 +97,8 @@ public class GameRoundState extends BombermanGameState
     	endMenu = new EndMenu();
     	endMenu.init();
     	
+    	suddenDeathTime = GameSettings.SUDDEN_DEATH_TIME;
+    	
     	loadMusic();
     	
     	background 				= new Image("res/visuals/backgrounds/menuBackground.png");
@@ -111,6 +116,7 @@ public class GameRoundState extends BombermanGameState
 	        case ROUND_END: render_STATE_ROUND_END(container, game, graphics); break;
 	    
 	    }
+        
     }
 
     private void render_STATE_ROUND_END(GameContainer container, StateBasedGame game, Graphics graphics) {
@@ -128,7 +134,7 @@ public class GameRoundState extends BombermanGameState
 		resetGraphics();
 		
 		this.map.render(container, game, this.map_graphics);
-
+		
         graphics.drawImage(playerStatsBackground, 0, 0);
         graphics.drawImage(playerStatsBackground, xOffset + map.getWidth(), 0);
         
@@ -188,7 +194,7 @@ public class GameRoundState extends BombermanGameState
     }
     
     private void update_STATE_ROUND_END(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-
+    	
     	endMenu.update(container, game, delta);
         	
     	if (endMenu.getActualAction() != Action.NO_ACTION) {
@@ -263,16 +269,20 @@ public class GameRoundState extends BombermanGameState
 			if (alive > 1) {
 				winner = "Time Limit Reached";
 			}
-			else if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDestroyed()) {	
-        		winner = "Player 1 wins!";
+			else if (this.map.getPlayers().length > 0 && !this.map.getPlayers()[0].isDying()) {	
+				this.map.getPlayers()[0].setWinner();
+				winner = "Player 1 wins!";
         	}
-        	else if (this.map.getPlayers().length > 1 && !this.map.getPlayers()[1].isDestroyed()) {
+        	else if (this.map.getPlayers().length > 1 && !this.map.getPlayers()[1].isDying()) {
+        		this.map.getPlayers()[1].setWinner();
         		winner = "Player 2 wins!";
         	}
-        	else if (this.map.getPlayers().length > 2 && !this.map.getPlayers()[2].isDestroyed()) {
+        	else if (this.map.getPlayers().length > 2 && !this.map.getPlayers()[2].isDying()) {
+        		this.map.getPlayers()[2].setWinner();
         		winner = "Player 3 wins!";
         	}
-        	else if (this.map.getPlayers().length > 3 &&!this.map.getPlayers()[3].isDestroyed()) {
+        	else if (this.map.getPlayers().length > 3 &&!this.map.getPlayers()[3].isDying()) {
+        		this.map.getPlayers()[3].setWinner();
         		winner = "Player 4 wins!";
         	}
         	else {
@@ -282,13 +292,14 @@ public class GameRoundState extends BombermanGameState
 			setIndestructable = true;
 		}
 		
-		if ((timeLimit && (ROUND_TIME >= (ROUND_TIME_LIMIT - SUDDEN_DEATH_TIME - SHOW_HURRY_TIMER))) && (SHOW_HURRY_TIME <= SHOW_HURRY_TIMER)) {
+		if ((timeLimit && (ROUND_TIME >= (ROUND_TIME_LIMIT - suddenDeathTime - SHOW_HURRY_TIMER))) && (SHOW_HURRY_TIME <= SHOW_HURRY_TIMER)) {
 			showHurryUP = true;
 			showCountdown = true;
 			SHOW_HURRY_TIME += delta;
 			if (!this.sirenplayed) {
 				this.sirenSound.play();
 				this.sirenplayed = true;
+				gameSound.loop(1.0f, 0.6f);
 			}
 			
 		}
@@ -297,7 +308,7 @@ public class GameRoundState extends BombermanGameState
 		}
 		
 		
-		if (timeLimit && !startSuddenDeath && (ROUND_TIME >= (ROUND_TIME_LIMIT - SUDDEN_DEATH_TIME))) {
+		if (timeLimit && !startSuddenDeath && (ROUND_TIME >= (ROUND_TIME_LIMIT - suddenDeathTime))) {
 			this.map.startSuddenDeath();
 			startSuddenDeath = true;
 		}
@@ -315,6 +326,16 @@ public class GameRoundState extends BombermanGameState
         	if(END_TIME >= END_TIMER) {
         		actualState = RoundState.ROUND_END;
         		input.clearKeyPressedRecord();
+            	if (gameSound.playing()) {
+            		gameSound.stop();
+            	}
+            	
+            	if (sirenSound.playing()) {
+            		sirenSound.stop();
+            	}
+            	if (gameStartMusic.playing()) {
+            		gameStartMusic.stop();
+            	}
         	}
         	else {
         		END_TIME += delta;
@@ -351,6 +372,7 @@ public class GameRoundState extends BombermanGameState
     public void enter(GameContainer container, StateBasedGame game) throws SlickException
     {
     	this.map = new BombermanMap(this.gameRoundConfig, container);
+    	this.stateScreens = new ArrayList<PlayerStateScreen>();
     	
     	// create player state screens
     	for (int i = 0; i < this.map.getPlayers().length; i++)
@@ -392,12 +414,14 @@ public class GameRoundState extends BombermanGameState
     	countdown		= "";
     	
     	actualState = RoundState.STARTING;
-    	playMusic (gameStartMusic);
+    	gameStartMusic.play(1.0f, 1.2f);
+    	 	
     }
     
     @Override
     public void leave(GameContainer container, StateBasedGame game) throws SlickException
     {
+    	gameSound.stop();
     	container.getInput().clearKeyPressedRecord();
     }
 	
@@ -416,27 +440,13 @@ public class GameRoundState extends BombermanGameState
 	{
 		try
 		{
-			this.gameStartMusic = new Music(gameStartMusicPath);
+			this.gameStartMusic = new Sound(gameStartMusicPath);
 			this.sirenSound		= new Sound(sirenSoundPath);
+			this.gameSound		= new Sound(gameSoundPath);
 		}
 		catch (SlickException e)
 		{
 			//TODO
 		}
-	}
-	
-	private void playMusic (Music music)
-	{
-		music.play();
-	}
-
-	private void pauseMusic (Music music)
-	{
-		music.pause();
-	}
-
-	private void resumeMusic (Music music)
-	{
-		music.resume();
 	}
 }

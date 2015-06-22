@@ -11,21 +11,21 @@ public class PauseMenu extends Menu
 {
 	// MainLayer
 	private int mainLayerIndex;
-	private int mainLayerSize = 3;
-	private String mainLayer_0 = "Resume";
-	private String mainLayer_1 = "Restart";
-	private String mainLayer_2 = "End Round";
+	private int mainLayerSize 		= 3;
+	private String mainLayer_0 		= "Resume";
+	private String mainLayer_1 		= "Restart";
+	private String mainLayer_2 		= "End Round";
 	
 	// ExitLayer
 	private int exitLayerIndex;
-	private int exitLayerSize = 2;
+	private int exitLayerSize 		= 2;
 	private String exitLayerHeading = "End Round?";
-	private String exitLayer_0 = "Yes";
-	private String exitLayer_1 = "No";
+	private String exitLayer_0 		= "Yes";
+	private String exitLayer_1 		= "No";
 	
 	public PauseMenu() {
-		this.canvasWidth 		= AppGameContainerFSCustom.GAME_CANVAS_WIDTH;
-		this.canvasHeight 		= AppGameContainerFSCustom.GAME_CANVAS_HEIGHT;
+		this.canvasWidth 			= AppGameContainerFSCustom.GAME_CANVAS_WIDTH;
+		this.canvasHeight 			= AppGameContainerFSCustom.GAME_CANVAS_HEIGHT;
 	}
 	
 	@Override
@@ -35,8 +35,8 @@ public class PauseMenu extends Menu
 	
 	@Override
 	public void reset() {
-		actualAction = Action.NO_ACTION;
-		actualLayer = Layer.MAIN_LAYER;
+		actualAction 	= Action.NO_ACTION;
+		actualLayer 	= Layer.MAIN_LAYER;
 		resetMainLayer();
 		resetExitLayer();
 	}

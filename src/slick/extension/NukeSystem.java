@@ -3,7 +3,8 @@ package slick.extension;
 import game.interfaces.IDestroyable;
 import game.interfaces.IRenderable;
 import game.interfaces.IUpdateable;
-import game.model.GameObject;
+import game.model.objects.GameObject;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.particles.ConfigurableEmitter;

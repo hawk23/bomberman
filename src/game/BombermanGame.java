@@ -38,6 +38,7 @@ public class BombermanGame extends StateBasedGame {
 	public static AngelCodeFont STEAMWRECK_FONT_OL;
 	
 	public static AngelCodeFont STEAMWRECK_FONT_RED;
+    public static AngelCodeFont STEAMWRECK_FONT_SHINY;
 	
 	public static AngelCodeFont OCR_FONT_BIG;
 	public static AngelCodeFont OCR_FONT_OL_BIG;
@@ -93,6 +94,7 @@ public class BombermanGame extends StateBasedGame {
 		STEAMWRECK_FONT = new AngelCodeFont("res/fonts/steamwreck.fnt", new Image("res/fonts/steamwreck.png"));
 		STEAMWRECK_FONT_OL = new AngelCodeFont("res/fonts/steamwreck_ol.fnt", new Image("res/fonts/steamwreck_ol.png"));
 		STEAMWRECK_FONT_RED = new AngelCodeFont("res/fonts/steamwreck_red.fnt", new Image("res/fonts/steamwreck_red.png"));
+        STEAMWRECK_FONT_SHINY = new AngelCodeFont("res/fonts/steamwreck_ol.fnt", new Image("res/fonts/steamwreck_shiny.png"));
 		
 		OCR_FONT_BIG = new AngelCodeFont("res/fonts/OCR_80.fnt", new Image("res/fonts/OCR_80.png"));
 		OCR_FONT_OL_BIG = new AngelCodeFont("res/fonts/OCR_ol_80.fnt", new Image("res/fonts/OCR_ol_80.png"));
@@ -117,9 +119,9 @@ public class BombermanGame extends StateBasedGame {
     {
         PlayerConfig player1 = new PlayerConfig();
         player1.setId(0);
-        player1.setPath("res/visuals/players/0/spritesheet.png");
+        player1.setPath("res/visuals/players/0/sheet_0.png");
         try {
-        	player1.setImage(new Image("res/visuals/players/0/avatar.png"));   
+        	player1.setImage(new Image("res/visuals/players/0/avatar_0.png"));
         } catch (RuntimeException e) {
         	player1.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
@@ -131,20 +133,50 @@ public class BombermanGame extends StateBasedGame {
 
         PlayerConfig player2 = new PlayerConfig();
         player2.setId(1);
-        player2.setPath("res/visuals/players/1/spritesheet.png");
+        player2.setPath("res/visuals/players/0/sheet_1.png");
         try {
-        	player2.setImage(new Image("res/visuals/players/1/avatar.png"));   
+        	player2.setImage(new Image("res/visuals/players/0/avatar_1.png"));
         } catch (RuntimeException e) {
         	player2.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
         player2.setName("Fat Blue");
         player2.setInitialBombLimit(1);
-        player2.setInitialSpeedUp(2);
+        player2.setInitialSpeedUp(3);
         player2.setInitialBombTimer(2200);
         player2.setInitialBombRange(1);
 
+        PlayerConfig player3 = new PlayerConfig();
+        player3.setId(2);
+        player3.setPath("res/visuals/players/0/sheet_2.png");
+        try {
+            player3.setImage(new Image("res/visuals/players/0/avatar_2.png"));
+        } catch (RuntimeException e) {
+            player3.setImage(new Image("res/visuals/default_thumbnail.png"));
+        }
+        player3.setName("Fat Green");
+        player3.setInitialBombLimit(1);
+        player3.setInitialSpeedUp(1);
+        player3.setInitialBombTimer(2200);
+        player3.setInitialBombRange(2);
+
+        PlayerConfig player4 = new PlayerConfig();
+        player4.setId(3);
+        player4.setPath("res/visuals/players/0/sheet_3.png");
+        try {
+            player4.setImage(new Image("res/visuals/players/0/avatar_3.png"));
+        } catch (RuntimeException e) {
+            player4.setImage(new Image("res/visuals/default_thumbnail.png"));
+        }
+        player4.setName("Fat Yellow");
+        player4.setInitialBombLimit(1);
+        player4.setInitialSpeedUp(5);
+        player4.setInitialBombTimer(2000);
+        player4.setInitialBombRange(1);
+
         this.playerConfigs.add(player1);
         this.playerConfigs.add(player2);
+        this.playerConfigs.add(player3);
+        this.playerConfigs.add(player4);
     }
 
     private void createMapConfig () throws SlickException
@@ -152,7 +184,7 @@ public class BombermanGame extends StateBasedGame {
         MapConfig mapConfig1 = new MapConfig();
         mapConfig1.setId(0);
         mapConfig1.setPath("res/levels/0/map.tmx");
-        
+
         try
         {
         	mapConfig1.setImage(new Image("res/levels/0/thumbnail.png"));
@@ -161,13 +193,13 @@ public class BombermanGame extends StateBasedGame {
         {
         	mapConfig1.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
-        
+
         mapConfig1.setName("Map 1");
 
         MapConfig mapConfig2 = new MapConfig();
         mapConfig2.setId(1);
         mapConfig2.setPath("res/levels/1/map.tmx");
-        
+
         try
         {
         	mapConfig2.setImage(new Image("res/levels/1/thumbnail.png"));
@@ -176,13 +208,13 @@ public class BombermanGame extends StateBasedGame {
         {
         	mapConfig2.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
-        
+
         mapConfig2.setName("Map 2");
-        
+
         MapConfig mapConfig3 = new MapConfig();
         mapConfig3.setId(2);
         mapConfig3.setPath("res/levels/2/map.tmx");
-        
+
         try
         {
         	mapConfig3.setImage(new Image("res/levels/2/thumbnail.png"));
@@ -191,13 +223,13 @@ public class BombermanGame extends StateBasedGame {
         {
         	mapConfig3.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
-        
+
         mapConfig3.setName("Map 3");
-        
+
         MapConfig mapConfig4 = new MapConfig();
         mapConfig4.setId(3);
         mapConfig4.setPath("res/levels/3/map.tmx");
-        
+
         try
         {
         	mapConfig4.setImage(new Image("res/levels/3/thumbnail.png"));
@@ -206,9 +238,9 @@ public class BombermanGame extends StateBasedGame {
         {
         	mapConfig4.setImage(new Image("res/visuals/default_thumbnail.png"));
         }
-        
+
         mapConfig4.setName("Map 4");
-        
+
         this.mapConfigs.add(mapConfig1);
         this.mapConfigs.add(mapConfig2);
         this.mapConfigs.add(mapConfig3);
@@ -223,11 +255,11 @@ public class BombermanGame extends StateBasedGame {
         this.inputConfigurations.add(inputConfiguration1);
         this.inputConfigurations.add(inputConfiguration2);
     }
-    
+
     private void loadDefaultGameRoundConfig() {
-    	
+
     	defaultGameRoundConfig = new GameRoundConfig();
-    	
+
     	MapConfig defaultMap 								= getMapConfigs().get(0);
 
         PlayerConfig defaultPlayer1 						= getPlayerConfigs().get(0);

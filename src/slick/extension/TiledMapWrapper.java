@@ -2,10 +2,10 @@ package slick.extension;
 
 import game.interfaces.IRenderable;
 import game.interfaces.IUpdateable;
-import game.model.Block;
-import game.model.DestroyableBlock;
-import game.model.GameObject;
-import game.model.SolidBlock;
+import game.model.objects.Block;
+import game.model.objects.DestroyableBlock;
+import game.model.objects.GameObject;
+import game.model.objects.SolidBlock;
 
 import java.awt.Point;
 
@@ -110,10 +110,10 @@ public class TiledMapWrapper extends TiledMap implements IUpdateable, IRenderabl
 		crackle.update(container,game,delta);
 	}
 	
-	public void removeBlock(int i, int j) {
-		this.setTileId(i, j, this.layerBlocks, 0);
-		this.blockMatrix[i][j] = null;
-		crackle.addCrackle(i,j);
+	public void removeBlock(int x, int y) {
+		this.setTileId(x, y, this.layerBlocks, 0);
+		this.blockMatrix[x][y] = null;
+		crackle.addCrackle(x,y);
 	}
 
 	@Override

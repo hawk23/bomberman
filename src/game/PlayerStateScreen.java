@@ -2,12 +2,10 @@ package game;
 
 import game.config.GameSettings;
 import game.interfaces.IRenderable;
-import game.model.Player;
+import game.model.objects.Player;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
-
-import java.text.DecimalFormat;
 
 public class PlayerStateScreen implements IRenderable
 {
@@ -27,7 +25,6 @@ public class PlayerStateScreen implements IRenderable
     private SpriteSheet         puShield;
     private SpriteSheet         puSpeed;
 
-    private DecimalFormat       decimalFormat = new DecimalFormat("0.00");
     private Image		        playerStatsBackground	= null;
 
     public PlayerStateScreen (Player player, int posX, int posY, Graphics g, Image buffer) throws SlickException

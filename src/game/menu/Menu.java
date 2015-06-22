@@ -11,7 +11,7 @@ public abstract class Menu
 {
 	protected AngelCodeFont font 			= BombermanGame.STEAMWRECK_FONT;
 	protected AngelCodeFont fontOutline 	= BombermanGame.STEAMWRECK_FONT_OL;
-	protected AngelCodeFont fontOutline2 	= BombermanGame.SUBWAY_FONT;
+	protected AngelCodeFont fontOutline2 	= BombermanGame.STEAMWRECK_FONT_SHINY;
 	
 	protected int canvasWidth;
 	protected int canvasHeight;
