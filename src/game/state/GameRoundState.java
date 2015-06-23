@@ -23,8 +23,14 @@ public class GameRoundState extends BombermanGameState
 	private Sound 					gameStartMusic;
 	private static final String 	sirenSoundPath      	= "res/sounds/round/suddendeath.ogg";
 	private Sound 					sirenSound;
-	private static final String 	gameSoundPath      		= "res/sounds/round/gameSound2.wav";
+	private static final String 	gameStartSoundPath      = "res/sounds/round/gameSound_1.wav";
+	private Sound 					gameStartSound;
+	private static final String 	gameSoundPath      		= "res/sounds/round/gameSound_2.wav";
 	private Sound 					gameSound;
+	private static final String 	sdLoopPath      		= "res/sounds/round/sd_Loop.wav";
+	private Sound 					sdLoop;
+	private static final String 	crumbleSoundPath      	= "res/sounds/round/crumble.wav";
+	private Sound 					crumbleSound;
 
 	
 	private static enum RoundState {
@@ -245,6 +251,16 @@ public class GameRoundState extends BombermanGameState
 		
 		ROUND_TIME += delta;
 		
+		if (showCountdown && !showHurryUP) {
+			if (!sdLoop.playing()) {
+				sdLoop.loop(1.0f, 0.5f);
+			}
+		}
+		
+		if (showHurryUP && gameSound.playing()) {
+			gameSound.stop();
+		}
+
 		if (timeLimit && ROUND_TIME >= ROUND_TIME_LIMIT) {
 			timeLimitReached = true;
 		}
@@ -255,6 +271,11 @@ public class GameRoundState extends BombermanGameState
     	
 		if (!(SHOW_GO_TIME >= SHOW_GO_TIMER)) {
 			SHOW_GO_TIME += delta;
+		}
+		else {
+			if (!gameSound.playing() && !startSuddenDeath && !showHurryUP && !gameStartSound.playing()) {
+				gameSound.loop(1.0f, 0.5f);
+			}
 		}
 
 		if (!setIndestructable && END_TIME >= SHOW_WINNER_TIME) {
@@ -298,8 +319,8 @@ public class GameRoundState extends BombermanGameState
 			SHOW_HURRY_TIME += delta;
 			if (!this.sirenplayed) {
 				this.sirenSound.play();
+				this.crumbleSound.play(1.2f, 1.0f);
 				this.sirenplayed = true;
-				gameSound.loop(1.0f, 0.6f);
 			}
 			
 		}
@@ -326,16 +347,7 @@ public class GameRoundState extends BombermanGameState
         	if(END_TIME >= END_TIMER) {
         		actualState = RoundState.ROUND_END;
         		input.clearKeyPressedRecord();
-            	if (gameSound.playing()) {
-            		gameSound.stop();
-            	}
-            	
-            	if (sirenSound.playing()) {
-            		sirenSound.stop();
-            	}
-            	if (gameStartMusic.playing()) {
-            		gameStartMusic.stop();
-            	}
+            	stopMusic();
         	}
         	else {
         		END_TIME += delta;
@@ -415,13 +427,14 @@ public class GameRoundState extends BombermanGameState
     	
     	actualState = RoundState.STARTING;
     	gameStartMusic.play(1.0f, 1.2f);
+    	gameStartSound.play(1.0f, 0.5f);
     	 	
     }
     
     @Override
     public void leave(GameContainer container, StateBasedGame game) throws SlickException
     {
-    	gameSound.stop();
+    	stopMusic();
     	container.getInput().clearKeyPressedRecord();
     }
 	
@@ -443,10 +456,35 @@ public class GameRoundState extends BombermanGameState
 			this.gameStartMusic = new Sound(gameStartMusicPath);
 			this.sirenSound		= new Sound(sirenSoundPath);
 			this.gameSound		= new Sound(gameSoundPath);
+			this.sdLoop			= new Sound(sdLoopPath);
+			this.gameStartSound = new Sound(gameStartSoundPath);
+			this.crumbleSound	= new Sound(crumbleSoundPath);
 		}
 		catch (SlickException e)
 		{
 			//TODO
 		}
+	}
+	
+	private void stopMusic() {
+		if (gameSound.playing()) {
+    		gameSound.stop();
+    	}
+    	
+    	if (sirenSound.playing()) {
+    		sirenSound.stop();
+    	}
+    	if (gameStartMusic.playing()) {
+    		gameStartMusic.stop();
+    	}
+    	if (sdLoop.playing()) {
+			sdLoop.stop();
+		}
+    	if (gameStartSound.playing()) {
+    		gameStartSound.stop();
+    	}
+    	if (crumbleSound.playing()) {
+    		crumbleSound.stop();
+    	}
 	}
 }

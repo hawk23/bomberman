@@ -12,7 +12,7 @@ import slick.extension.AppGameContainerFSCustom;
 
 public class FallingBlock extends Block {
 
-	private static final String fallingBlock   	= "res/sounds/block/drop2.wav";
+	private static final String fallingBlock   	= "res/sounds/block/drop.ogg";
 	private static final String blockImagePath 	= "res/visuals/blocks/tile_solid_01.png";
 	
 	private Sound drop;
