@@ -1004,16 +1004,10 @@ public class MainMenu extends Menu
 				
 				case 1: 
 					if (checkControls()) {
-						if (successSound.playing()) {
-							successSound.stop();
-						}
 						successSound.play();
 						saveControls();
 					}
 					else {
-						if (errorSound.playing()) {
-							errorSound.stop();
-						}
 						errorSound.play();
 					}
 					break;
