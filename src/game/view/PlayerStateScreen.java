@@ -1,5 +1,6 @@
-package game;
+package game.view;
 
+import game.BombermanGame;
 import game.config.GameSettings;
 import game.interfaces.IRenderable;
 import game.model.objects.Player;

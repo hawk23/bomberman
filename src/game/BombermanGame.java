@@ -1,6 +1,7 @@
 package game;
 
 import game.config.GameRoundConfig;
+import game.config.GameSettings;
 import game.config.InputConfiguration;
 import game.config.MapConfig;
 import game.config.PlayerConfig;
@@ -8,6 +9,8 @@ import game.state.GameRoundState;
 import game.state.IntroState;
 import game.state.MainMenuState;
 
+import org.lwjgl.input.Controller;
+import org.lwjgl.input.Controllers;
 import org.newdawn.slick.AngelCodeFont;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
@@ -52,6 +55,9 @@ public class BombermanGame extends StateBasedGame {
     private ArrayList<PlayerConfig>         playerConfigs           = new ArrayList<PlayerConfig>();
     private ArrayList<MapConfig>            mapConfigs              = new ArrayList<MapConfig>();
     private ArrayList<InputConfiguration>   inputConfigurations     = new ArrayList<InputConfiguration>();
+    
+    private ArrayList<Controller> 			controllers				= new ArrayList<Controller>();
+    private int 							maxPlayers;
 
 	public BombermanGame() throws SlickException
     {
@@ -73,11 +79,34 @@ public class BombermanGame extends StateBasedGame {
     }
     
     private void doInitialization() throws SlickException {
+    	loadControllers();
     	createConfig();
     	loadFonts();
     	loadDefaultGameRoundConfig();
     }
     
+	private void loadControllers() {
+		int count = Controllers.getControllerCount();
+		
+		for (int i = 0; i < count; i++) {
+			Controller controller = Controllers.getController(i);
+
+			if ((controller.getButtonCount() >= 3) && (controller.getButtonCount() < 100) && controller.getName().contains("Xbox")) {
+				controllers.add(controller);
+			}
+		}
+		
+		// console output for testing
+//		for (Controller c : controllers) {
+//			System.out.println(c.getIndex() + " " + c.getName());
+//		}
+		
+	}
+	
+	public ArrayList<Controller> getControllers() {
+		return this.controllers;
+	}
+
 	private void loadFonts() throws SlickException  {
 		STEAMPUNK_FONT = new AngelCodeFont("res/fonts/steampunk.fnt", new Image("res/fonts/steampunk.png"));
 		STEAMPUNK_FONT_OL = new AngelCodeFont("res/fonts/steampunkOutline.fnt", new Image("res/fonts/steampunkOutline.png"));
@@ -250,10 +279,46 @@ public class BombermanGame extends StateBasedGame {
     private void createInputConfig () throws SlickException
     {
         InputConfiguration inputConfiguration1 = new InputConfiguration(Input.KEY_W, Input.KEY_S, Input.KEY_A, Input.KEY_D, Input.KEY_LCONTROL);
+        Image image_wasd = new Image("res/controls/key_wasd.png");
+        inputConfiguration1.setImage(image_wasd);
         InputConfiguration inputConfiguration2 = new InputConfiguration(Input.KEY_UP, Input.KEY_DOWN, Input.KEY_LEFT, Input.KEY_RIGHT, Input.KEY_RCONTROL);
-
+        Image image_arrow = new Image("res/controls/key_arrow.png");
+        inputConfiguration2.setImage(image_arrow);
+        
+        
         this.inputConfigurations.add(inputConfiguration1);
         this.inputConfigurations.add(inputConfiguration2);
+        
+        this.maxPlayers = 2;
+        
+        for (Controller c : this.controllers) {
+        	InputConfiguration inputConfiguration = new InputConfiguration();
+        	inputConfiguration.setControllerID(c.getIndex());
+        	
+        	if (this.controllers.indexOf(c) == 0) {
+        		Image image = new Image("res/controls/pad_1.png");
+        		inputConfiguration.setImage(image);
+        	}
+        	
+        	if (this.controllers.indexOf(c) == 1) {
+        		Image image = new Image("res/controls/pad_2.png");
+        		inputConfiguration.setImage(image);
+        	}
+        	
+        	if (this.controllers.indexOf(c) == 2) {
+        		Image image = new Image("res/controls/pad_3.png");
+        		inputConfiguration.setImage(image);
+        	}
+        	
+        	if (this.controllers.indexOf(c) == 3) {
+        		Image image = new Image("res/controls/pad_4.png");
+        		inputConfiguration.setImage(image);
+        	}
+        	
+        	this.inputConfigurations.add(inputConfiguration);
+        	this.maxPlayers++;
+        }
+        
     }
 
     private void loadDefaultGameRoundConfig() {
@@ -269,16 +334,10 @@ public class BombermanGame extends StateBasedGame {
     	defaultPlayerConfigs.add(defaultPlayer1);
     	defaultPlayerConfigs.add(defaultPlayer2);
 
-        InputConfiguration defaultInput1 					= getInputConfigurations().get(0);
-    	InputConfiguration defaultInput2 					= getInputConfigurations().get(1);
-
-    	ArrayList<InputConfiguration> defaultInputConfigs 	= new ArrayList<InputConfiguration>();
-    	defaultInputConfigs.add(defaultInput1);
-    	defaultInputConfigs.add(defaultInput2);
     	
     	defaultGameRoundConfig.setMapConfig(defaultMap);
     	defaultGameRoundConfig.setCurrentPlayerConfigs(defaultPlayerConfigs);
-    	defaultGameRoundConfig.setCurrentInputConfigs(defaultInputConfigs);
+    	defaultGameRoundConfig.setCurrentInputConfigs(this.inputConfigurations);
     	defaultGameRoundConfig.setTimeLimit(5);
 		
 	}
@@ -301,5 +360,9 @@ public class BombermanGame extends StateBasedGame {
 
 	public void exitGame() {
 		getContainer().exit();
+	}
+	
+	public int getMaxPlayers() {
+		return this.maxPlayers;
 	}
 }

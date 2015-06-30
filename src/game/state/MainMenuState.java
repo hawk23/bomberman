@@ -11,7 +11,6 @@ import org.newdawn.slick.state.StateBasedGame;
 public class MainMenuState extends BombermanGameState
 {
 	private static final String mainMenuSoundPath		= "res/sounds/menu/menuLoop.wav";
-	//private static final String mainMenuSoundPath		= "res/sounds/menu/mainmenu.ogg";
 	private Sound mainMenuSound;
 
 	private Image background				= null;
@@ -74,7 +73,7 @@ public class MainMenuState extends BombermanGameState
 		loopSound(mainMenuSound);
     }
 
-    @Override
+	@Override
     public void leave(GameContainer container, StateBasedGame game) throws SlickException {
     	container.getInput().clearKeyPressedRecord();
 		stopSound(mainMenuSound);
