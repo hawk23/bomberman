@@ -69,34 +69,31 @@ public class BombermanMap implements IUpdateable, IRenderable
         this.suddenDeathManager.generateSuddenDeath(this, GameSettings.SUDDEN_DEATH_TIME, wrapper.getWidth(), wrapper.getHeight());
         this.suddenDeath		= false;
 		this.deadPlayers		= 0;
-        Controller[] controllers     = ControllerEnvironment.getDefaultEnvironment().getControllers();
-        int keyboardsUsed   	= 0;
-        int gamepadsUsed    	= 0;
-        
+
         loadSound();
 
+        int inputsLeft = config.getCurrentInputConfigs().size();
+        
+
+        
     	// create players and define controls
 		for (int i = 0; i < this.players.length; i++)
 		{
             InputManager inputManager = null;
 
-            if (config.getCurrentInputConfigs().size() > keyboardsUsed)
-            {
-                // Use Keyboard controls if possible
-                inputManager    = new KeyboardInputManager(container.getInput(), config.getCurrentInputConfigs().get(keyboardsUsed));
-                keyboardsUsed++;
+            if (inputsLeft == 0) {
+            	// Create empty input config if none of the above works
             }
-            else if (controllers.length > gamepadsUsed+1)
-            {
-                // Use Gamepads for the rest if possible
-                inputManager    = new GamePadInputManager(container.getInput(),gamepadsUsed+1);
-                gamepadsUsed++;
+            else if (config.getCurrentInputConfigs().get(i).getControllerID() == -1) {
+            	// Use Keyboard controls if possible
+                inputManager    = new KeyboardInputManager(container.getInput(), config.getCurrentInputConfigs().get(i));
+                inputsLeft--;
             }
-            else
-            {
-                // Create empty input config if none of the above works
-                inputManager    = new KeyboardInputManager(container.getInput(), new InputConfiguration());
-            }
+            else {
+            	// Use Gamepads for the rest if possible
+                inputManager    = new GamePadInputManager(container.getInput(), config.getCurrentInputConfigs().get(i).getControllerID());
+                inputsLeft--;
+            }          
 
             this.players[i] = new Player(this, inputManager, config.getCurrentPlayerConfigs().get(i), this.wrapper.getSpawnPoint(i));
             this.objects.add(this.players[i]);

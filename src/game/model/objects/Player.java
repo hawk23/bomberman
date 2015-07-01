@@ -47,10 +47,10 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
     private Image		stopLeft;
 
     private int 		animationInterval;
-    private int			winningAnimationInterval = 50;
+    private int			winningAnimationInterval = 60;
     private int 		dyingAnimationInterval = 75;
     private int			shieldAnimationInterval = 50;
-    private int			kickingAnimationInterval = 17;
+    private int			kickingAnimationInterval = 20;
     
     private Animation 	animation_actual;
     private Animation 	animation_up;
@@ -130,6 +130,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         this.destroyed				= false;
         this.indestructable			= false;
         this.movementDirection 		= Direction.DOWN;
+        this.direction				= Direction.NO_DIRECTION;
         this.movementInterpolation 	= 0.0f;
         
         adjustAnimationSpeed();
@@ -317,9 +318,10 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
         }
         else // alive!
         {
-        	this.inputManager.update();
-            direction = this.inputManager.getDirection();
-
+        	if (this.inputManager != null) {
+        		this.inputManager.update();
+                direction = this.inputManager.getDirection();
+        	}
             if (shielded){
             	
             	if (shieldTimer <= 0) {
@@ -560,7 +562,7 @@ public class Player extends GameObject implements IDestroyable, ExplosionListene
                 tileY = posY / GameSettings.TILE_HEIGHT;
             }
 
-            if (inputManager.bombDrop()) {
+            if (inputManager != null && inputManager.bombDrop()) {
                addBomb();
             }
         }      

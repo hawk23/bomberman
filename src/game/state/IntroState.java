@@ -61,10 +61,13 @@ public class IntroState extends BombermanGameState
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
     	
-//    	Input input = container.getInput();
-//    	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-//    		leaveIntro = true;
-//    	}
+    	Input input = container.getInput();
+    	if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+    		if (introSound.playing()) {
+        		introSound.stop();
+    		}
+    	}
+    		
 //    	
 //    	// increment timer by delta
 //    	timer += delta;

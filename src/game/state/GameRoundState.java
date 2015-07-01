@@ -1,13 +1,13 @@
 package game.state;
 
 import game.BombermanGame;
-import game.PlayerStateScreen;
 import game.config.GameRoundConfig;
 import game.config.GameSettings;
 import game.menu.Menu.Action;
 import game.menu.EndMenu;
 import game.menu.PauseMenu;
 import game.model.BombermanMap;
+import game.view.PlayerStateScreen;
 
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
@@ -383,6 +383,8 @@ public class GameRoundState extends BombermanGameState
     @Override
     public void enter(GameContainer container, StateBasedGame game) throws SlickException
     {
+    	container.getInput().clearControlPressedRecord();
+    	
     	this.map = new BombermanMap(this.gameRoundConfig, container);
     	this.stateScreens = new ArrayList<PlayerStateScreen>();
     	

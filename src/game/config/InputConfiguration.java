@@ -1,11 +1,16 @@
 package game.config;
 
+import org.newdawn.slick.Image;
+
 public class InputConfiguration {
     private int up      =   -1;
     private int down    =   -1;
     private int left    =   -1;
     private int right   =   -1;
     private int drop    =   -1;
+    
+    private int controllerID = -1;
+    private Image image;
 
     public InputConfiguration () {
 
@@ -18,6 +23,7 @@ public class InputConfiguration {
         this.right  = right;
         this.drop   = drop;
     }
+    
 
     public int getUp() {
         return up;
@@ -58,4 +64,20 @@ public class InputConfiguration {
     public void setDrop(int drop) {
         this.drop = drop;
     }
+
+	public int getControllerID() {
+		return controllerID;
+	}
+
+	public void setControllerID(int controllerID) {
+		this.controllerID = controllerID;
+	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
 }

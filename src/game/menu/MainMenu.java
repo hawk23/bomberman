@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import game.BombermanGame;
 import game.config.GameRoundConfig;
+import game.config.GameSettings;
 import game.config.InputConfiguration;
 import game.config.MapConfig;
 import game.config.PlayerConfig;
@@ -14,20 +15,38 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.StateBasedGame;
 
 import slick.extension.AppGameContainerFSCustom;
 
 public class MainMenu extends Menu
 {
+	
+	private static final String errorSoundPath		= "res/sounds/menu/error.wav";
+	private Sound errorSound;
+	private static final String successSoundPath		= "res/sounds/menu/success.wav";
+	private Sound successSound;
+	
 	private GameRoundConfig 				gameRoundConfig 	= new GameRoundConfig();
 	private ArrayList<MapConfig> 			mapConfigs 			= new ArrayList<MapConfig>();
 	private ArrayList<PlayerConfig> 		playerConfigs 		= new ArrayList<PlayerConfig>();
 	private ArrayList<PlayerConfig> 		actualPlayerConfigs = new ArrayList<PlayerConfig>();
-	private ArrayList<InputConfiguration> 	inputConfigs 		= new ArrayList<InputConfiguration>();
+	private ArrayList<InputConfiguration> 	inputConfigs 		= new ArrayList<InputConfiguration>(); 
+	private ArrayList<InputConfiguration>	actualInputConfigs	= new ArrayList<InputConfiguration>();
 	
 	private Image avatar_back;
-	private static final String avatarBackgroundPath = "res/visuals/backgrounds/avatar_background.png";
+	private Image key_wasd;
+	private Image key_arrow;
+	private Image pad_1;
+	private Image pad_2;
+	private Image map_controls;
+	private static final String key_wasd_path 			= "res/controls/key_wasd.png";
+	private static final String key_arrow_path 			= "res/controls/key_arrow.png";
+	private static final String pad_1_path 				= "res/controls/pad_1.png";
+	private static final String pad_2_path 				= "res/controls/pad_2.png";
+	private static final String map_controls_path 		= "res/controls/map_controls.png";
+	private static final String avatarBackgroundPath 	= "res/visuals/backgrounds/avatar_background.png";
 
 	// MainLayer
 	private int mainLayerIndex;
@@ -44,7 +63,23 @@ public class MainMenu extends Menu
 	private String exitLayer_1		= "No";
 	
 	// ControlsLayer
+	private int controlsLayerSize;
+	private int controlsLayerIndex = 0;
 	private String controlsLayer_0 = "Back";
+	private String controlsLayer_1 = "Save";
+	private String controlsLayer_2 = "Player 1";
+	private String controlsLayer_3 = "Player 2";
+	private String controlsLayer_4 = "Player 3";
+	private String controlsLayer_5 = "Player 4";
+	private boolean p1_error;
+	private boolean p2_error;
+	private boolean p3_error;
+	private boolean p4_error;
+	private int player1_index		= -1;
+	private int player2_index		= -1;
+	private int player3_index		= -1;
+	private int player4_index		= -1;
+	private int p1_sic, p2_sic, p3_sic, p4_sic = -1;
 	
 	// SettingsLayer1
 	private int settingsLayer1Index;
@@ -57,7 +92,7 @@ public class MainMenu extends Menu
 	private int maxTimeLimit 			= 10;
 	private int players;
 	private int minPlayers 				= 2;
-	private int maxPlayers 				= 4;
+	private int maxPlayers;
 	private int actualMap;
 	private String settingsLayer1_0 	= "Start Round!";
 	private String settingsLayer1_1 	= "Timelimit";
@@ -90,15 +125,35 @@ public class MainMenu extends Menu
 		this.mapConfigs 		= mapConfigs;
 		this.playerConfigs 		= playerConfigs;
 		this.inputConfigs 		= inputConfigs;
+		this.actualInputConfigs	= (ArrayList<InputConfiguration>) gameRoundConfig.getCurrentInputConfigs().clone();
+		this.maxPlayers			= inputConfigs.size() > GameSettings.MAX_PLAYERS ? GameSettings.MAX_PLAYERS : inputConfigs.size();
+		this.controlsLayerSize	= this.maxPlayers + 2;
 		this.canvasWidth 		= AppGameContainerFSCustom.GAME_CANVAS_WIDTH;
 		this.canvasHeight 		= AppGameContainerFSCustom.GAME_CANVAS_HEIGHT;
 		try {
 			this.avatar_back		= new Image(avatarBackgroundPath);
+			this.key_wasd			= new Image(key_wasd_path);
+			this.key_arrow			= new Image(key_arrow_path);
+			this.pad_1				= new Image(pad_1_path);
+			this.pad_2				= new Image(pad_2_path);
+			this.map_controls		= new Image(map_controls_path);
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
+		
+		loadSound();
 	}
 	
+	private void loadSound() {
+		try {
+			this.successSound 	= new Sound(successSoundPath);
+			this.errorSound		= new Sound(errorSoundPath);
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+
 	public void init() {
 		reset();	
 		initSettings();
@@ -107,7 +162,6 @@ public class MainMenu extends Menu
 	public void reset() {
 		resetMainLayer();
 		resetExitLayer();
-		resetControlsLayer();
 		resetSettingsLayer1();
 		resetAvatarLayer();
 		actualAction 	= Action.NO_ACTION;
@@ -127,6 +181,81 @@ public class MainMenu extends Menu
 		for (int i = 0; i < players; i++) {
 			actualPlayerConfigs.add(playerConfigs.get(i));
 		}
+	}
+	
+	private void initControlsLayer() {
+		
+		player1_index = inputConfigs.indexOf(actualInputConfigs.get(0));
+		p1_sic = player1_index;
+		
+		player2_index = inputConfigs.indexOf(actualInputConfigs.get(1));
+		p2_sic = player2_index;
+		
+		if (maxPlayers > 2) {
+			player3_index = inputConfigs.indexOf(actualInputConfigs.get(2));
+			p3_sic = player3_index;
+		}
+		
+		if (maxPlayers > 3) {
+			player4_index = inputConfigs.indexOf(actualInputConfigs.get(3));
+			p4_sic = player4_index;
+		}
+	}
+	
+	private boolean checkControls() {
+		boolean bool = true;
+		
+		p1_error = p2_error = p3_error = p4_error = false;
+		
+		if (player1_index == player2_index) {
+			p1_error = p2_error = true;
+			bool = false;
+		}
+		
+		if (maxPlayers > 2) {
+			if (player1_index == player3_index) {
+				p1_error = p3_error = true;
+				bool = false;
+			}
+			if (player2_index == player3_index) {
+				p3_error = p2_error = true;
+				bool = false;
+			}
+		}
+
+		if (maxPlayers > 3) {
+			if (player1_index == player4_index) {
+				p1_error = p4_error = true;
+				bool = false;
+			}
+
+			if (player2_index == player4_index) {
+				p4_error = p2_error = true;
+				bool = false;
+			}
+			if (player3_index == player4_index) {
+				p3_error = p4_error = true;
+				bool = false;
+			}
+		}
+	
+		return bool;
+	}
+	
+	private void saveControls() {
+
+		actualInputConfigs.set(0, inputConfigs.get(player1_index));
+		p1_sic = player1_index;
+		actualInputConfigs.set(1, inputConfigs.get(player2_index));
+		p2_sic = player2_index;
+		if (maxPlayers > 2) {
+			actualInputConfigs.set(2, inputConfigs.get(player3_index));
+			p3_sic = player3_index;
+		}
+		if (maxPlayers > 3) {
+			actualInputConfigs.set(3, inputConfigs.get(player4_index));
+			p4_sic = player4_index;
+		}			
 	}
 
 	public void render(GameContainer container, StateBasedGame game, Graphics graphics) {
@@ -150,8 +279,7 @@ public class MainMenu extends Menu
 				break;
 			
 			default: break;
-		}
-		
+		}		
 	}
 	
 	private void renderAvatarLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
@@ -422,10 +550,128 @@ public class MainMenu extends Menu
 	private void renderControlsLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
 		fontOutline2.drawString(180, 5, "Controls");
 		
+		map_controls.draw((canvasWidth - map_controls.getWidth()) / 2,
+				(canvasHeight - map_controls.getHeight()) / 2,
+					new Color(1f, 1f, 1f, 0.8f));		
+		
+		int space = 70;
+		int startY = 255;
 		graphics.scale(0.7f, 0.7f);
-		fontOutline.drawString((canvasWidth - fontOutline.getWidth(controlsLayer_0)) / 2 /0.7f, 
-				650 /0.7f, controlsLayer_0);
+		
+		if (controlsLayerIndex == 0) {
+			fontOutline.drawString((canvasWidth - fontOutline.getWidth(controlsLayer_0)) / 2 /0.7f + 30, 
+					startY /0.7f, controlsLayer_0);
+		}
+		else {
+			font.drawString((canvasWidth - font.getWidth(controlsLayer_0)) / 2 /0.7f + 30, 
+					startY /0.7f, controlsLayer_0);
+		}
+
+		if (checkControls()) {
+			if (controlsLayerIndex == 1) {
+				fontOutline.drawString((canvasWidth - fontOutline.getWidth(controlsLayer_1)) / 2 /0.7f + 30, 
+						(startY + space) /0.7f, controlsLayer_1);
+			}
+			else {
+				font.drawString((canvasWidth - font.getWidth(controlsLayer_1)) / 2 /0.7f + 30, 
+						(startY + space) /0.7f, controlsLayer_1);
+			}
+		}
+		else {
+			if (controlsLayerIndex == 1) {
+				fontOutline.drawString((canvasWidth - fontOutline.getWidth(controlsLayer_1)) / 2 /0.7f + 30, 
+						(startY + space) /0.7f, controlsLayer_1, new Color(1f, 0.5f, 0.5f, 1f));
+			}
+			else {
+				font.drawString((canvasWidth - font.getWidth(controlsLayer_1)) / 2 /0.7f + 30, 
+						(startY + space) /0.7f, controlsLayer_1, new Color(1f, 0.5f, 0.5f, 1f));
+			}
+		}
+
+		
+		if (controlsLayerIndex == 2) {
+			fontOutline.drawString((canvasWidth - fontOutline.getWidth("<" + controlsLayer_2 + ">")) / 2 /0.7f + 77, 
+					(startY + 2 * space) /0.7f, "<" + controlsLayer_2 + ">");
+		}
+		else {
+			font.drawString((canvasWidth - font.getWidth(controlsLayer_2)) / 2 /0.7f + 62, 
+					(startY + 2 * space) /0.7f, controlsLayer_2);
+		}
+
+		
+		if (controlsLayerIndex == 3) {
+			fontOutline.drawString((canvasWidth - fontOutline.getWidth("<" + controlsLayer_3 + ">")) / 2 /0.7f + 80, 
+					(startY + 3 * space) /0.7f, "<" + controlsLayer_3 + ">");
+		}
+		else {
+			font.drawString((canvasWidth - font.getWidth(controlsLayer_3)) / 2 /0.7f + 65, 
+					(startY + 3 * space) /0.7f, controlsLayer_3);
+		}
+
+		if (maxPlayers > 2) {
+			if (controlsLayerIndex == 4) {
+				fontOutline.drawString((canvasWidth - fontOutline.getWidth("<" + controlsLayer_4 + ">")) / 2 /0.7f + 80, 
+						(startY + 4 * space) /0.7f, "<" + controlsLayer_4 + ">");
+			}
+			else {
+				font.drawString((canvasWidth - font.getWidth(controlsLayer_4)) / 2 /0.7f + 65, 
+						(startY + 4 * space) /0.7f, controlsLayer_4);
+			}
+		}
+
+		if (maxPlayers > 3) {
+			if (controlsLayerIndex == 5) {
+				fontOutline.drawString((canvasWidth - fontOutline.getWidth("<" + controlsLayer_5 + ">")) / 2 /0.7f + 80, 
+						(startY + 5 * space) /0.7f, "<" + controlsLayer_5 + ">");
+			}
+			else {
+				font.drawString((canvasWidth - font.getWidth(controlsLayer_5)) / 2 /0.7f + 65, 
+						(startY + 5 * space) /0.7f, controlsLayer_5);
+			}
+		}
+		
 		graphics.resetTransform();
+		
+		fontOutline2.drawString(250, 120, "P1");
+		if (p1_error) {
+			inputConfigs.get(player1_index).getImage().draw(220, 220, new Color(1f, 0.5f, 0.5f, 0.8f));
+		}
+		else {
+			inputConfigs.get(player1_index).getImage().draw(220, 220, new Color(0.5f, 1f, 0.5f, 0.8f));
+		}
+		
+		fontOutline2.drawString(970, 120, "P2");
+		if (p2_error) {
+			inputConfigs.get(player2_index).getImage().draw(940, 220, new Color(1f, 0.5f, 0.5f, 0.8f));
+		}
+		else {
+			inputConfigs.get(player2_index).getImage().draw(940, 220, new Color(0.5f, 1f, 0.5f, 0.8f));
+		}
+		
+		if (maxPlayers > 2) {
+			fontOutline2.drawString(250, 700, "P3");
+			if (p3_error) {
+				inputConfigs.get(player3_index).getImage().draw(220, 600, new Color(1f, 0.5f, 0.5f, 0.8f));
+			}
+			else {
+				inputConfigs.get(player3_index).getImage().draw(220, 600, new Color(0.5f, 1f, 0.5f, 0.8f));
+			}
+		}
+		
+		if (maxPlayers > 3) {
+			fontOutline2.drawString(970, 700, "P4");
+			if (p4_error) {
+				inputConfigs.get(player4_index).getImage().draw(940, 600, new Color(1f, 0.5f, 0.5f, 0.8f));
+			}
+			else {
+				inputConfigs.get(player4_index).getImage().draw(940, 600, new Color(0.5f, 1f, 0.5f, 0.8f));
+			}
+		}
+		
+//		fontOutline.drawString(0, 0, "" + player1_index);
+//		fontOutline.drawString(0, 60, "" + player2_index);
+//		fontOutline.drawString(0, 120, "" + player3_index);
+//		fontOutline.drawString(0, 180, "" + player4_index);
 	}
 
 	private void renderExitLayer(GameContainer container, StateBasedGame game, Graphics graphics) {
@@ -476,6 +722,14 @@ public class MainMenu extends Menu
 
 	public void update(GameContainer container, StateBasedGame game, int delta) {
 		checkInput(container.getInput());
+		
+		switch (actualLayer) {
+			case CONTROLS_LAYER: 
+				checkControls(); 
+				break;
+				
+			default: break;
+		}
 	}
 	
 	private void checkInput(Input input) {
@@ -593,6 +847,7 @@ public class MainMenu extends Menu
 		}
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			actualLayer = Layer.SETTINGS_LAYER_1;
+			input.clearKeyPressedRecord();
 			resetAvatarLayer();
 		}
 	}
@@ -655,12 +910,15 @@ public class MainMenu extends Menu
 				case 0: 
 					createGameRoundConfig();
 					actualAction = Action.START_GAME_ROUND;
+					input.clearKeyPressedRecord();
 					break;
 				case 3: 
 					actualLayer = Layer.AVATAR_LAYER;
+					input.clearKeyPressedRecord();
 					break;
 				case 5: 
 					actualLayer = Layer.MAIN_LAYER;
+					input.clearKeyPressedRecord();
 					resetSettingsLayer1();
 					break;
 			
@@ -668,6 +926,7 @@ public class MainMenu extends Menu
 		}
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			actualLayer = Layer.MAIN_LAYER;
+			input.clearKeyPressedRecord();
 			resetSettingsLayer1();
 		}
 		
@@ -675,12 +934,90 @@ public class MainMenu extends Menu
 
 	private void controlsLayer_checkInput(Input input) {
 		
+		if (input.isKeyPressed(Input.KEY_W) || input.isKeyPressed(Input.KEY_UP)) {
+			if (controlsLayerIndex - 1 >= 0) {
+				controlsLayerIndex--;
+			}	
+		}
+		if (input.isKeyPressed(Input.KEY_S) || input.isKeyPressed(Input.KEY_DOWN)) {
+			if (controlsLayerIndex + 1 < controlsLayerSize) {
+				controlsLayerIndex++;
+			}
+		}
+		if (input.isKeyPressed(Input.KEY_A) || input.isKeyPressed(Input.KEY_LEFT)) {
+			switch (controlsLayerIndex) {
+				case 2: 
+					if (player1_index - 1 >= 0) {
+						player1_index--;
+					}
+					break;
+				case 3: 
+					if (player2_index - 1 >= 0) {
+						player2_index--;
+					}
+					break;
+				case 4: 
+					if (player3_index - 1 >= 0) {
+						player3_index--;
+					}
+					break;
+				case 5: 
+					if (player4_index - 1 >= 0) {
+						player4_index--;
+					}
+					break;
+			}
+		}
+		if (input.isKeyPressed(Input.KEY_D) || input.isKeyPressed(Input.KEY_RIGHT)) {
+			switch (controlsLayerIndex) {
+			case 2: 
+				if (player1_index + 1 < inputConfigs.size()) {
+					player1_index++;
+				}
+				break;
+			case 3: 
+				if (player2_index + 1 < inputConfigs.size()) {
+					player2_index++;
+				}
+				break;
+			case 4: 
+				if (player3_index + 1 < inputConfigs.size()) {
+					player3_index++;
+				}
+				break;
+			case 5: 
+				if (player4_index + 1 < inputConfigs.size()) {
+					player4_index++;
+				}
+				break;
+		}
+		}
+		
 		if (input.isKeyPressed(Input.KEY_ENTER)) {
-			actualLayer = Layer.MAIN_LAYER;
-			resetControlsLayer();
+			
+			switch (controlsLayerIndex) {
+				case 0: 
+					actualLayer = Layer.MAIN_LAYER;
+					input.clearKeyPressedRecord();
+					resetControlsLayer();
+					break;
+				
+				case 1: 
+					if (checkControls()) {
+						successSound.play();
+						saveControls();
+					}
+					else {
+						errorSound.play();
+					}
+					break;
+			}
+			
+			
 		}
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			actualLayer = Layer.MAIN_LAYER;
+			input.clearKeyPressedRecord();
 			resetControlsLayer();
 		}
 		
@@ -705,15 +1042,18 @@ public class MainMenu extends Menu
 				
 				case 0: 
 					actualAction = Action.EXIT_GAME;
+					input.clearKeyPressedRecord();
 					break;
 				case 1: 
 					actualLayer = Layer.MAIN_LAYER;
+					input.clearKeyPressedRecord();
 					resetExitLayer();
 					break;
 			}
 		}
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			actualLayer = Layer.MAIN_LAYER;
+			input.clearKeyPressedRecord();
 			resetExitLayer();
 		}
 		
@@ -738,17 +1078,22 @@ public class MainMenu extends Menu
 				
 				case 0: 
 					actualLayer = Layer.SETTINGS_LAYER_1;
+					input.clearKeyPressedRecord();
 					break;
 				case 1: 
 					actualLayer = Layer.CONTROLS_LAYER;
+					initControlsLayer();
+					input.clearKeyPressedRecord();
 					break;
 				case 2: 
 					actualLayer = Layer.EXIT_LAYER;
+					input.clearKeyPressedRecord();
 					break;
 			}
 		}
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			actualLayer = Layer.EXIT_LAYER;
+			input.clearKeyPressedRecord();
 		}
 	}
 	
@@ -761,7 +1106,7 @@ public class MainMenu extends Menu
 	}
 
 	private void resetControlsLayer() {
-		
+		controlsLayerIndex = 0;		
 	}
 
 	private void resetExitLayer() {
@@ -776,13 +1121,7 @@ public class MainMenu extends Menu
 		gameRoundConfig.setCurrentPlayerConfigs(actualPlayerConfigs);
 		gameRoundConfig.setMapConfig(mapConfigs.get(actualMap));
 		gameRoundConfig.setTimeLimit(timeLimit);
-		
-		ArrayList<InputConfiguration> input = new ArrayList<InputConfiguration>();
-		for (int i = 0; i < players; i++) {
-			if (i < inputConfigs.size()) {
-				input.add(inputConfigs.get(i));
-			}
-		}
+		gameRoundConfig.setCurrentInputConfigs(actualInputConfigs);
 	}
 
 	public Action getActualAction() {
